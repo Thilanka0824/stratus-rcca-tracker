@@ -1,0 +1,4577 @@
+[
+ {
+  "run_id": "TR-2026-0001",
+  "date": "2026-04-02",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0002",
+  "date": "2026-04-02",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 21,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0003",
+  "date": "2026-04-03",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": false,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0004",
+  "date": "2026-04-03",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0005",
+  "date": "2026-04-03",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 12,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0006",
+  "date": "2026-04-04",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0007",
+  "date": "2026-04-04",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 42,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0008",
+  "date": "2026-04-04",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0009",
+  "date": "2026-04-04",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 20,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0010",
+  "date": "2026-04-05",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0011",
+  "date": "2026-04-05",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 18,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0012",
+  "date": "2026-04-05",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 8,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0013",
+  "date": "2026-04-05",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0014",
+  "date": "2026-04-06",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0015",
+  "date": "2026-04-06",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 31,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0016",
+  "date": "2026-04-06",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 43,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0017",
+  "date": "2026-04-07",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 12,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0018",
+  "date": "2026-04-07",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0019",
+  "date": "2026-04-07",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 4,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0020",
+  "date": "2026-04-07",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 15,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0021",
+  "date": "2026-04-07",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 13,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0022",
+  "date": "2026-04-07",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0023",
+  "date": "2026-04-08",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 4,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0024",
+  "date": "2026-04-08",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 30,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0025",
+  "date": "2026-04-08",
+  "pipeline": "HIL Bench",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 44,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0026",
+  "date": "2026-04-08",
+  "pipeline": "HIL Bench",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 18,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0027",
+  "date": "2026-04-09",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 5,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0028",
+  "date": "2026-04-09",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "blocked",
+  "duration_min": 14,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0029",
+  "date": "2026-04-09",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0030",
+  "date": "2026-04-09",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 16,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0031",
+  "date": "2026-04-10",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0032",
+  "date": "2026-04-10",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 22,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0033",
+  "date": "2026-04-10",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.2",
+  "status": "blocked",
+  "duration_min": 17,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0034",
+  "date": "2026-04-10",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 4,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0035",
+  "date": "2026-04-11",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0036",
+  "date": "2026-04-11",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0037",
+  "date": "2026-04-11",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 4,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0038",
+  "date": "2026-04-12",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 12,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0039",
+  "date": "2026-04-13",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 18,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0040",
+  "date": "2026-04-13",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 44,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0041",
+  "date": "2026-04-14",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0042",
+  "date": "2026-04-14",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0043",
+  "date": "2026-04-14",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0044",
+  "date": "2026-04-15",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 32,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0045",
+  "date": "2026-04-15",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 57,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0046",
+  "date": "2026-04-15",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0047",
+  "date": "2026-04-15",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0048",
+  "date": "2026-04-15",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0049",
+  "date": "2026-04-16",
+  "pipeline": "HIL Bench",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.2",
+  "status": "fail",
+  "duration_min": 32,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0050",
+  "date": "2026-04-16",
+  "pipeline": "Flight",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 24,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0051",
+  "date": "2026-04-16",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0052",
+  "date": "2026-04-16",
+  "pipeline": "Flight",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 33,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0053",
+  "date": "2026-04-16",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0054",
+  "date": "2026-04-17",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.2",
+  "status": "blocked",
+  "duration_min": 7,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0055",
+  "date": "2026-04-17",
+  "pipeline": "Flight",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 34,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0056",
+  "date": "2026-04-17",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0057",
+  "date": "2026-04-18",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.2",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0058",
+  "date": "2026-04-19",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 21,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0059",
+  "date": "2026-04-19",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.4",
+  "status": "fail",
+  "duration_min": 15,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0060",
+  "date": "2026-04-19",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0061",
+  "date": "2026-04-20",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0062",
+  "date": "2026-04-20",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 8,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0063",
+  "date": "2026-04-20",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0064",
+  "date": "2026-04-21",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0065",
+  "date": "2026-04-21",
+  "pipeline": "HIL Bench",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 39,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0066",
+  "date": "2026-04-21",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 34,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0067",
+  "date": "2026-04-21",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0068",
+  "date": "2026-04-22",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 22,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0069",
+  "date": "2026-04-22",
+  "pipeline": "Flight",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 51,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0070",
+  "date": "2026-04-23",
+  "pipeline": "HIL Bench",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 38,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0071",
+  "date": "2026-04-23",
+  "pipeline": "Flight",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 37,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0072",
+  "date": "2026-04-23",
+  "pipeline": "HIL Bench",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 22,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0073",
+  "date": "2026-04-23",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.4",
+  "status": "fail",
+  "duration_min": 6,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0074",
+  "date": "2026-04-24",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0075",
+  "date": "2026-04-24",
+  "pipeline": "Flight",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 52,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": false,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0076",
+  "date": "2026-04-25",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0077",
+  "date": "2026-04-25",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0078",
+  "date": "2026-04-25",
+  "pipeline": "HIL Bench",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 33,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0079",
+  "date": "2026-04-26",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 29,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0080",
+  "date": "2026-04-26",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0081",
+  "date": "2026-04-27",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.13.4",
+  "status": "fail",
+  "duration_min": 5,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0082",
+  "date": "2026-04-27",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 36,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0083",
+  "date": "2026-04-27",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 45,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0084",
+  "date": "2026-04-27",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 36,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": false
+  }
+ },
+ {
+  "run_id": "TR-2026-0085",
+  "date": "2026-04-28",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.13.4",
+  "status": "fail",
+  "duration_min": 41,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0086",
+  "date": "2026-04-28",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 31,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0087",
+  "date": "2026-04-28",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0088",
+  "date": "2026-04-28",
+  "pipeline": "HIL Bench",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 44,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0089",
+  "date": "2026-04-29",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 18,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0090",
+  "date": "2026-04-29",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0091",
+  "date": "2026-04-29",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0092",
+  "date": "2026-04-29",
+  "pipeline": "Flight",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 37,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0093",
+  "date": "2026-04-30",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0094",
+  "date": "2026-04-30",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 12,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0095",
+  "date": "2026-04-30",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 8,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0096",
+  "date": "2026-04-30",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.13.4",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0097",
+  "date": "2026-05-01",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0098",
+  "date": "2026-05-01",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 30,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0099",
+  "date": "2026-05-01",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.14.0",
+  "status": "fail",
+  "duration_min": 17,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0100",
+  "date": "2026-05-02",
+  "pipeline": "Flight",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 38,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0101",
+  "date": "2026-05-02",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 4,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0102",
+  "date": "2026-05-03",
+  "pipeline": "Flight",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.0",
+  "status": "fail",
+  "duration_min": 60,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0103",
+  "date": "2026-05-03",
+  "pipeline": "HIL Bench",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 24,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0104",
+  "date": "2026-05-04",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 57,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0105",
+  "date": "2026-05-04",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0106",
+  "date": "2026-05-05",
+  "pipeline": "HIL Bench",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.0",
+  "status": "fail",
+  "duration_min": 33,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0107",
+  "date": "2026-05-05",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0108",
+  "date": "2026-05-05",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0109",
+  "date": "2026-05-06",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 34,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0110",
+  "date": "2026-05-06",
+  "pipeline": "Flight",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 58,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0111",
+  "date": "2026-05-06",
+  "pipeline": "Flight",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 55,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0112",
+  "date": "2026-05-06",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 52,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0113",
+  "date": "2026-05-06",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.14.0",
+  "status": "fail",
+  "duration_min": 7,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0114",
+  "date": "2026-05-07",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.0",
+  "status": "blocked",
+  "duration_min": 11,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0115",
+  "date": "2026-05-07",
+  "pipeline": "HIL Bench",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0116",
+  "date": "2026-05-07",
+  "pipeline": "Flight",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 51,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": false
+  }
+ },
+ {
+  "run_id": "TR-2026-0117",
+  "date": "2026-05-07",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0118",
+  "date": "2026-05-08",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0119",
+  "date": "2026-05-08",
+  "pipeline": "Flight",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 48,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0120",
+  "date": "2026-05-08",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0121",
+  "date": "2026-05-09",
+  "pipeline": "HIL Bench",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 27,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0122",
+  "date": "2026-05-09",
+  "pipeline": "Flight",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 48,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0123",
+  "date": "2026-05-09",
+  "pipeline": "Flight",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 59,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": false,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0124",
+  "date": "2026-05-09",
+  "pipeline": "Flight",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 51,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0125",
+  "date": "2026-05-09",
+  "pipeline": "Flight",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 42,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0126",
+  "date": "2026-05-10",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 4,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0127",
+  "date": "2026-05-10",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0128",
+  "date": "2026-05-10",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0129",
+  "date": "2026-05-10",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0130",
+  "date": "2026-05-11",
+  "pipeline": "HIL Bench",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 44,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0131",
+  "date": "2026-05-11",
+  "pipeline": "Flight",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.0",
+  "status": "fail",
+  "duration_min": 28,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0132",
+  "date": "2026-05-11",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 8,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0133",
+  "date": "2026-05-12",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0134",
+  "date": "2026-05-12",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0135",
+  "date": "2026-05-12",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0136",
+  "date": "2026-05-13",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0137",
+  "date": "2026-05-13",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0138",
+  "date": "2026-05-13",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 27,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": false
+  }
+ },
+ {
+  "run_id": "TR-2026-0139",
+  "date": "2026-05-13",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0140",
+  "date": "2026-05-13",
+  "pipeline": "Flight",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 34,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0141",
+  "date": "2026-05-14",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 38,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0142",
+  "date": "2026-05-14",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.0",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0143",
+  "date": "2026-05-15",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0144",
+  "date": "2026-05-15",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 22,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0145",
+  "date": "2026-05-15",
+  "pipeline": "Flight",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 51,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": false
+  }
+ },
+ {
+  "run_id": "TR-2026-0146",
+  "date": "2026-05-15",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 36,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0147",
+  "date": "2026-05-15",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0148",
+  "date": "2026-05-16",
+  "pipeline": "Flight",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 53,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0149",
+  "date": "2026-05-16",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.1",
+  "status": "blocked",
+  "duration_min": 15,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0150",
+  "date": "2026-05-16",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 28,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0151",
+  "date": "2026-05-16",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0152",
+  "date": "2026-05-17",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 42,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0153",
+  "date": "2026-05-17",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0154",
+  "date": "2026-05-17",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 12,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0155",
+  "date": "2026-05-18",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 31,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0156",
+  "date": "2026-05-18",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.1",
+  "status": "blocked",
+  "duration_min": 40,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0157",
+  "date": "2026-05-18",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 38,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0158",
+  "date": "2026-05-19",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0159",
+  "date": "2026-05-19",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 30,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0160",
+  "date": "2026-05-19",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0161",
+  "date": "2026-05-19",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.1",
+  "status": "blocked",
+  "duration_min": 27,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0162",
+  "date": "2026-05-19",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.14.1",
+  "status": "fail",
+  "duration_min": 10,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0163",
+  "date": "2026-05-19",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 22,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0164",
+  "date": "2026-05-20",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.1",
+  "status": "fail",
+  "duration_min": 14,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0165",
+  "date": "2026-05-20",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0166",
+  "date": "2026-05-20",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 18,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0167",
+  "date": "2026-05-20",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.1",
+  "status": "fail",
+  "duration_min": 16,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0168",
+  "date": "2026-05-21",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0169",
+  "date": "2026-05-21",
+  "pipeline": "Flight",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.1",
+  "status": "fail",
+  "duration_min": 54,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0170",
+  "date": "2026-05-21",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0171",
+  "date": "2026-05-21",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 34,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0172",
+  "date": "2026-05-21",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 24,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0173",
+  "date": "2026-05-22",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0174",
+  "date": "2026-05-22",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0175",
+  "date": "2026-05-22",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0176",
+  "date": "2026-05-23",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0177",
+  "date": "2026-05-23",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0178",
+  "date": "2026-05-23",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0179",
+  "date": "2026-05-24",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.1",
+  "status": "fail",
+  "duration_min": 10,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0180",
+  "date": "2026-05-24",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 4,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0181",
+  "date": "2026-05-24",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0182",
+  "date": "2026-05-25",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0183",
+  "date": "2026-05-25",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0184",
+  "date": "2026-05-25",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 31,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0185",
+  "date": "2026-05-26",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0186",
+  "date": "2026-05-26",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.14.1",
+  "status": "fail",
+  "duration_min": 33,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0187",
+  "date": "2026-05-26",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.1",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0188",
+  "date": "2026-05-27",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0189",
+  "date": "2026-05-27",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.14.3",
+  "status": "fail",
+  "duration_min": 14,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0190",
+  "date": "2026-05-27",
+  "pipeline": "HIL Bench",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0191",
+  "date": "2026-05-27",
+  "pipeline": "Flight",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0192",
+  "date": "2026-05-28",
+  "pipeline": "Flight",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 50,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0193",
+  "date": "2026-05-28",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0194",
+  "date": "2026-05-29",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0195",
+  "date": "2026-05-29",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0196",
+  "date": "2026-05-29",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0197",
+  "date": "2026-05-30",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 31,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0198",
+  "date": "2026-05-30",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0199",
+  "date": "2026-05-31",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.3",
+  "status": "fail",
+  "duration_min": 55,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0200",
+  "date": "2026-05-31",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.14.3",
+  "status": "blocked",
+  "duration_min": 39,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0201",
+  "date": "2026-05-31",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 24,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0202",
+  "date": "2026-06-01",
+  "pipeline": "HIL Bench",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 36,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0203",
+  "date": "2026-06-01",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0204",
+  "date": "2026-06-01",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.14.3",
+  "status": "pass",
+  "duration_min": 28,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0205",
+  "date": "2026-06-02",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0206",
+  "date": "2026-06-02",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 47,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0207",
+  "date": "2026-06-02",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0208",
+  "date": "2026-06-02",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.0",
+  "status": "fail",
+  "duration_min": 20,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0209",
+  "date": "2026-06-03",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0210",
+  "date": "2026-06-03",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": false,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0211",
+  "date": "2026-06-04",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 29,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0212",
+  "date": "2026-06-04",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 7,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": false,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0213",
+  "date": "2026-06-04",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.0",
+  "status": "fail",
+  "duration_min": 39,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0214",
+  "date": "2026-06-05",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0215",
+  "date": "2026-06-05",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.0",
+  "status": "fail",
+  "duration_min": 32,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0216",
+  "date": "2026-06-05",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.15.0",
+  "status": "fail",
+  "duration_min": 15,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0217",
+  "date": "2026-06-05",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.0",
+  "status": "fail",
+  "duration_min": 40,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0218",
+  "date": "2026-06-06",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 39,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0219",
+  "date": "2026-06-06",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0220",
+  "date": "2026-06-06",
+  "pipeline": "Flight",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 51,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0221",
+  "date": "2026-06-06",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.0",
+  "status": "fail",
+  "duration_min": 33,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0222",
+  "date": "2026-06-07",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0223",
+  "date": "2026-06-07",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0224",
+  "date": "2026-06-07",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.0",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0225",
+  "date": "2026-06-08",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0226",
+  "date": "2026-06-08",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0227",
+  "date": "2026-06-08",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.1",
+  "status": "fail",
+  "duration_min": 30,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0228",
+  "date": "2026-06-09",
+  "pipeline": "HIL Bench",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 29,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0229",
+  "date": "2026-06-09",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0230",
+  "date": "2026-06-09",
+  "pipeline": "HIL Bench",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 19,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0231",
+  "date": "2026-06-10",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0232",
+  "date": "2026-06-10",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.1",
+  "status": "fail",
+  "duration_min": 54,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0233",
+  "date": "2026-06-11",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 27,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0234",
+  "date": "2026-06-11",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 44,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0235",
+  "date": "2026-06-11",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.1",
+  "status": "fail",
+  "duration_min": 43,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0236",
+  "date": "2026-06-12",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 30,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0237",
+  "date": "2026-06-12",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.15.1",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0238",
+  "date": "2026-06-12",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.15.1",
+  "status": "fail",
+  "duration_min": 37,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0239",
+  "date": "2026-06-12",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.1",
+  "status": "fail",
+  "duration_min": 26,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0240",
+  "date": "2026-06-12",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.1",
+  "status": "fail",
+  "duration_min": 48,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0241",
+  "date": "2026-06-13",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 11,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0242",
+  "date": "2026-06-13",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0243",
+  "date": "2026-06-13",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0244",
+  "date": "2026-06-13",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.15.2",
+  "status": "fail",
+  "duration_min": 7,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0245",
+  "date": "2026-06-13",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 29,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0246",
+  "date": "2026-06-14",
+  "pipeline": "Simulation",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0247",
+  "date": "2026-06-14",
+  "pipeline": "Flight",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0248",
+  "date": "2026-06-14",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 42,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0249",
+  "date": "2026-06-15",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 12,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0250",
+  "date": "2026-06-15",
+  "pipeline": "Flight",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 56,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0251",
+  "date": "2026-06-15",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0252",
+  "date": "2026-06-15",
+  "pipeline": "Flight",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.15.2",
+  "status": "fail",
+  "duration_min": 58,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0253",
+  "date": "2026-06-15",
+  "pipeline": "HIL Bench",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 24,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0254",
+  "date": "2026-06-15",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 34,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0255",
+  "date": "2026-06-15",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 57,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0256",
+  "date": "2026-06-16",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 6,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0257",
+  "date": "2026-06-16",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0258",
+  "date": "2026-06-16",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 25,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0259",
+  "date": "2026-06-16",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0260",
+  "date": "2026-06-17",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 32,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0261",
+  "date": "2026-06-17",
+  "pipeline": "Flight",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 54,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": false
+  }
+ },
+ {
+  "run_id": "TR-2026-0262",
+  "date": "2026-06-17",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 52,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0263",
+  "date": "2026-06-18",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 16,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0264",
+  "date": "2026-06-18",
+  "pipeline": "Simulation",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.15.2",
+  "status": "fail",
+  "duration_min": 8,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0265",
+  "date": "2026-06-18",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0266",
+  "date": "2026-06-18",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0267",
+  "date": "2026-06-18",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0268",
+  "date": "2026-06-19",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 13,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0269",
+  "date": "2026-06-19",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 17,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0270",
+  "date": "2026-06-19",
+  "pipeline": "HIL Bench",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 28,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": false,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0271",
+  "date": "2026-06-19",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 35,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0272",
+  "date": "2026-06-20",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.15.2",
+  "status": "pass",
+  "duration_min": 41,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0273",
+  "date": "2026-06-21",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.15.2",
+  "status": "blocked",
+  "duration_min": 37,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": false,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0274",
+  "date": "2026-06-22",
+  "pipeline": "Simulation",
+  "scenario": "Emergency Landing Site Selection",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 4,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0275",
+  "date": "2026-06-22",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0276",
+  "date": "2026-06-22",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 15,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0277",
+  "date": "2026-06-22",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 24,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0278",
+  "date": "2026-06-23",
+  "pipeline": "HIL Bench",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 23,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0279",
+  "date": "2026-06-23",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0280",
+  "date": "2026-06-23",
+  "pipeline": "Simulation",
+  "scenario": "Comms Loss Failover",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 14,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0281",
+  "date": "2026-06-24",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0282",
+  "date": "2026-06-24",
+  "pipeline": "Simulation",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 5,
+  "owner": "M. Haddad",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0283",
+  "date": "2026-06-24",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.16.0",
+  "status": "blocked",
+  "duration_min": 12,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0284",
+  "date": "2026-06-24",
+  "pipeline": "Simulation",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 9,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0285",
+  "date": "2026-06-25",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 24,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0286",
+  "date": "2026-06-26",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 33,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0287",
+  "date": "2026-06-26",
+  "pipeline": "Flight",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 51,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0288",
+  "date": "2026-06-26",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 32,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0289",
+  "date": "2026-06-26",
+  "pipeline": "HIL Bench",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 39,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0290",
+  "date": "2026-06-27",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 36,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0291",
+  "date": "2026-06-27",
+  "pipeline": "Simulation",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": false,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0292",
+  "date": "2026-06-27",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.16.0",
+  "status": "pass",
+  "duration_min": 57,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0293",
+  "date": "2026-06-28",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 37,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": false
+  }
+ },
+ {
+  "run_id": "TR-2026-0294",
+  "date": "2026-06-28",
+  "pipeline": "Simulation",
+  "scenario": "Precision Landing \u2014 Nominal",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 18,
+  "owner": "P. Nguyen",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0295",
+  "date": "2026-06-28",
+  "pipeline": "HIL Bench",
+  "scenario": "Payload Imbalance Compensation",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 19,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0296",
+  "date": "2026-06-28",
+  "pipeline": "Simulation",
+  "scenario": "Night Ops \u2014 Beacon Tracking",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 18,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0297",
+  "date": "2026-06-29",
+  "pipeline": "Flight",
+  "scenario": "Obstacle Avoidance \u2014 Static Field",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 55,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0298",
+  "date": "2026-06-29",
+  "pipeline": "HIL Bench",
+  "scenario": "GPS-Denied Navigation \u2014 Urban Canyon",
+  "build": "v2.16.1",
+  "status": "fail",
+  "duration_min": 31,
+  "owner": "L. Alvarez",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0299",
+  "date": "2026-06-29",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 37,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0300",
+  "date": "2026-06-29",
+  "pipeline": "Simulation",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 10,
+  "owner": "K. Osei",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": null
+  }
+ },
+ {
+  "run_id": "TR-2026-0301",
+  "date": "2026-06-29",
+  "pipeline": "HIL Bench",
+  "scenario": "Vertiport Approach \u2014 Traffic Sequencing",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 41,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0302",
+  "date": "2026-06-29",
+  "pipeline": "HIL Bench",
+  "scenario": "Obstacle Avoidance \u2014 Dynamic Intruder",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 35,
+  "owner": "A. Okafor",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0303",
+  "date": "2026-06-30",
+  "pipeline": "HIL Bench",
+  "scenario": "Precision Landing \u2014 Gusty Crosswind",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 43,
+  "owner": "J. Meyer",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0304",
+  "date": "2026-06-30",
+  "pipeline": "Flight",
+  "scenario": "Cabin Door Interlock Sequence",
+  "build": "v2.16.1",
+  "status": "fail",
+  "duration_min": 48,
+  "owner": "D. Whitfield",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ },
+ {
+  "run_id": "TR-2026-0305",
+  "date": "2026-06-30",
+  "pipeline": "Flight",
+  "scenario": "Battery Failsafe \u2014 Forced RTL",
+  "build": "v2.16.1",
+  "status": "pass",
+  "duration_min": 56,
+  "owner": "S. Tanaka",
+  "artifacts": {
+   "logs": true,
+   "telemetry": true,
+   "video": true
+  }
+ }
+]

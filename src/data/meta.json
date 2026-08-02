@@ -1,0 +1,7 @@
+{
+ "company": "Stratus Aerial",
+ "dataset": "synthetic",
+ "generated_by": "generate_data.py (seeded, reproducible)",
+ "window_start": "2026-04-02",
+ "window_end": "2026-06-30"
+}

@@ -1,0 +1,263 @@
+[
+ {
+  "failure_id": "F-0001",
+  "title": "Scenario runner picks stale map tile cache",
+  "severity": "P1",
+  "triage_status": "Verified",
+  "team": "Test Infrastructure",
+  "root_cause": "Test Environment",
+  "opened": "2026-04-02",
+  "resolved": "2026-04-06",
+  "five_whys": [],
+  "corrective_action": "Fix verified against re-run; monitoring for recurrence.",
+  "occurrences": [
+   "TR-2026-0002",
+   "TR-2026-0085",
+   "TR-2026-0102"
+  ]
+ },
+ {
+  "failure_id": "F-0002",
+  "title": "Route replanner oscillates at vertiport hold point",
+  "severity": "P2",
+  "triage_status": "Investigating",
+  "team": "Autonomy",
+  "root_cause": "Data / Logging",
+  "opened": "2026-04-07",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0216",
+   "TR-2026-0017"
+  ]
+ },
+ {
+  "failure_id": "F-0003",
+  "title": "HIL bench power brownout aborts scenario mid-run",
+  "severity": "P3",
+  "triage_status": "Investigating",
+  "team": "Test Infrastructure",
+  "root_cause": "Hardware",
+  "opened": "2026-04-08",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0024"
+  ]
+ },
+ {
+  "failure_id": "F-0004",
+  "title": "Lateral drift exceeds touchdown tolerance \u2014 gusty crosswind (SIM only)",
+  "severity": "P1",
+  "triage_status": "Corrective Action",
+  "team": "Test Infrastructure",
+  "root_cause": "Scenario Definition",
+  "opened": "2026-04-09",
+  "resolved": null,
+  "five_whys": [
+   "Why did precision landing fail? Lateral drift exceeded the 0.5 m touchdown tolerance.",
+   "Why the drift? The controller was compensating for gusts beyond its design envelope.",
+   "Why beyond envelope? The sim wind model applied a gust profile ~2.5x the scenario spec.",
+   "Why 2.5x? The scenario config supplies gust speed in m/s; the wind service reads knots.",
+   "Why wasn't it caught? No unit validation on scenario schema; config was copied from a legacy suite."
+  ],
+  "corrective_action": "Add unit validation to scenario schema; audit all legacy-derived configs. Flight runs of the same scenario pass \u2014 confirms sim-config root cause, not vehicle behavior.",
+  "occurrences": [
+   "TR-2026-0011",
+   "TR-2026-0020",
+   "TR-2026-0021",
+   "TR-2026-0027",
+   "TR-2026-0030",
+   "TR-2026-0099",
+   "TR-2026-0113",
+   "TR-2026-0162",
+   "TR-2026-0244"
+  ]
+ },
+ {
+  "failure_id": "F-0005",
+  "title": "Door interlock sensor intermittent open state",
+  "severity": "P1",
+  "triage_status": "Investigating",
+  "team": "Hardware",
+  "root_cause": null,
+  "opened": "2026-04-10",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0186",
+   "TR-2026-0034",
+   "TR-2026-0164"
+  ]
+ },
+ {
+  "failure_id": "F-0006",
+  "title": "Urban-canyon GPS multipath exceeds nav filter bound",
+  "severity": "P1",
+  "triage_status": "Verified",
+  "team": "Autonomy",
+  "root_cause": "Process Error",
+  "opened": "2026-04-10",
+  "resolved": "2026-04-17",
+  "five_whys": [],
+  "corrective_action": "Fix verified against re-run; monitoring for recurrence.",
+  "occurrences": [
+   "TR-2026-0073",
+   "TR-2026-0298",
+   "TR-2026-0032"
+  ]
+ },
+ {
+  "failure_id": "F-0007",
+  "title": "Landing-site scorer ranks occupied pad viable",
+  "severity": "P3",
+  "triage_status": "Investigating",
+  "team": "Autonomy",
+  "root_cause": "Hardware",
+  "opened": "2026-04-19",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0304",
+   "TR-2026-0179",
+   "TR-2026-0059"
+  ]
+ },
+ {
+  "failure_id": "F-0008",
+  "title": "Payload comp gains untuned for aft-heavy loadout",
+  "severity": "P1",
+  "triage_status": "Investigating",
+  "team": "Flight Controls",
+  "root_cause": null,
+  "opened": "2026-05-05",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0106"
+  ]
+ },
+ {
+  "failure_id": "F-0009",
+  "title": "RTL triggers 4% above configured battery threshold",
+  "severity": "P2",
+  "triage_status": "Corrective Action",
+  "team": "Flight Controls",
+  "root_cause": "Hardware",
+  "opened": "2026-05-11",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": "Corrective action in review with owning team.",
+  "occurrences": [
+   "TR-2026-0131",
+   "TR-2026-0199",
+   "TR-2026-0189"
+  ]
+ },
+ {
+  "failure_id": "F-0010",
+  "title": "Telemetry uploader race drops flight logs on rapid disarm",
+  "severity": "P2",
+  "triage_status": "Investigating",
+  "team": "Data Platform",
+  "root_cause": "Data / Logging",
+  "opened": "2026-05-22",
+  "resolved": null,
+  "five_whys": [
+   "Why are flight telemetry files missing? Uploader session closes before final flush on rapid disarm.",
+   "Why does the session close early? Disarm event triggers teardown without awaiting the upload queue."
+  ],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0155",
+   "TR-2026-0163",
+   "TR-2026-0169",
+   "TR-2026-0191",
+   "TR-2026-0192",
+   "TR-2026-0204",
+   "TR-2026-0206",
+   "TR-2026-0213"
+  ]
+ },
+ {
+  "failure_id": "F-0011",
+  "title": "Intruder track dropout above 12 m/s closure after planner refactor",
+  "severity": "P0",
+  "triage_status": "Verified",
+  "team": "Autonomy",
+  "root_cause": "Software Regression",
+  "opened": "2026-06-03",
+  "resolved": "2026-06-13",
+  "five_whys": [
+   "Why did avoidance fail? Intruder track dropped above 12 m/s closure rate.",
+   "Why did the track drop? Cost-map decay constant changed in the v2.15.0 planner refactor.",
+   "Why did the change ship? Perf test suite lacked a high-closure-rate intruder case."
+  ],
+  "corrective_action": "Reverted cost-map decay change; fix shipped in v2.15.2. Added high-closure intruder case to the pre-merge perf suite.",
+  "occurrences": [
+   "TR-2026-0208",
+   "TR-2026-0213",
+   "TR-2026-0217",
+   "TR-2026-0221",
+   "TR-2026-0227",
+   "TR-2026-0232",
+   "TR-2026-0235",
+   "TR-2026-0239",
+   "TR-2026-0240"
+  ]
+ },
+ {
+  "failure_id": "F-0012",
+  "title": "Comms failover handshake exceeds 800 ms budget",
+  "severity": "P2",
+  "triage_status": "Verified",
+  "team": "Systems Integration",
+  "root_cause": "Process Error",
+  "opened": "2026-06-05",
+  "resolved": "2026-06-14",
+  "five_whys": [],
+  "corrective_action": "Fix verified against re-run; monitoring for recurrence.",
+  "occurrences": [
+   "TR-2026-0215",
+   "TR-2026-0264"
+  ]
+ },
+ {
+  "failure_id": "F-0013",
+  "title": "Log indexer mislabels pipeline field on re-ingest",
+  "severity": "P1",
+  "triage_status": "Open",
+  "team": "Data Platform",
+  "root_cause": null,
+  "opened": "2026-06-13",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0167",
+   "TR-2026-0238"
+  ]
+ },
+ {
+  "failure_id": "F-0014",
+  "title": "Beacon tracker loses lock under strobing backlight",
+  "severity": "P0",
+  "triage_status": "Open",
+  "team": "Autonomy",
+  "root_cause": null,
+  "opened": "2026-06-28",
+  "resolved": null,
+  "five_whys": [],
+  "corrective_action": null,
+  "occurrences": [
+   "TR-2026-0252",
+   "TR-2026-0049",
+   "TR-2026-0081"
+  ]
+ }
+]
