@@ -61,6 +61,9 @@ Three narrative arcs are seeded so the RCCA workflow has something real to show:
   so the integrity audit doesn't produce false alarms.
 - **Functional React + hooks throughout.** State lives in `useState`/`useMemo`;
   the triage stepper mutates a state copy of the failure list.
+- **Light and dark themes, system-aware.** The preference persists in
+  `localStorage` and "Auto" follows the OS live; the theme resolves before first
+  paint, so there's no flash of the wrong one on load.
 
 ## Run it
 
