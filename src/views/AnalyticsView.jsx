@@ -3,9 +3,10 @@ import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, BarChart, LabelList,
 } from 'recharts';
-import { paretoRootCauses, failuresByTeam, AXIS, GRID, TIP } from '../lib/helpers';
+import { paretoRootCauses, failuresByTeam, chartTheme } from '../lib/helpers';
 
-export default function AnalyticsView({ failures }) {
+export default function AnalyticsView({ failures, theme }) {
+  const { AXIS, GRID, TIP, INK, ACCENT, AMBER, GREEN, CURSOR } = chartTheme(theme);
   const pareto = useMemo(() => paretoRootCauses(failures), [failures]);
   const teams = useMemo(() => failuresByTeam(failures), [failures]);
   const uncategorized = failures.filter((f) => !f.root_cause).length;
@@ -39,14 +40,14 @@ export default function AnalyticsView({ failures }) {
               tickFormatter={(v) => `${v}%`}
             />
             <Tooltip {...TIP} />
-            <Bar yAxisId="count" dataKey="count" name="Occurrences" fill="#6e8cb8" radius={[3, 3, 0, 0]} />
+            <Bar yAxisId="count" dataKey="count" name="Occurrences" fill={ACCENT} radius={[3, 3, 0, 0]} />
             <Line
               yAxisId="cum"
               dataKey="cumulative"
               name="Cumulative %"
-              stroke="#d9a441"
+              stroke={AMBER}
               strokeWidth={2}
-              dot={{ r: 3, fill: '#d9a441' }}
+              dot={{ r: 3, fill: AMBER }}
             />
           </ComposedChart>
         </ResponsiveContainer>
@@ -62,10 +63,10 @@ export default function AnalyticsView({ failures }) {
           <BarChart data={teams} layout="vertical" margin={{ top: 4, right: 40, left: 40, bottom: 4 }}>
             <CartesianGrid stroke={GRID} horizontal={false} />
             <XAxis type="number" tick={AXIS} allowDecimals={false} />
-            <YAxis type="category" dataKey="team" tick={{ ...AXIS, fill: '#e8ecf4' }} width={140} />
-            <Tooltip {...TIP} cursor={{ fill: 'rgba(110,140,184,0.08)' }} />
-            <Bar dataKey="count" name="Failures" fill="#4caf7d" radius={[0, 3, 3, 0]}>
-              <LabelList dataKey="count" position="right" style={{ ...AXIS, fill: '#e8ecf4' }} />
+            <YAxis type="category" dataKey="team" tick={{ ...AXIS, fill: INK }} width={140} />
+            <Tooltip {...TIP} cursor={{ fill: CURSOR }} />
+            <Bar dataKey="count" name="Failures" fill={GREEN} radius={[0, 3, 3, 0]}>
+              <LabelList dataKey="count" position="right" style={{ ...AXIS, fill: INK }} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

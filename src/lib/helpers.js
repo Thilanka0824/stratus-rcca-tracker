@@ -105,12 +105,45 @@ export function failuresByTeam(failures) {
 }
 
 // Shared recharts theme — one source of truth for both chart views.
-export const AXIS = { fill: '#8b96a8', fontSize: 11, fontFamily: "'IBM Plex Mono', monospace" };
-export const GRID = '#232b3a';
-export const TIP = {
-  contentStyle: {
-    background: '#171c26', border: '1px solid #232b3a', borderRadius: 6,
-    fontFamily: "'IBM Plex Mono', monospace", fontSize: 12,
+// SVG presentation attributes can't resolve CSS variables, so chart colors
+// live here per theme; keep values in sync with the tokens in styles.css.
+const MONO = "'IBM Plex Mono', monospace";
+
+const CHART_THEMES = {
+  dark: {
+    AXIS: { fill: '#8b96a8', fontSize: 11, fontFamily: MONO },
+    GRID: '#232b3a',
+    TIP: {
+      contentStyle: {
+        background: '#171c26', border: '1px solid #232b3a', borderRadius: 6,
+        fontFamily: MONO, fontSize: 12,
+      },
+      labelStyle: { color: '#e8ecf4' },
+    },
+    INK: '#e8ecf4',
+    ACCENT: '#6e8cb8',
+    AMBER: '#d9a441',
+    GREEN: '#4caf7d',
+    CURSOR: 'rgba(110, 140, 184, 0.08)',
   },
-  labelStyle: { color: '#e8ecf4' },
+  light: {
+    AXIS: { fill: '#5a6478', fontSize: 11, fontFamily: MONO },
+    GRID: '#d7dce5',
+    TIP: {
+      contentStyle: {
+        background: '#ffffff', border: '1px solid #d7dce5', borderRadius: 6,
+        fontFamily: MONO, fontSize: 12,
+      },
+      labelStyle: { color: '#1a2130' },
+    },
+    INK: '#1a2130',
+    ACCENT: '#3d6398',
+    AMBER: '#96700a',
+    GREEN: '#1f7a4d',
+    CURSOR: 'rgba(61, 99, 152, 0.08)',
+  },
 };
+
+export function chartTheme(theme) {
+  return CHART_THEMES[theme] ?? CHART_THEMES.dark;
+}

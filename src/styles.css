@@ -5,6 +5,8 @@
    ============================================================ */
 
 :root {
+  color-scheme: dark;
+
   --bg0: #0b0e14;        /* deep blue-black, not pure black */
   --bg1: #11151d;        /* panel */
   --bg2: #171c26;        /* raised / hover */
@@ -30,6 +32,30 @@
   --r: 6px;
 }
 
+/* Light: same hues, darkened for contrast on paper-white.
+   Chart colors in lib/helpers.js mirror these — keep in sync. */
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg0: #f2f4f7;
+  --bg1: #ffffff;
+  --bg2: #e9edf2;
+  --line: #d7dce5;
+  --ink: #1a2130;
+  --ink-dim: #5a6478;
+  --ink-faint: #8b96a8;
+
+  --accent: #3d6398;
+  --pass: #1f7a4d;
+  --fail: #c2402c;
+  --blocked: #96700a;
+
+  --p0: #c2402c;
+  --p1: #96700a;
+  --p2: #3d6398;
+  --p3: #5a6478;
+}
+
 * { box-sizing: border-box; }
 
 html, body {
@@ -41,7 +67,7 @@ html, body {
   line-height: 1.5;
 }
 
-::selection { background: rgba(110, 140, 184, 0.35); }
+::selection { background: color-mix(in srgb, var(--accent) 35%, transparent); }
 
 .app { max-width: 1180px; margin: 0 auto; padding: 20px 20px 64px; }
 
@@ -112,6 +138,16 @@ html, body {
 .tab.on { color: var(--ink); border-bottom-color: var(--accent); }
 .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
+.theme-toggle {
+  appearance: none; cursor: pointer;
+  margin-left: auto; align-self: center;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none; border: 1px solid var(--line); border-radius: 999px;
+  color: var(--ink-dim); padding: 4px 10px;
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--accent); }
+
 /* ---------- filters ---------- */
 .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
 .filters select, .filters input {
@@ -144,9 +180,9 @@ td.scenario { white-space: normal; min-width: 220px; }
   letter-spacing: 0.06em; text-transform: uppercase;
   padding: 2px 8px; border-radius: 999px; border: 1px solid;
 }
-.pill.pass { color: var(--pass); border-color: rgba(76,175,125,.4); background: rgba(76,175,125,.08); }
-.pill.fail { color: var(--fail); border-color: rgba(229,101,78,.4); background: rgba(229,101,78,.08); }
-.pill.blocked { color: var(--blocked); border-color: rgba(217,164,65,.4); background: rgba(217,164,65,.08); }
+.pill.pass { color: var(--pass); border-color: color-mix(in srgb, var(--pass) 40%, transparent); background: color-mix(in srgb, var(--pass) 8%, transparent); }
+.pill.fail { color: var(--fail); border-color: color-mix(in srgb, var(--fail) 40%, transparent); background: color-mix(in srgb, var(--fail) 8%, transparent); }
+.pill.blocked { color: var(--blocked); border-color: color-mix(in srgb, var(--blocked) 40%, transparent); background: color-mix(in srgb, var(--blocked) 8%, transparent); }
 
 /* artifact dots: filled ok · outlined red missing · faint n/a */
 .art { display: inline-flex; gap: 5px; }
@@ -167,7 +203,7 @@ td.scenario { white-space: normal; min-width: 220px; }
 .fl-card.sel { border-color: var(--accent); background: var(--bg2); }
 .fl-card.aging { animation: pulse 2.6s ease-in-out infinite; border-left-color: var(--fail); }
 @keyframes pulse {
-  0%, 100% { border-left-color: rgba(229,101,78,.35); }
+  0%, 100% { border-left-color: color-mix(in srgb, var(--fail) 35%, transparent); }
   50% { border-left-color: var(--fail); }
 }
 .fl-top { display: flex; align-items: center; gap: 8px; }

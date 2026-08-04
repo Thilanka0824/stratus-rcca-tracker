@@ -5,17 +5,17 @@ import {
 } from 'recharts';
 import {
   weeklyPassRate, missingArtifacts, fmtDate, failureAge, isUnresolved, isAging,
-  AXIS, GRID, TIP,
+  chartTheme,
 } from '../lib/helpers';
 
-const LINE_COLORS = {
-  Overall: '#e8ecf4',
-  Simulation: '#6e8cb8',
-  'HIL Bench': '#d9a441',
-  Flight: '#4caf7d',
-};
-
-export default function ReportsView({ runs, failures, today }) {
+export default function ReportsView({ runs, failures, today, theme }) {
+  const { AXIS, GRID, TIP, INK, ACCENT, AMBER, GREEN } = chartTheme(theme);
+  const lineColors = {
+    Overall: INK,
+    Simulation: ACCENT,
+    'HIL Bench': AMBER,
+    Flight: GREEN,
+  };
   const trend = useMemo(() => weeklyPassRate(runs), [runs]);
   const gaps = useMemo(
     () =>
@@ -65,7 +65,7 @@ export default function ReportsView({ runs, failures, today }) {
             <YAxis tick={AXIS} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
             <Tooltip {...TIP} formatter={(v) => (v == null ? '—' : `${v}%`)} />
             <Legend wrapperStyle={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12 }} />
-            {Object.entries(LINE_COLORS).map(([key, color]) => (
+            {Object.entries(lineColors).map(([key, color]) => (
               <Line
                 key={key}
                 dataKey={key}
@@ -103,7 +103,7 @@ export default function ReportsView({ runs, failures, today }) {
                   <td className="mono dim">{fmtDate(r.date)}</td>
                   <td className="dim">{r.pipeline}</td>
                   <td className="scenario">{r.scenario}</td>
-                  <td className="mono" style={{ color: '#e5654e' }}>
+                  <td className="mono" style={{ color: 'var(--fail)' }}>
                     {missingArtifacts(r).join(', ')}
                   </td>
                 </tr>

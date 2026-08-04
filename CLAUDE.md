@@ -24,11 +24,11 @@ A single-page React dashboard for test-execution and root-cause/corrective-actio
 
 ## Architecture
 
-**Data flows one way at build time.** `generate_data.py` → `src/data/{test_runs.json, failures.json, meta.json}` → imported by `App.jsx` → passed as props to the four views. `App.jsx` holds the only mutable state: `failures` in `useState`, so the triage stepper can advance a failure's `triage_status`. Runs are never mutated. Changing the shape of a run or failure means changing `generate_data.py`, regenerating, and updating the consuming views together.
+**Data flows one way at build time.** `generate_data.py` → `src/data/{test_runs.json, failures.json, meta.json}` → imported by `App.jsx` → passed as props to the four views. `App.jsx` holds the only mutable state: `failures` in `useState` (so the triage stepper can advance a failure's `triage_status`) and the theme preference (`'system'`/`'light'`/`'dark'` in `localStorage['stratus-theme']`; `'system'` follows the OS live via a `matchMedia` listener, the resolved theme is stamped on `<html data-theme>`, and an inline script in `index.html` re-resolves it pre-paint). Runs are never mutated. Changing the shape of a run or failure means changing `generate_data.py`, regenerating, and updating the consuming views together.
 
-`src/lib/helpers.js` is the shared derivation layer — put any cross-view computation there rather than in a view. It also exports the recharts theme constants (`AXIS`, `GRID`, `TIP`) that both chart views use; new charts should import those rather than restyle inline.
+`src/lib/helpers.js` is the shared derivation layer — put any cross-view computation there rather than in a view. It also exports `chartTheme(theme)`, the per-theme recharts values (`AXIS`, `GRID`, `TIP`, plus series colors `INK`/`ACCENT`/`AMBER`/`GREEN`/`CURSOR`). SVG attributes can't resolve CSS variables, so chart colors must come from there — chart views take `theme` as a prop from `App.jsx` and destructure `chartTheme(theme)` rather than hardcoding hex.
 
-Views are `src/views/{RunsView, TriageView, AnalyticsView, ReportsView}.jsx`, selected by tab index in `App.jsx`. `src/styles.css` is a single global stylesheet with CSS custom properties at `:root` (`--pass`/`--fail`/`--blocked`, `--p0`..`--p3`) — status color *is* the data encoding, so reuse the tokens instead of hardcoding hex.
+Views are `src/views/{RunsView, TriageView, AnalyticsView, ReportsView}.jsx`, selected by tab index in `App.jsx`. `src/styles.css` is a single global stylesheet with CSS custom properties at `:root` (dark, the default) overridden under `[data-theme='light']` (`--pass`/`--fail`/`--blocked`, `--p0`..`--p3`) — status color *is* the data encoding, so reuse the tokens instead of hardcoding hex, and derive tints with `color-mix()` so they track both themes. New colors must be added to both theme blocks and, if charts use them, to both objects in `chartTheme`.
 
 ## Domain invariants
 
