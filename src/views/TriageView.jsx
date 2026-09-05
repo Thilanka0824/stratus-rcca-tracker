@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { failureAge, isAging, isUnresolved, fmtDate } from '../lib/helpers';
 
 const STEPS = ['Open', 'Investigating', 'Corrective Action', 'Verified'];
@@ -23,23 +23,40 @@ export default function TriageView({ failures, setFailures, today }) {
 
   const sel = failures.find((f) => f.failure_id === selId) || sorted[0];
 
-  function setStatus(id, status) {
+  // Every status change is reversible for a few seconds. A mis-click on
+  // "Verified" would otherwise silently close a failure and sink it in the
+  // queue — the kind of ending a triager remembers (Peak-End rule).
+  const [toast, setToast] = useState(null);
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 6000);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  function applyStatus(id, status, resolved) {
     setFailures((prev) =>
-      prev.map((f) =>
-        f.failure_id === id
-          ? {
-              ...f,
-              triage_status: status,
-              resolved: status === 'Verified' ? today : null,
-            }
-          : f,
-      ),
+      prev.map((f) => (f.failure_id === id ? { ...f, triage_status: status, resolved } : f)),
     );
+  }
+
+  function setStatus(id, status) {
+    const before = failures.find((f) => f.failure_id === id);
+    if (!before || before.triage_status === status) return;
+    setSelId(id); // keep the changed card selected even as the queue re-sorts
+    applyStatus(id, status, status === 'Verified' ? today : null);
+    const verb =
+      status === 'Verified'
+        ? `verified · closed in ${failureAge({ ...before, resolved: today }, today)}d`
+        : `→ ${status}`;
+    setToast({
+      text: `${id} ${verb}`,
+      undo: () => applyStatus(id, before.triage_status, before.resolved),
+    });
   }
 
   return (
     <section className="triage">
-      <div className="fl-list" role="list">
+      <div className="fl-list">
         {sorted.map((f) => {
           const age = failureAge(f, today);
           const aging = isAging(f, today);
@@ -69,6 +86,15 @@ export default function TriageView({ failures, setFailures, today }) {
 
       {sel ? <Detail f={sel} today={today} setStatus={setStatus} /> : (
         <div className="detail empty-hint">Select a failure to triage.</div>
+      )}
+
+      {toast && (
+        <div className="toast" role="status">
+          <span className="mono">{toast.text}</span>
+          <button className="btn ghost" onClick={() => { toast.undo(); setToast(null); }}>
+            Undo
+          </button>
+        </div>
       )}
     </section>
   );
@@ -112,6 +138,7 @@ function Detail({ f, today, setStatus }) {
             key={s}
             className={`step ${i < stepIdx ? 'done' : ''} ${i === stepIdx ? 'now' : ''}`}
             onClick={() => setStatus(f.failure_id, s)}
+            aria-current={i === stepIdx ? 'step' : undefined}
             title={`Set status: ${s}`}
           >
             {s}
