@@ -18,6 +18,7 @@ export default function RunsView({ runs }) {
   const latest = runs[runs.length - 1].date;
 
   const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
     const cutoffDays = RANGES[range];
     const cutoff = new Date(new Date(latest) - cutoffDays * 86400000);
     return runs
@@ -26,13 +27,16 @@ export default function RunsView({ runs }) {
       .filter((r) => (build === 'all' ? true : r.build === build))
       .filter((r) => (range === 'all' ? true : new Date(r.date) >= cutoff))
       .filter((r) =>
-        q.trim() === ''
+        needle === ''
           ? true
-          : (r.scenario + ' ' + r.run_id + ' ' + r.owner).toLowerCase().includes(q.toLowerCase()),
+          : (r.scenario + ' ' + r.run_id + ' ' + r.owner).toLowerCase().includes(needle),
       )
       .slice()
       .reverse(); // newest first — this is a log, not a ledger
   }, [runs, pipeline, status, build, range, q, latest]);
+
+  // Columns marked col-md collapse on narrow screens — the ones you can
+  // recover from the search box (build, owner) or don't triage on (duration).
 
   return (
     <section>
@@ -81,11 +85,11 @@ export default function RunsView({ runs }) {
               <th>Date</th>
               <th>Pipeline</th>
               <th>Scenario</th>
-              <th>Build</th>
+              <th className="col-md">Build</th>
               <th>Status</th>
-              <th>Dur</th>
-              <th>Owner</th>
-              <th title="Artifacts: logs · telemetry · video">Art</th>
+              <th className="col-md">Duration</th>
+              <th className="col-md">Owner</th>
+              <th>Artifacts</th>
             </tr>
           </thead>
           <tbody>
@@ -95,12 +99,12 @@ export default function RunsView({ runs }) {
                 <td className="mono dim">{fmtDate(r.date)}</td>
                 <td className="dim">{r.pipeline}</td>
                 <td className="scenario">{r.scenario}</td>
-                <td className="mono dim">{r.build}</td>
+                <td className="mono dim col-md">{r.build}</td>
                 <td>
                   <span className={`pill ${r.status}`}>{r.status}</span>
                 </td>
-                <td className="mono dim">{r.duration_min}m</td>
-                <td className="dim">{r.owner}</td>
+                <td className="mono dim col-md">{r.duration_min}m</td>
+                <td className="dim col-md">{r.owner}</td>
                 <td>
                   <ArtifactDots run={r} />
                 </td>
@@ -109,6 +113,10 @@ export default function RunsView({ runs }) {
           </tbody>
         </table>
       </div>
+      <p className="legend" aria-hidden="true">
+        Artifacts, left to right: logs · telemetry · video —
+        <span className="dot ok" /> present <span className="dot miss" /> missing <span className="dot na" /> not required
+      </p>
     </section>
   );
 }
@@ -129,6 +137,7 @@ function ArtifactDots({ run }) {
   };
   return (
     <span className="art">
+      <span className="sr-only">{miss.length ? `missing ${miss.join(', ')}` : 'all artifacts present'}</span>
       {dot('logs', run.artifacts.logs)}
       {dot('telemetry', run.artifacts.telemetry)}
       {dot('video', run.artifacts.video)}

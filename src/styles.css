@@ -96,6 +96,11 @@ html, body {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
   color: var(--ink-faint); text-transform: uppercase; margin-bottom: 6px;
 }
+.hb-key { margin-left: 10px; letter-spacing: 0.06em; }
+.hb-key i { display: inline-block; width: 7px; height: 9px; border-radius: 2px; margin: 0 3px 0 6px; vertical-align: -1px; }
+.hb-key i.pass { background: var(--pass); opacity: 0.75; }
+.hb-key i.fail { background: var(--fail); }
+.hb-key i.blocked { background: var(--blocked); }
 .hb-row { display: flex; gap: 3px; justify-content: flex-end; }
 .hb-cell {
   width: 7px; height: 18px; border-radius: 2px;
@@ -112,9 +117,13 @@ html, body {
   gap: 12px; margin: 18px 0;
 }
 .stat {
+  appearance: none; cursor: pointer; text-align: left; color: var(--ink);
+  font-family: var(--body); width: 100%; min-height: 44px;
   background: var(--bg1); border: 1px solid var(--line); border-radius: var(--r);
-  padding: 12px 14px;
+  padding: 12px 14px; transition: border-color 120ms, background 120ms;
 }
+.stat:hover, .stat:focus-visible { border-color: var(--accent); background: var(--bg2); }
+.stat:active { transform: translateY(1px); }
 .stat .k {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--ink-faint);
@@ -127,11 +136,14 @@ html, body {
 .stat .v.bad { color: var(--fail); }
 
 /* ---------- tabs ---------- */
-.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.tabs {
+  display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 18px;
+  overflow-x: auto; scrollbar-width: none;   /* never clip a tab on a phone */
+}
 .tab {
   appearance: none; background: none; border: none; cursor: pointer;
   font-family: var(--display); font-size: 14px; font-weight: 500;
-  color: var(--ink-dim); padding: 10px 14px;
+  color: var(--ink-dim); padding: 10px 14px; min-height: 44px; flex: none;
   border-bottom: 2px solid transparent; margin-bottom: -1px;
 }
 .tab:hover { color: var(--ink); }
@@ -144,7 +156,7 @@ html, body {
   font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em;
   text-transform: uppercase;
   background: none; border: 1px solid var(--line); border-radius: 999px;
-  color: var(--ink-dim); padding: 4px 10px;
+  color: var(--ink-dim); padding: 4px 12px; min-height: 36px; flex: none;
 }
 .theme-toggle:hover { color: var(--ink); border-color: var(--accent); }
 
@@ -158,6 +170,12 @@ html, body {
 .filters select:focus-visible, .filters input:focus-visible,
 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .count-note { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin: 0 0 8px; }
+.legend {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin: 8px 0 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px;
+}
+.legend .dot { display: inline-block; margin-left: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- table ---------- */
 .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); }
@@ -201,7 +219,9 @@ td.scenario { white-space: normal; min-width: 220px; }
 }
 .fl-card:hover { background: var(--bg2); }
 .fl-card.sel { border-color: var(--accent); background: var(--bg2); }
-.fl-card.aging { animation: pulse 2.6s ease-in-out infinite; border-left-color: var(--fail); }
+/* Pulse twice to catch the eye, then hold. A strip that never stops
+   competing with the heartbeat makes both invisible. */
+.fl-card.aging { animation: pulse 2.6s ease-in-out 2; border-left-color: var(--fail); }
 @keyframes pulse {
   0%, 100% { border-left-color: color-mix(in srgb, var(--fail) 35%, transparent); }
   50% { border-left-color: var(--fail); }
@@ -233,9 +253,10 @@ td.scenario { white-space: normal; min-width: 220px; }
 .stepper { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
 .step {
   appearance: none; cursor: pointer; font-family: var(--mono); font-size: 11px;
-  padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line);
+  padding: 6px 12px; min-height: 36px; border-radius: 999px; border: 1px solid var(--line);
   background: none; color: var(--ink-dim);
 }
+.step:hover { border-color: var(--accent); color: var(--ink); }
 .step.done { border-color: var(--accent); color: var(--accent); }
 .step.now { background: var(--accent); border-color: var(--accent); color: var(--bg0); font-weight: 600; }
 
@@ -268,6 +289,16 @@ td.scenario { white-space: normal; min-width: 220px; }
 .btn:hover { filter: brightness(1.1); }
 .btn.ghost { background: none; color: var(--accent); border: 1px solid var(--accent); }
 
+/* ---------- undo toast (triage) ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 14px; max-width: calc(100vw - 32px);
+  background: var(--bg2); border: 1px solid var(--accent); border-radius: var(--r);
+  padding: 8px 8px 8px 14px; font-size: 12px; color: var(--ink);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); z-index: 20;
+}
+.toast .btn { min-height: 36px; }
+
 /* ---------- footer ---------- */
 .foot {
   margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line);
@@ -277,11 +308,24 @@ td.scenario { white-space: normal; min-width: 220px; }
 @media (max-width: 900px) {
   .triage { grid-template-columns: 1fr; }
   .detail { position: static; }
-  .heartbeat { width: 100%; }
+  .heartbeat { width: 100%; text-align: left; }
   .hb-row { justify-content: flex-start; flex-wrap: wrap; }
+}
+
+@media (max-width: 700px) {
+  .col-md { display: none; }           /* build, duration, owner — searchable, not scannable on a phone */
+  td.scenario { min-width: 160px; }
+  .filters input { min-width: 0; flex-basis: 100%; }
+}
+
+/* Touch: every control clears 44px (Fitts / WCAG 2.5.8). */
+@media (pointer: coarse) {
+  .step, .theme-toggle, .btn, .filters select, .filters input { min-height: 44px; }
+  .fl-card { padding: 12px 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hb-cell { animation: none; }
   .fl-card.aging { animation: none; border-left-color: var(--fail); }
+  .stat:active { transform: none; }
 }
