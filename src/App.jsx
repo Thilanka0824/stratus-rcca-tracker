@@ -8,7 +8,9 @@ import TriageView from './views/TriageView';
 import AnalyticsView from './views/AnalyticsView';
 import ReportsView from './views/ReportsView';
 
-const TABS = ['Test Runs', 'Failure Triage', 'RCCA Analytics', 'Reports'];
+// Short labels so all four fit a phone width; the header already says
+// what the app is, the tabs only need to say where you're going.
+const TABS = ['Runs', 'Triage', 'Analytics', 'Reports'];
 
 // Theme modes cycle in this order; 'system' follows the OS preference live.
 const THEMES = [
@@ -19,6 +21,13 @@ const THEMES = [
 
 export default function App() {
   const [tab, setTab] = useState(0);
+  // Which panel the Reports view should scroll to on arrival (from a stat card).
+  const [reportsFocus, setReportsFocus] = useState(null);
+
+  function go(i, focus = null) {
+    setReportsFocus(focus);
+    setTab(i);
+  }
 
   // Theme preference ('system' | 'light' | 'dark') vs. resolved theme: only
   // the preference is persisted; index.html re-resolves it before first paint.
@@ -69,13 +78,16 @@ export default function App() {
           <div className="eyebrow">Stratus Aerial · Flight Test Operations</div>
           <h1>RCCA Test Tracker</h1>
           <div className="window">
-            {fmtDate(meta.window_start)} – {fmtDate(meta.window_end)} 2026 · synthetic dataset ·
-            seeded via generate_data.py
+            {fmtDate(meta.window_start)} – {fmtDate(meta.window_end)} 2026 · 90-day window
           </div>
         </div>
-        <div className="heartbeat" aria-label="Status of the last 60 test runs">
-          <div className="hb-label">Last 60 runs</div>
-          <div className="hb-row">
+        <div className="heartbeat" role="img"
+          aria-label={`Last 60 runs: ${heartbeat.filter((r) => r.status === 'pass').length} pass, ${heartbeat.filter((r) => r.status === 'fail').length} fail, ${heartbeat.filter((r) => r.status === 'blocked').length} blocked`}>
+          <div className="hb-label">
+            Last 60 runs
+            <span className="hb-key"><i className="pass" />pass <i className="fail" />fail <i className="blocked" />blocked</span>
+          </div>
+          <div className="hb-row" aria-hidden="true">
             {heartbeat.map((r, i) => (
               <span
                 key={r.run_id}
@@ -88,34 +100,36 @@ export default function App() {
         </div>
       </header>
 
-      <section className="stats">
-        <div className="stat">
+      {/* Each number links to the view where you act on it — a stat you can't
+          click is a stat card that looks clickable and isn't. */}
+      <section className="stats" aria-label="Summary">
+        <button className="stat" onClick={() => go(0)}>
           <div className="k">Test runs (90d)</div>
           <div className="v">{stats.total}</div>
           <div className="sub">SIM {runsData.filter((r) => r.pipeline === 'Simulation').length} ·
             HIL {runsData.filter((r) => r.pipeline === 'HIL Bench').length} ·
             FLT {runsData.filter((r) => r.pipeline === 'Flight').length}</div>
-        </div>
-        <div className="stat">
+        </button>
+        <button className="stat" onClick={() => go(3, 'trend')}>
           <div className="k">Pass rate</div>
           <div className="v">{stats.passRate}%</div>
-          <div className="sub">across all pipelines</div>
-        </div>
-        <div className="stat">
+          <div className="sub">weekly trend →</div>
+        </button>
+        <button className="stat" onClick={() => go(1)}>
           <div className="k">Active failures</div>
           <div className={`v ${stats.active > 0 ? 'warn' : ''}`}>{stats.active}</div>
-          <div className="sub">unresolved (not Verified)</div>
-        </div>
-        <div className="stat">
+          <div className="sub">open triage queue →</div>
+        </button>
+        <button className="stat" onClick={() => go(3, 'gaps')}>
           <div className="k">Artifact gaps</div>
           <div className={`v ${stats.gaps > 0 ? 'bad' : ''}`}>{stats.gaps}</div>
-          <div className="sub">runs missing required artifacts</div>
-        </div>
+          <div className="sub">runs missing artifacts →</div>
+        </button>
       </section>
 
       <nav className="tabs" aria-label="Views">
         {TABS.map((t, i) => (
-          <button key={t} className={`tab ${tab === i ? 'on' : ''}`} onClick={() => setTab(i)}>
+          <button key={t} className={`tab ${tab === i ? 'on' : ''}`} aria-current={tab === i ? 'page' : undefined} onClick={() => go(i)}>
             {t}
           </button>
         ))}
@@ -135,7 +149,7 @@ export default function App() {
       )}
       {tab === 2 && <AnalyticsView failures={failures} theme={theme} />}
       {tab === 3 && (
-        <ReportsView runs={runsData} failures={failures} today={today} theme={theme} />
+        <ReportsView runs={runsData} failures={failures} today={today} theme={theme} focus={reportsFocus} />
       )}
 
       <footer className="foot">
