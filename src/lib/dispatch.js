@@ -103,7 +103,7 @@ export function misattribution(db, opts) {
 
 // Requests executed within a requested window, on or before needed_by,
 // over requests submitted before cutoff whose date has passed. By priority.
-export function onWindowFulfillment(db, today) {
+export function onWindowFulfillment(db, today, from = null, to = null) {
   const out = {};
   const bump = (k, hit) => {
     out[k] ??= { num: 0, den: 0 };
@@ -112,6 +112,7 @@ export function onWindowFulfillment(db, today) {
   };
   for (const r of db.requests) {
     if (r.late || r.status === 'withdrawn' || r.needed_by > today) continue;
+    if ((from && r.needed_by < from) || (to && r.needed_by > to)) continue;
     let hit = false;
     if (r.status === 'executed') {
       const a = latestAssignment(db, r.request_id);

@@ -11,6 +11,7 @@ import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers'
 import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest } from './lib/rules';
 import RequestsView from './views/RequestsView';
 import DispatchView from './views/DispatchView';
+import CapacityView from './views/CapacityView';
 import RunsView from './views/RunsView';
 import TriageView from './views/TriageView';
 import AnalyticsView from './views/AnalyticsView';
@@ -22,6 +23,7 @@ import ReportsView from './views/ReportsView';
 const TABS = [
   { label: 'Requests', group: 'Plan' },
   { label: 'Dispatch', group: 'Plan' },
+  { label: 'Capacity', group: 'Plan' },
   { label: 'Runs', group: 'Execute' },
   { label: 'Triage', group: 'Execute' },
   { label: 'Analytics', group: 'Execute' },
@@ -221,6 +223,7 @@ export default function App() {
           onAssign={assign} onDefer={defer} onScrub={scrub} onOpenRequest={openRequest}
         />
       )}
+      {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} />}
       {tab === idx('Runs') && <RunsView runs={runsData} />}
       {tab === idx('Triage') && (
         <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} />
