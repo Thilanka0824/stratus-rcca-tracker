@@ -1,16 +1,31 @@
 import { useEffect, useMemo, useState } from 'react';
 import runsData from './data/test_runs.json';
 import failuresData from './data/failures.json';
+import programsData from './data/programs.json';
+import assetsData from './data/assets.json';
+import personsData from './data/persons.json';
+import requestsData from './data/requests.json';
+import assignmentsData from './data/assignments.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
+import { makeDb } from './lib/rules';
+import RequestsView from './views/RequestsView';
 import RunsView from './views/RunsView';
 import TriageView from './views/TriageView';
 import AnalyticsView from './views/AnalyticsView';
 import ReportsView from './views/ReportsView';
 
-// Short labels so all four fit a phone width; the header already says
-// what the app is, the tabs only need to say where you're going.
-const TABS = ['Runs', 'Triage', 'Analytics', 'Reports'];
+// Two groups by index, no router: Plan is the upstream half (requests in,
+// tails and crew out), Execute is the downstream half (runs → RCCA).
+// Short labels so the row fits a phone; the header says what the app is.
+const TABS = [
+  { label: 'Requests', group: 'Plan' },
+  { label: 'Runs', group: 'Execute' },
+  { label: 'Triage', group: 'Execute' },
+  { label: 'Analytics', group: 'Execute' },
+  { label: 'Reports', group: 'Execute' },
+];
+const idx = (label) => TABS.findIndex((t) => t.label === label);
 
 // Theme modes cycle in this order; 'system' follows the OS preference live.
 const THEMES = [
@@ -52,8 +67,16 @@ export default function App() {
     localStorage.setItem('stratus-theme', pref);
   }, [theme, pref]);
 
-  // Failures live in state so the triage stepper can advance them.
+  // Mutable state, all session-only: failures (the triage stepper), and the
+  // request queue + assignments (the dispatch board). The seed is the truth
+  // on reload — by design, there is no backend to prove here.
   const [failures, setFailures] = useState(failuresData);
+  const [requests, setRequests] = useState(requestsData);
+  const [assignments, setAssignments] = useState(assignmentsData);
+  const db = useMemo(
+    () => makeDb({ programs: programsData, assets: assetsData, persons: personsData, requests, assignments }),
+    [requests, assignments],
+  );
 
   const today = useMemo(() => maxDate(runsData), []);
 
@@ -70,12 +93,13 @@ export default function App() {
 
   const themeMode = THEMES.find((m) => m.pref === pref);
   const themeNext = THEMES[(THEMES.indexOf(themeMode) + 1) % THEMES.length];
+  const groups = [...new Set(TABS.map((t) => t.group))];
 
   return (
     <div className="app">
       <header className="hdr">
         <div>
-          <div className="eyebrow">Stratus Aerial · Flight Test Operations</div>
+          <div className="eyebrow">Stratus Aerial · Test Operations</div>
           <h1>RCCA Test Tracker</h1>
           <div className="window">
             {fmtDate(meta.window_start)} – {fmtDate(meta.window_end)} 2026 · 90-day window
@@ -103,24 +127,24 @@ export default function App() {
       {/* Each number links to the view where you act on it — a stat you can't
           click is a stat card that looks clickable and isn't. */}
       <section className="stats" aria-label="Summary">
-        <button className="stat" onClick={() => go(0)}>
+        <button className="stat" onClick={() => go(idx('Runs'))}>
           <div className="k">Test runs (90d)</div>
           <div className="v">{stats.total}</div>
           <div className="sub">SIM {runsData.filter((r) => r.pipeline === 'Simulation').length} ·
             HIL {runsData.filter((r) => r.pipeline === 'HIL Bench').length} ·
             FLT {runsData.filter((r) => r.pipeline === 'Flight').length}</div>
         </button>
-        <button className="stat" onClick={() => go(3, 'trend')}>
+        <button className="stat" onClick={() => go(idx('Reports'), 'trend')}>
           <div className="k">Pass rate</div>
           <div className="v">{stats.passRate}%</div>
           <div className="sub">weekly trend →</div>
         </button>
-        <button className="stat" onClick={() => go(1)}>
+        <button className="stat" onClick={() => go(idx('Triage'))}>
           <div className="k">Active failures</div>
           <div className={`v ${stats.active > 0 ? 'warn' : ''}`}>{stats.active}</div>
           <div className="sub">open triage queue →</div>
         </button>
-        <button className="stat" onClick={() => go(3, 'gaps')}>
+        <button className="stat" onClick={() => go(idx('Reports'), 'gaps')}>
           <div className="k">Artifact gaps</div>
           <div className={`v ${stats.gaps > 0 ? 'bad' : ''}`}>{stats.gaps}</div>
           <div className="sub">runs missing artifacts →</div>
@@ -128,10 +152,15 @@ export default function App() {
       </section>
 
       <nav className="tabs" aria-label="Views">
-        {TABS.map((t, i) => (
-          <button key={t} className={`tab ${tab === i ? 'on' : ''}`} aria-current={tab === i ? 'page' : undefined} onClick={() => go(i)}>
-            {t}
-          </button>
+        {groups.map((g) => (
+          <div key={g} className="tab-set" role="group" aria-label={`${g} views`}>
+            <span className="tab-group" aria-hidden="true">{g}</span>
+            {TABS.map((t, i) => t.group === g && (
+              <button key={t.label} className={`tab ${tab === i ? 'on' : ''}`} aria-current={tab === i ? 'page' : undefined} onClick={() => go(i)}>
+                {t.label}
+              </button>
+            ))}
+          </div>
         ))}
         <button
           className="theme-toggle"
@@ -143,18 +172,19 @@ export default function App() {
         </button>
       </nav>
 
-      {tab === 0 && <RunsView runs={runsData} />}
-      {tab === 1 && (
+      {tab === idx('Requests') && <RequestsView db={db} meta={meta} today={today} />}
+      {tab === idx('Runs') && <RunsView runs={runsData} />}
+      {tab === idx('Triage') && (
         <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} />
       )}
-      {tab === 2 && <AnalyticsView failures={failures} theme={theme} />}
-      {tab === 3 && (
+      {tab === idx('Analytics') && <AnalyticsView failures={failures} theme={theme} />}
+      {tab === idx('Reports') && (
         <ReportsView runs={runsData} failures={failures} today={today} theme={theme} focus={reportsFocus} />
       )}
 
       <footer className="foot">
-        All data is synthetic — generated by generate_data.py to demonstrate RCCA workflow design.
-        Built by Thilanka Rodrigo.
+        All data is synthetic — generated by generate_data.py to demonstrate test-operations workflow design.
+        Board and triage edits live in this session only. Built by Thilanka Rodrigo.
       </footer>
     </div>
   );
