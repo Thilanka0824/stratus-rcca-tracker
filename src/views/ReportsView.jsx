@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer,
@@ -8,7 +8,7 @@ import {
   chartTheme,
 } from '../lib/helpers';
 
-export default function ReportsView({ runs, failures, today, theme }) {
+export default function ReportsView({ runs, failures, today, theme, focus }) {
   const { AXIS, GRID, TIP, INK, ACCENT, AMBER, GREEN } = chartTheme(theme);
   const lineColors = {
     Overall: INK,
@@ -33,6 +33,14 @@ export default function ReportsView({ runs, failures, today, theme }) {
   const [reportDate, setReportDate] = useState(dates[0]);
   const [copied, setCopied] = useState(false);
 
+  // Arriving from a stat card: land on the panel that number came from.
+  const trendRef = useRef(null);
+  const gapsRef = useRef(null);
+  useEffect(() => {
+    const el = focus === 'gaps' ? gapsRef.current : focus === 'trend' ? trendRef.current : null;
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [focus]);
+
   const report = useMemo(
     () => buildEodReport(runs, failures, reportDate, today),
     [runs, failures, reportDate, today],
@@ -52,7 +60,7 @@ export default function ReportsView({ runs, failures, today, theme }) {
 
   return (
     <section>
-      <div className="panel">
+      <div className="panel" ref={trendRef}>
         <h3>Weekly pass rate by pipeline</h3>
         <p className="caption">
           The v2.15.0 regression is visible as the early-June dip — and the recovery after the
@@ -79,7 +87,7 @@ export default function ReportsView({ runs, failures, today, theme }) {
         </ResponsiveContainer>
       </div>
 
-      <div className="panel">
+      <div className="panel" ref={gapsRef}>
         <h3>Artifact integrity — {gaps.length} runs with missing artifacts</h3>
         <p className="caption">
           A test you can't audit is a test you can't trust. The May–June cluster of missing
