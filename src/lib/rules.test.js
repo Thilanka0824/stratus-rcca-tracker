@@ -172,6 +172,18 @@ describe('R5 · program tail target', () => {
     expect(over.level).toBe('over');
     expect(over.count).toBe(4);
   });
+  it('expects a standing program on weekdays only; a weekend with no demand is not under target', () => {
+    const db = fx();
+    db.requests = [];                                     // nothing asked for, nothing overdue
+    db.request = new Map();
+    db.assignments = [];
+    const fri = '2026-07-03';
+    const sat = '2026-07-04';
+    db.persons[0].availability[fri] = ['AM'];
+    db.persons[0].availability[sat] = ['AM'];            // someone is rostered, so both days are operating
+    expect(dayWarnings(fri, db).filter((v) => v.rule === 'R5' && v.level === 'under').map((v) => v.program_id)).toEqual(['PRG-A', 'PRG-B']);
+    expect(dayWarnings(sat, db).filter((v) => v.rule === 'R5' && v.level === 'under')).toEqual([]);
+  });
   it('does not flag a non-standing program with no demand, but does when it has a queued request', () => {
     const db = fx();
     expect(dayWarnings(D, db).find((v) => v.rule === 'R5' && v.program_id === 'PRG-C')).toBeTruthy();   // RQ-C1/C2 queued

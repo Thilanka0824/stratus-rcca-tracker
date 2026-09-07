@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import runsData from './data/test_runs.json';
 import failuresData from './data/failures.json';
 import programsData from './data/programs.json';
@@ -8,8 +8,9 @@ import requestsData from './data/requests.json';
 import assignmentsData from './data/assignments.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
-import { makeDb } from './lib/rules';
+import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest } from './lib/rules';
 import RequestsView from './views/RequestsView';
+import DispatchView from './views/DispatchView';
 import RunsView from './views/RunsView';
 import TriageView from './views/TriageView';
 import AnalyticsView from './views/AnalyticsView';
@@ -20,6 +21,7 @@ import ReportsView from './views/ReportsView';
 // Short labels so the row fits a phone; the header says what the app is.
 const TABS = [
   { label: 'Requests', group: 'Plan' },
+  { label: 'Dispatch', group: 'Plan' },
   { label: 'Runs', group: 'Execute' },
   { label: 'Triage', group: 'Execute' },
   { label: 'Analytics', group: 'Execute' },
@@ -38,10 +40,21 @@ export default function App() {
   const [tab, setTab] = useState(0);
   // Which panel the Reports view should scroll to on arrival (from a stat card).
   const [reportsFocus, setReportsFocus] = useState(null);
+  // Deep-link targets between the Plan views: a day on the board, a request in the queue.
+  const [boardDate, setBoardDate] = useState(meta.tomorrow);
+  const [requestFocus, setRequestFocus] = useState(null);
 
   function go(i, focus = null) {
     setReportsFocus(focus);
     setTab(i);
+  }
+  function openBoard(date) {
+    setBoardDate(date);
+    go(idx('Dispatch'));
+  }
+  function openRequest(id) {
+    setRequestFocus(id);
+    go(idx('Requests'));
   }
 
   // Theme preference ('system' | 'light' | 'dark') vs. resolved theme: only
@@ -79,6 +92,33 @@ export default function App() {
   );
 
   const today = useMemo(() => maxDate(runsData), []);
+
+  // Board edits go through the rules: a block is returned to the caller and
+  // nothing is saved; a deferral or scrub without a reason cannot be built.
+  // Edits are stamped in the evening of dataset "today", in order.
+  const editStamp = useRef(0);
+  const stampNow = () => `${today}T18:${String(editStamp.current++ % 60).padStart(2, '0')}`;
+
+  function assign(cand) {
+    const violations = checkAssignment(cand, db);
+    if (hasBlock(violations)) return violations;
+    const a = { assignment_id: nextAssignmentId(), ...cand, status: 'planned', scrub_reason: null, run_id: null, notes: 'assigned on the board' };
+    const at = stampNow();
+    setAssignments((prev) => [...prev, a]);
+    setRequests((prev) => prev.map((r) => (r.request_id === cand.request_id ? scheduleRequest(r, a, at) : r)));
+    return violations;
+  }
+  function defer(requestId, reason, note) {
+    const at = stampNow();
+    setRequests((prev) => prev.map((r) => (r.request_id === requestId ? deferRequest(r, { reason, day: boardDate, at, note }) : r)));
+  }
+  function scrub(assignmentId, reason) {
+    const a = assignments.find((x) => x.assignment_id === assignmentId);
+    if (!a) return;
+    const at = stampNow();
+    setAssignments((prev) => prev.map((x) => (x.assignment_id === assignmentId ? scrubAssignment(x, { reason }) : x)));
+    setRequests((prev) => prev.map((r) => (r.request_id === a.request_id ? scrubRequest(r, a, { reason, at }) : r)));
+  }
 
   const stats = useMemo(() => {
     const total = runsData.length;
@@ -172,7 +212,15 @@ export default function App() {
         </button>
       </nav>
 
-      {tab === idx('Requests') && <RequestsView db={db} meta={meta} today={today} />}
+      {tab === idx('Requests') && (
+        <RequestsView db={db} meta={meta} today={today} onOpenBoard={openBoard} focusId={requestFocus} />
+      )}
+      {tab === idx('Dispatch') && (
+        <DispatchView
+          db={db} meta={meta} today={today} date={boardDate} setDate={setBoardDate}
+          onAssign={assign} onDefer={defer} onScrub={scrub} onOpenRequest={openRequest}
+        />
+      )}
       {tab === idx('Runs') && <RunsView runs={runsData} />}
       {tab === idx('Triage') && (
         <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} />

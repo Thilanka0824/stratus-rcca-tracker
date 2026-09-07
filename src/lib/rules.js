@@ -258,8 +258,10 @@ export function dayWarnings(date, db) {
 
   for (const p of db.programs) {
     const n = programTails(date, p.program_id, db).size;
-    const demand = queued.some((r) => r.program_id === p.program_id) || n > 0;
-    if (operating && (p.standing || demand) && n < p.asset_min) {
+    // A standing program is expected every weekday; anyone else only when
+    // it actually asked for tails that day.
+    const demand = queued.some((r) => r.program_id === p.program_id) || n > 0 || (p.standing && !isWeekend(date));
+    if (operating && demand && n < p.asset_min) {
       out.push({ rule: 'R5', severity: 'warn', level: 'under', program_id: p.program_id, count: n,
         message: `${p.code}: ${n} of ${p.asset_min}–${p.asset_max} tails — under target.` });
     } else if (n > p.asset_max) {
@@ -318,10 +320,12 @@ export function scrubAssignment(assignment, { reason }) {
   return { ...assignment, status: 'scrubbed', scrub_reason: reason };
 }
 
+// A scrubbed sortie puts its request back on the same day's rail, so the
+// coordinator can reassign it before deciding to defer.
 export function scrubRequest(request, assignment, { reason, at }) {
   assertReason(reason, SCRUB_REASONS);
   return {
-    ...request, status: 'deferred', plan_date: addDays(assignment.date, 1),
+    ...request, status: 'deferred', plan_date: assignment.date,
     timeline: [...request.timeline, { at, day: assignment.date, event: 'scrubbed', reason,
       note: `${assignment.asset_id} ${assignment.window} scrubbed (board)` }],
   };

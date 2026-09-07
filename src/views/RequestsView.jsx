@@ -6,13 +6,13 @@ import { STATUS_ORDER, fmtStamp, requestAge, isQueued, programCode, latestAssign
 const PRIO = { P0: 0, P1: 1, P2: 2, P3: 3 };
 
 // The intake queue: everything that came in, what happened to it, and why.
-export default function RequestsView({ db, meta, today, onOpenBoard }) {
+export default function RequestsView({ db, meta, today, onOpenBoard, focusId = null }) {
   const [program, setProgram] = useState('all');
   const [status, setStatus] = useState('all');
   const [priority, setPriority] = useState('all');
   const [airframe, setAirframe] = useState('all');
-  const [q, setQ] = useState('');
-  const [selId, setSelId] = useState(null);
+  const [q, setQ] = useState(focusId || '');           // arriving from the board: land on that request
+  const [selId, setSelId] = useState(focusId);
 
   const tomorrow = meta.tomorrow;
   const planning = useMemo(() => {

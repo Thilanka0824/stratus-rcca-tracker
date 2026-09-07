@@ -347,7 +347,7 @@ export function tailsAgainst(db, failureId) {
 export function daySummary(db, date) {
   const sorties = db.assignments.filter((a) => a.date === date && a.status !== 'scrubbed');
   const rail = queuedFor(date, db);
-  const unscheduled = rail.filter(isQueued);
+  const unscheduled = rail.filter((r) => isQueued(r) && r.plan_date <= date);
   return {
     date,
     sorties: sorties.length,
