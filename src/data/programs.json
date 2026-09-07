@@ -1,0 +1,87 @@
+[
+ {
+  "program_id": "PRG-01",
+  "code": "PLC",
+  "name": "Precision Landing Cert",
+  "lead": "S. Tanaka",
+  "priority_default": "P0",
+  "standing": true,
+  "airframes": [
+   "Harmattan"
+  ],
+  "asset_min": 2,
+  "asset_max": 3,
+  "cutoff_local": "15:00"
+ },
+ {
+  "program_id": "PRG-02",
+  "code": "PN",
+  "name": "Perception Nightly",
+  "lead": "A. Okafor",
+  "priority_default": "P1",
+  "standing": true,
+  "airframes": [
+   "Levant"
+  ],
+  "asset_min": 3,
+  "asset_max": 4,
+  "cutoff_local": "15:00"
+ },
+ {
+  "program_id": "PRG-03",
+  "code": "SBU",
+  "name": "Sirocco Bring-up",
+  "lead": "R. Okafor",
+  "priority_default": "P0",
+  "standing": false,
+  "airframes": [
+   "Sirocco"
+  ],
+  "asset_min": 1,
+  "asset_max": 2,
+  "cutoff_local": "15:00"
+ },
+ {
+  "program_id": "PRG-04",
+  "code": "URC",
+  "name": "Urban Route Campaign",
+  "lead": "J. Meyer",
+  "priority_default": "P1",
+  "standing": false,
+  "airframes": [
+   "Levant"
+  ],
+  "asset_min": 1,
+  "asset_max": 2,
+  "cutoff_local": "15:00"
+ },
+ {
+  "program_id": "PRG-05",
+  "code": "CQ",
+  "name": "Crew Qualification",
+  "lead": "D. Whitfield",
+  "priority_default": "P2",
+  "standing": true,
+  "airframes": [
+   "Levant",
+   "Harmattan"
+  ],
+  "asset_min": 0,
+  "asset_max": 1,
+  "cutoff_local": "15:00"
+ },
+ {
+  "program_id": "PRG-06",
+  "code": "SF",
+  "name": "Showcase Flights",
+  "lead": "K. Osei",
+  "priority_default": "P0",
+  "standing": false,
+  "airframes": [
+   "Levant"
+  ],
+  "asset_min": 0,
+  "asset_max": 1,
+  "cutoff_local": "15:00"
+ }
+]
