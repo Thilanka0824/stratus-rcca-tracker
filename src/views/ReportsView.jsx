@@ -7,8 +7,10 @@ import {
   weeklyPassRate, missingArtifacts, fmtDate, failureAge, isUnresolved, isAging,
   chartTheme,
 } from '../lib/helpers';
+import { addDays, REASON_LABELS } from '../lib/rules';
+import { daySummary } from '../lib/dispatch';
 
-export default function ReportsView({ runs, failures, today, theme, focus }) {
+export default function ReportsView({ runs, failures, today, theme, focus, db }) {
   const { AXIS, GRID, TIP, INK, ACCENT, AMBER, GREEN } = chartTheme(theme);
   const lineColors = {
     Overall: INK,
@@ -42,8 +44,8 @@ export default function ReportsView({ runs, failures, today, theme, focus }) {
   }, [focus]);
 
   const report = useMemo(
-    () => buildEodReport(runs, failures, reportDate, today),
-    [runs, failures, reportDate, today],
+    () => buildEodReport(runs, failures, reportDate, today, db),
+    [runs, failures, reportDate, today, db],
   );
 
   async function copyReport() {
@@ -149,7 +151,7 @@ export default function ReportsView({ runs, failures, today, theme, focus }) {
   );
 }
 
-function buildEodReport(runs, failures, date, today) {
+function buildEodReport(runs, failures, date, today, db) {
   const day = runs.filter((r) => r.date === date);
   const by = (s) => day.filter((r) => r.status === s).length;
   const pipe = (p) => day.filter((r) => r.pipeline === p).length;
@@ -192,6 +194,16 @@ function buildEodReport(runs, failures, date, today) {
   if (dayGaps.length === 0) lines.push('  none');
   dayGaps.forEach((r) =>
     lines.push(`  ${r.run_id} (${r.pipeline}) missing ${missingArtifacts(r).join(', ')}`),
+  );
+  // The upstream half: what tomorrow's plan looks like as of this evening.
+  const plan = daySummary(db, addDays(date, 1));
+  lines.push('');
+  lines.push(`TOMORROW'S PLAN (${plan.date}):`);
+  lines.push(`  ${plan.sorties} sorties planned · ${plan.unscheduled} unscheduled (P0: ${plan.p0})${plan.late ? ` · ${plan.late} late intake` : ''}`);
+  lines.push(
+    plan.byCause.length === 0
+      ? '  deferrals by cause: none'
+      : `  deferrals by cause: ${plan.byCause.map((c) => `${REASON_LABELS[c.cause] ?? c.cause} ${c.count}`).join(' · ')}`,
   );
   return lines.join('\n');
 }

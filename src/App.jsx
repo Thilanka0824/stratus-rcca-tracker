@@ -8,6 +8,7 @@ import requestsData from './data/requests.json';
 import assignmentsData from './data/assignments.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
+import { daySummary } from './lib/dispatch';
 import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest } from './lib/rules';
 import RequestsView from './views/RequestsView';
 import DispatchView from './views/DispatchView';
@@ -45,6 +46,7 @@ export default function App() {
   // Deep-link targets between the Plan views: a day on the board, a request in the queue.
   const [boardDate, setBoardDate] = useState(meta.tomorrow);
   const [requestFocus, setRequestFocus] = useState(null);
+  const [triageFocus, setTriageFocus] = useState(null);
 
   function go(i, focus = null) {
     setReportsFocus(focus);
@@ -57,6 +59,10 @@ export default function App() {
   function openRequest(id) {
     setRequestFocus(id);
     go(idx('Requests'));
+  }
+  function openFailure(id) {
+    setTriageFocus(id);
+    go(idx('Triage'));
   }
 
   // Theme preference ('system' | 'light' | 'dark') vs. resolved theme: only
@@ -130,6 +136,9 @@ export default function App() {
     return { total, passRate: Math.round((pass / total) * 100), active, gaps };
   }, [failures]);
 
+  // The upstream number that matters tonight: P0 requests still unscheduled for tomorrow.
+  const tomorrow = useMemo(() => daySummary(db, meta.tomorrow), [db]);
+
   // Signature: last 60 runs as a mission-control heartbeat strip.
   const heartbeat = useMemo(() => runsData.slice(-60), []);
 
@@ -142,7 +151,7 @@ export default function App() {
       <header className="hdr">
         <div>
           <div className="eyebrow">Stratus Aerial · Test Operations</div>
-          <h1>RCCA Test Tracker</h1>
+          <h1>Test Operations Platform</h1>
           <div className="window">
             {fmtDate(meta.window_start)} – {fmtDate(meta.window_end)} 2026 · 90-day window
           </div>
@@ -191,6 +200,11 @@ export default function App() {
           <div className={`v ${stats.gaps > 0 ? 'bad' : ''}`}>{stats.gaps}</div>
           <div className="sub">runs missing artifacts →</div>
         </button>
+        <button className="stat" onClick={() => openBoard(meta.tomorrow)}>
+          <div className="k">Tomorrow: unscheduled P0</div>
+          <div className={`v ${tomorrow.p0 > 0 ? 'bad' : ''}`}>{tomorrow.p0}</div>
+          <div className="sub">{tomorrow.sorties} sorties planned · {tomorrow.unscheduled} waiting →</div>
+        </button>
       </section>
 
       <nav className="tabs" aria-label="Views">
@@ -220,17 +234,17 @@ export default function App() {
       {tab === idx('Dispatch') && (
         <DispatchView
           db={db} meta={meta} today={today} date={boardDate} setDate={setBoardDate}
-          onAssign={assign} onDefer={defer} onScrub={scrub} onOpenRequest={openRequest}
+          onAssign={assign} onDefer={defer} onScrub={scrub} onOpenRequest={openRequest} onOpenFailure={openFailure}
         />
       )}
       {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} />}
-      {tab === idx('Runs') && <RunsView runs={runsData} />}
+      {tab === idx('Runs') && <RunsView runs={runsData} db={db} />}
       {tab === idx('Triage') && (
-        <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} />
+        <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} db={db} focusId={triageFocus} onOpenBoard={openBoard} />
       )}
       {tab === idx('Analytics') && <AnalyticsView failures={failures} theme={theme} />}
       {tab === idx('Reports') && (
-        <ReportsView runs={runsData} failures={failures} today={today} theme={theme} focus={reportsFocus} />
+        <ReportsView runs={runsData} failures={failures} today={today} theme={theme} focus={reportsFocus} db={db} />
       )}
 
       <footer className="foot">

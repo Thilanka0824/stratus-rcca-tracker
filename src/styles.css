@@ -1,5 +1,5 @@
 /* ============================================================
-   Stratus Aerial — RCCA Test Tracker
+   Stratus Aerial — Test Operations Platform
    Design tokens: mission-control dark. Status color IS the data.
    Display: Space Grotesk · Data: IBM Plex Mono · Body: IBM Plex Sans
    ============================================================ */
@@ -469,6 +469,9 @@ table.matrix td.mx.rated { color: var(--pass); background: color-mix(in srgb, va
 table.matrix td.mx.pending { color: var(--blocked); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blocked) 50%, transparent); }
 table.matrix td.mx.none { color: var(--ink-faint); }
 table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var(--bg1); }
+
+.grounding { margin-top: 6px; }
+.grounding .linkish { margin-left: 8px; }
 
 /* ---------- footer ---------- */
 .foot {
