@@ -1245,6 +1245,8 @@ print(f"D1 Harmattan crew deferrals/weekday: before cross-rating {pre_rate:.2f} 
       f"  drop {1 - post_rate / pre_rate:.0%}")
 harm = Counter(e["reason"] for r, e in def_events if r["airframe"] == "Harmattan")
 print(f"D1 Harmattan deferral reasons: {dict(harm)}")
+# The tell, as the app and sql/analytics/08_the_tell.sql define it: a rated
+# operator rostered in a window the request asked for and on no sortie there.
 mis = 0
 for r, e in def_events:
     if r["airframe"] != "Harmattan" or e["reason"] != "no_rated_operator":
@@ -1253,10 +1255,10 @@ for r, e in def_events:
     busy = {(pid, a["window"]) for a in assignments if a["date"] == iso(D) and a["status"] != "scrubbed"
             for pid in (a["operator_id"], a["pilot_id"]) if pid}
     idle = [p for p in persons if "operator" in p["roles"] and rated_on(p, "Harmattan", D)
-            and available(p, D, "PM") and (p["person_id"], "PM") not in busy]
+            and any(available(p, D, w) and (p["person_id"], w) not in busy for w in r["windows"])]
     mis += bool(idle)
-print(f"D1 misattributed: {mis}/{harm['no_rated_operator']} 'no_rated_operator' deferrals had a Harmattan-rated "
-      f"operator idle in PM that day")
+print(f"D1 the tell: {mis}/{harm['no_rated_operator']} 'no_rated_operator' deferrals had a Harmattan-rated "
+      f"operator idle in a requested window")
 print("D1 cross-rating flights: " + "; ".join(
     f"{r['request_id']} {r['status']} {r['plan_date']} after {sum(e['event'] == 'deferred' for e in r['timeline'])} deferrals"
     for r in requests if r["request_id"] in cq_cross_ids))

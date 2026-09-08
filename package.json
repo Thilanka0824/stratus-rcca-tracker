@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "data": "python3 generate_data.py",
-    "test": "vitest run"
+    "data": "python3 generate_data.py && python3 scripts/render_analytics.py",
+    "test": "vitest run",
+    "analytics": "python3 scripts/render_analytics.py"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -4,52 +4,65 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Layout
 
-Flat — the app lives directly at the project root: `package.json`, `vite.config.js`, `index.html`, `generate_data.py`, and `src/` (`main.jsx`, `App.jsx`, `styles.css`, `lib/helpers.js`, `views/`, `data/`). **Run npm and python commands from the project root**; `generate_data.py` writes to `src/data/*.json` via relative paths and will fail from anywhere else.
+Flat — the app lives at the project root: `package.json`, `vite.config.js`, `index.html`, `generate_data.py`, `sql/` (`schema.sql`, `analytics/*.sql`), `scripts/render_analytics.py`, `docs/analytics.md`, and `src/` (`main.jsx`, `App.jsx`, `styles.css`, `lib/{helpers,dispatch,rules}.js`, `lib/rules.test.js`, `views/`, `data/`). **Run npm and python commands from the project root**; `generate_data.py` and the render script write via relative paths and will fail from anywhere else. `data/stratus.sqlite` is generated and gitignored.
 
 ## Commands
 
 ```bash
 npm install
-npm run dev       # Vite dev server
-npm run build     # production build
-npm run preview   # serve the built bundle
-npm run data      # python3 generate_data.py — regenerate src/data/*.json
+npm run dev        # Vite dev server
+npm run build      # production build (the recharts chunk-size warning is expected)
+npm run preview    # serve the built bundle
+npm test           # vitest run — src/lib/rules.test.js only
+npm run data       # python3 generate_data.py && render docs/analytics.md — regenerates src/data/*.json and data/stratus.sqlite
+npm run analytics  # re-render docs/analytics.md from the sqlite file
 ```
 
-There is no test suite, linter, or formatter configured. Don't invent commands for them; verify changes by running the dev server.
+The only test suite is `rules.test.js` (vitest), deliberately scoped to the rules engine and the seed's compliance with it. There is no linter or formatter; verify UI changes by running the dev server. Do not run `npm audit fix` — the vite major bump is deferred on purpose.
 
 ## What this is
 
-A single-page React dashboard for test-execution and root-cause/corrective-action (RCCA) tracking at a **fictional** drone company. All data is synthetic and seeded (`random.seed(42)`), generated offline into JSON that Vite imports at build time. There is no backend, no database, no router, no state library — deliberately. The thing being demonstrated is RCCA workflow design, so avoid adding CRUD/persistence plumbing unless asked.
+A single-page React dashboard for test operations at a **fictional** drone-robotaxi company: the upstream half (requests → prioritize → dispatch tails and crew) and the downstream half (runs → failures → triage → RCCA → report). All data is synthetic and seeded, generated offline into JSON that Vite imports at build time. There is no backend, no router, no state library — deliberately. The thing being demonstrated is workflow and prioritization design, so avoid adding CRUD/persistence plumbing unless asked. Confidentiality is a hard rule: nothing from any real workplace enters the repo — no colleague names, vehicle ids, program names, tool names, channel names or certification codes. The fiction is Stratus Aerial and the Windz fleet.
 
 ## Architecture
 
-**Data flows one way at build time.** `generate_data.py` → `src/data/{test_runs.json, failures.json, meta.json}` → imported by `App.jsx` → passed as props to the four views. `App.jsx` holds the only mutable state: `failures` in `useState` (so the triage stepper can advance a failure's `triage_status`) and the theme preference (`'system'`/`'light'`/`'dark'` in `localStorage['stratus-theme']`; `'system'` follows the OS live via a `matchMedia` listener, the resolved theme is stamped on `<html data-theme>`, and an inline script in `index.html` re-resolves it pre-paint). `App.jsx` also holds `reportsFocus` (`'trend' | 'gaps' | null`), set when a header stat card deep-links into Reports so the view can scroll to the matching panel. Runs are never mutated. Changing the shape of a run or failure means changing `generate_data.py`, regenerating, and updating the consuming views together.
+**Data flows one way at build time.** `generate_data.py` → `src/data/{test_runs, failures, meta, programs, assets, persons, requests, assignments}.json` → imported by `App.jsx` → `makeDb()` (from `lib/rules.js`) indexes them once → passed as props. `App.jsx` holds all mutable state, session-only: `failures` (the triage stepper), `requests` + `assignments` (the dispatch board: assign, defer, scrub), the theme preference (`localStorage['stratus-theme']`, resolved pre-paint by an inline script in `index.html`), and the deep-link targets between views (`reportsFocus`, `boardDate`, `requestFocus`, `triageFocus`). Runs are never mutated. Changing the shape of any entity means changing `generate_data.py`, regenerating, and updating `sql/schema.sql`, the consuming views, and `rules.test.js` together.
 
-`src/lib/helpers.js` is the shared derivation layer — put any cross-view computation there rather than in a view. It also exports `chartTheme(theme)`, the per-theme recharts values (`AXIS`, `GRID`, `TIP`, plus series colors `INK`/`ACCENT`/`AMBER`/`GREEN`/`CURSOR`). SVG attributes can't resolve CSS variables, so chart colors must come from there — chart views take `theme` as a prop from `App.jsx` and destructure `chartTheme(theme)` rather than hardcoding hex.
+The generator has two halves on two RNG streams: the RCCA data (`random.seed(42)`) and, below the `dispatch layer` banner, a day-by-day planner (`random.Random(4242)`) that obeys the same rules the app enforces. Changing the dispatch section never perturbs runs or failures. `check_rules()` re-verifies the seed before writing; the sanity report at the end prints entity counts, the deferral mix and per-arc checks and **asserts that tomorrow's queue holds exactly two P0** — the demo depends on it.
 
-Views are `src/views/{RunsView, TriageView, AnalyticsView, ReportsView}.jsx`, selected by tab index in `App.jsx`. `src/styles.css` is a single global stylesheet with CSS custom properties at `:root` (dark, the default) overridden under `[data-theme='light']` (`--pass`/`--fail`/`--blocked`, `--p0`..`--p3`) — status color *is* the data encoding, so reuse the tokens instead of hardcoding hex, and derive tints with `color-mix()` so they track both themes. New colors must be added to both theme blocks and, if charts use them, to both objects in `chartTheme`.
+**Derivation layers.** `src/lib/helpers.js` is the RCCA side (aging, weekly pass rate, root-cause Pareto, `chartTheme(theme)`); `src/lib/dispatch.js` is the plan side (deferral Pareto, the misattribution tell, on-window fulfillment, utilization, lead time, churn, rating matrix, demand vs supply, grounding days, `daySummary`). Put cross-view computation in one of those, never in a view. `src/lib/rules.js` is the rules engine: R1–R4 in `checkAssignment()`, R5–R6 in `dayWarnings()`, R7 in `isLate()`/`defaultPlanDate()`, R8 in `deferRequest()`/`scrubAssignment()` (they throw without a reason), plus `queuedFor()` (the rail: live queue + what was deferred from that day) and the immutable transitions the board applies. SVG attributes can't resolve CSS variables, so chart colors come from `chartTheme` — chart views take `theme` as a prop and destructure it rather than hardcoding hex.
+
+Views are `src/views/{RequestsView, DispatchView, CapacityView, RunsView, TriageView, AnalyticsView, ReportsView}.jsx`, selected by tab index in `App.jsx` in two groups (Plan · Execute). `src/styles.css` is one global stylesheet with tokens at `:root` (dark) overridden under `[data-theme='light']` — status color *is* the data encoding, so reuse `--pass`/`--fail`/`--blocked`, `--p0`..`--p3` and derive tints with `color-mix()`. New colors go in both theme blocks and, if charts use them, in both `chartTheme` objects.
 
 ## Domain invariants
 
 These are load-bearing; breaking them makes the dashboard dishonest.
 
-- **"Today" is the last date in the dataset**, not the wall clock (`maxDate(runsData)` in `App.jsx`, threaded down as the `today` prop). Never call `new Date()` for aging math — static data would age indefinitely.
-- **Artifact requirements vary by pipeline.** `run.artifacts.video` is `null` for Simulation runs meaning *not applicable*, `false` meaning *missing*. `missingArtifacts()` tests `=== false` for exactly this reason — a truthiness check would flag every sim run.
-- **The Pareto is occurrence-weighted**, counting `f.occurrences.length` rather than one per failure, and it **excludes failures with no `root_cause`** (you can't Pareto what hasn't been root-caused). `AnalyticsView` surfaces that exclusion count in the caption.
-- **Triage order is not chronological**: unresolved first, then severity `P0→P3`, then oldest-first. "Unresolved" means `triage_status !== 'Verified'`; "aging" means unresolved and open >7 days.
-- **Triage status is a 4-step ladder** — `Open → Investigating → Corrective Action → Verified` — mirrored in both `generate_data.py`'s `STATUS_POOL` and `TriageView`'s `STEPS`. Setting `Verified` stamps `resolved = today`; anything else clears it. Every status change shows a 6-second Undo toast that restores the prior `triage_status` and `resolved` — keep that reversible; it's the only destructive action in the app.
+- **"Today" is the last run date** (`maxDate(runsData)` in `App.jsx`, also `meta.today`), never the wall clock. **Tomorrow = today + 1 exists** as a planned day with an unscheduled queue (`meta.tomorrow`) — the board's default view. Board edits are stamped in the evening of today.
+- **A deferral requires a reason** from the enum in `meta.deferral_reasons` (R8); a scrub takes the same enum plus `weather`. `deferRequest()` throws otherwise; `sql/schema.sql` checks it too.
+- **Rated-only assignment.** Ratings have an effective date (`person.ratings_effective`); `ratedOn(person, airframe, date)` is the only way to ask. The two operator-pilots earn Harmattan on 2026-05-29 (arc D1).
+- **One assignment per (date, asset, window), ever.** A scrubbed sortie frees its crew but not its slot — the generator, R2 in `rules.js` and a UNIQUE constraint all enforce it.
+- **Grounded and maintenance tails leave the utilization denominator**; utilization is computed over operating days (anyone rostered). Asset status on a day comes from `asset.status_history` via `assetStatusOn()`; the flat `status`/`status_since` fields are only today's snapshot.
+- **Late intake is flagged, not absorbed** (R7): `request.late` equals the predicate `submitted_at >= (needed_by − 1 day) 15:00`, and a late request's `plan_date` is the next open day. The seed test asserts the flag matches the predicate for every request.
+- **Timeline events carry `day`**, the plan day they refer to (a deferral stamped at Tuesday's cutoff is *for* Wednesday). Group deferrals, scrubs and churn by `day`, not by the timestamp.
+- **Artifact requirements vary by pipeline.** `run.artifacts.video` is `null` for Simulation (not applicable), `false` (missing). `missingArtifacts()` tests `=== false`.
+- **Paretos are occurrence-weighted** (root causes by `occurrences.length`, deferrals by event) and the root-cause one **excludes failures with no `root_cause`**.
+- **Triage order is not chronological**: unresolved first, then severity `P0→P3`, then oldest-first. **Triage status is a 4-step ladder** `Open → Investigating → Corrective Action → Verified`; setting `Verified` stamps `resolved = today`; every status change shows a 6-second Undo toast — keep that reversible.
+- **Runs link to sorties through `request_id`** (Flight runs only, nullable); failures link to programs through their occurrences, with no new field.
 
 ## The seeded narrative arcs
 
-`generate_data.py` deliberately plants three stories, documented in its docstring. Regenerating with a different seed or altering the failure-probability logic will break the captions in `ReportsView` and `AnalyticsView` that reference them by name:
+`generate_data.py` plants six stories, documented in its docstring. Regenerating with a different seed or altering the probability logic will break captions in `ReportsView`, `AnalyticsView`, `CapacityView` and the README that reference them by name:
 
-1. **Sim-only crosswind failure** — "Precision Landing — Gusty Crosswind" fails ~85% in Simulation but passes in Flight. Root cause: Scenario Definition (m/s vs. knots unit mismatch). This is the flagship RCCA demo.
-2. **Telemetry gap cluster** — Flight runs between 2026-05-18 and 2026-06-07 drop telemetry ~42% of the time; drives the artifact-integrity table.
-3. **Software regression** — "Obstacle Avoidance — Dynamic Intruder" spikes on HIL/Flight in builds v2.15.0/.1, fixed in v2.15.2; produces the visible dip-and-recovery in the weekly pass-rate chart.
+1. **Sim-only crosswind failure** — fails ~85% in Simulation, passes in Flight; root cause Scenario Definition.
+2. **Telemetry gap cluster** — Flight runs 2026-05-18..06-07 drop telemetry ~42%.
+3. **Software regression** — v2.15.0/.1 spike intruder-avoidance failures, fixed in v2.15.2; the weekly dip.
+4. **D1, the misattributed shortage** — April Harmattan deferrals logged `no_rated_operator` (note "per thread consensus"); the constraint is two rated pilots until the CQ cross-rating flights on May 27–28 (deferred twice during the May cert push); the Harmattan crew-deferral rate drops ~80%.
+5. **D2, the bring-up surge** — 22 SBU requests for June 20–21 against 8 asset-windows; 7 fly, 15 defer, 5 are late; lead-time p90 spikes then absorbs.
+6. **D3, the grounding cascade** — LV-03/LV-05 grounded June 10–18 against arc 3's failure (`status_history.failure_id`); PN under its minimum; churn peaks June 10.
 
-The generator prints a sanity report (run counts, pass rate, per-arc occurrence counts) after writing — check it after any change to the generation logic.
+Check the sanity report after any change to the generation logic.
 
 ## README roadmap (unimplemented)
 
-Deploy to Vercel · failure → linked-run drill-through · CSV export of the integrity audit · code-split recharts (bundle is ~640 KB).
+Structured intake (free-text request → schema) · live multi-user state · code-split recharts and the seed JSON (bundle ~1.2 MB) · CSV export of the integrity audit.
