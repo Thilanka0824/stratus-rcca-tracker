@@ -159,14 +159,17 @@ export function checkAssignment(cand, db) {
     out.push({ rule: 'R3', severity: 'block', message: `${asset.asset_id} is reserved by ${holder} on ${cand.date}.` });
   }
 
-  // R2 — no tail and no person in two sorties in the same date + window
+  // R2 — no tail and no person in two sorties in the same date + window.
+  // A scrubbed sortie frees its crew but not its slot: one assignment per
+  // (date, asset, window), ever — the schema says the same.
   const crew = [cand.operator_id, cand.pilot_id].filter(Boolean);
   for (const a of db.assignments) {
-    if (a.status === 'scrubbed' || a.date !== cand.date || a.window !== cand.window) continue;
+    if (a.date !== cand.date || a.window !== cand.window) continue;
     if (cand.assignment_id && a.assignment_id === cand.assignment_id) continue;
     if (a.asset_id === cand.asset_id) {
-      out.push({ rule: 'R2', severity: 'block', message: `${asset.asset_id} is already assigned to ${a.request_id} in ${cand.window} on ${cand.date}.` });
+      out.push({ rule: 'R2', severity: 'block', message: `${asset.asset_id} is already ${a.status === 'scrubbed' ? 'used (scrubbed sortie)' : `assigned to ${a.request_id}`} in ${cand.window} on ${cand.date}.` });
     }
+    if (a.status === 'scrubbed') continue;
     for (const pid of crew) {
       if (a.operator_id === pid || a.pilot_id === pid) {
         out.push({ rule: 'R2', severity: 'block', message: `${personName(db, pid)} is already on ${a.request_id} (${a.asset_id}) in ${cand.window} on ${cand.date}.` });

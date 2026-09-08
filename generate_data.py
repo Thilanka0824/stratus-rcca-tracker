@@ -17,10 +17,12 @@ drone-robotaxi company, with three deliberately seeded narrative arcs:
 The dispatch layer (upstream of the runs) adds programs, tails, crew,
 requests and assignments over the same window, with three more arcs:
 
-  ARC D1 "The misattributed shortage" (May): PLC Harmattan deferrals are
-         logged as no_rated_operator, but the real constraint is two
-         Harmattan-rated pilots. Two CQ cross-rating flights — deferred twice
-         during the PLC push because training is P2 — fix it on May 27–28.
+  ARC D1 "The misattributed shortage" (April–May): through April the PLC
+         Harmattan deferrals are logged as no_rated_operator ("per thread
+         consensus"); the supply view corrects the attribution at the end of
+         April, but the real constraint — two Harmattan-rated pilots — holds
+         through the May cert push. Two CQ cross-rating flights, deferred
+         twice during that push because training is P2, fix it on May 27–28.
   ARC D2 "The bring-up surge" (Jun 20–21): SBU files 22 requests against 8
          weekend asset-windows; ~60% defer with reasons, a handful arrive
          after cutoff and carry late=true; lead time and churn spike, then
@@ -480,6 +482,8 @@ for a in assets:                                   # snapshot fields = status as
         t = date.fromisoformat(ev["date_to"]) if ev["date_to"] else TOMORROW
         if f <= END <= t:
             a["status_note"], a["status_since"] = ev.get("note", ""), ev["date_from"]
+        elif t < END:                              # back in service the day after the event ended
+            a["status_since"] = max(a["status_since"], iso(t + timedelta(days=1)))
 
 # ---------------------------------------------------------------- people
 # pattern: day = Mon–Fri AM/PM · night = Mon–Fri NIGHT · swing = Mon–Fri PM/NIGHT
@@ -673,9 +677,8 @@ def add_request(code, needed_by, windows, crew, title=None, submitted_at=None, l
     set_plan_date(req, plan_date)
     # a few requesters change their mind before the plan is built
     if may_withdraw and drng.random() < 0.03 and needed_by < END:
-        sd = date.fromisoformat(submitted_at[:10])
-        event(req, stamp(sd, 17, drng.randint(0, 59)), "withdrawn", "requester_withdrew", "withdrawn before planning",
-              day=needed_by)
+        event(req, plus_minutes(submitted_at, drng.randint(35, 170)), "withdrawn", "requester_withdrew",
+              "withdrawn before planning", day=needed_by)
         req["status"], req["deferral_reason"] = "withdrawn", "requester_withdrew"
         set_plan_date(req, None)
     return req
@@ -711,8 +714,11 @@ def daily_demand(D):
             win = ["NIGHT"] if drng.random() < 0.6 else ["PM", "NIGHT"]
         add_request("PN", D, win, "pilot_only")
     if D.toordinal() % 3 == 0 and D != TOMORROW and not queued_for("CQ", D):
-        who = drng.choice([p["name"] for p in persons if "Levant" in p["ratings"]])
-        add_request("CQ", D, ["AM", "PM"], "operator_pilot", title=f"Currency check — Levant ({who})")
+        subjects = [p for p in persons if "Levant" in p["ratings"]
+                    and any(w in p["availability"].get(iso(D), []) for w in ("AM", "PM"))]
+        who = drng.choice(subjects or persons)
+        r = add_request("CQ", D, ["AM", "PM"], "operator_pilot", title=f"Currency check — Levant ({who['name']})")
+        rstate[r["request_id"]]["subject"] = who["person_id"]      # the check is theirs to fly
     if any(s <= D <= e for s, e in URC_CAMPAIGNS):        # route legs are distinct items: a missed leg backs up
         for k in range(2):
             add_request("URC", D, ["AM", "PM"] if k == 0 else ["PM", "AM"], "operator_pilot")
@@ -791,7 +797,7 @@ def defer(r, D, reason, note="", at=None):
         note = note or "both Harmattan-rated pilots committed"
     event(r, at or stamp(D - timedelta(days=1), 15, 30), "deferred", reason, note, day=D)
     r["status"], r["deferral_reason"] = "deferred", reason
-    if r["request_id"] in cq_cross_ids and st["attempts"] >= 2:
+    if r["request_id"] in cq_cross_ids and st["attempts"] == 2:
         r["windows"] = ["PM"]
         event(r, stamp(D, 9, 0), "rescheduled", None,
               "parked until the PLC cert push clears; moved to the PM slot", day=D)
@@ -843,6 +849,18 @@ def crew_for(r, D, w, busy):
         return (None, None)
     pilots = free_people(D, w, af, "pilot", busy)
     ops = free_people(D, w, af, "operator", busy)
+    subject = rstate.get(r["request_id"], {}).get("subject")
+    if subject and r["crew"] == "operator_pilot":              # a currency check flies its own subject
+        me = PERSON[subject]
+        if me in ops:
+            others = [p for p in pilots if p["person_id"] != subject]
+            return (me, pick(others)) if others else "no_rated_pilot"
+        if me in pilots:
+            others = [p for p in ops if p["person_id"] != subject]
+            return (pick(others), me) if others else "no_rated_operator"
+        # the subject is busy or off this window: try another window, else the
+        # check waits — a person being elsewhere is not a shortage
+        return "subject_busy"
     if r["crew"] == "pilot_only":
         return (None, pick(pilots)) if pilots else "no_rated_pilot"
     if r["crew"] == "lone_operator":
@@ -858,10 +876,14 @@ def crew_for(r, D, w, busy):
 
 
 def busy_sets(D):
+    """Tails and people already committed on D. A scrubbed sortie frees its
+    crew but not its slot: one assignment per (date, asset, window), ever."""
     ba, bp = set(), set()
     for a in assignments:
-        if a["date"] == iso(D) and a["status"] != "scrubbed":
-            ba.add((a["asset_id"], a["window"]))
+        if a["date"] != iso(D):
+            continue
+        ba.add((a["asset_id"], a["window"]))
+        if a["status"] != "scrubbed":
             for pid in (a["operator_id"], a["pilot_id"]):
                 if pid:
                     bp.add((pid, a["window"]))
@@ -925,6 +947,9 @@ def plan_day(D, standing_only=False):
     for a in assignments:
         if a["date"] == iso(D) and a["status"] != "scrubbed":
             prog_tails[REQ[a["request_id"]]["program_id"]].add(a["asset_id"])
+    for a in assignments:                       # sorties already flown or planned
+        if a["date"] == iso(D) and a["status"] != "scrubbed":
+            prog_tails[REQ[a["request_id"]]["program_id"]].add(a["asset_id"])
     for r in queued:
         if BUILD_START.get(r["build"], START) > D:
             defer(r, D, "build_not_ready", f"{r['build']} ships {iso(BUILD_START[r['build']])}")
@@ -932,8 +957,14 @@ def plan_day(D, standing_only=False):
         note = ""
         if r["request_id"] in cq_cross_ids:
             note = f"cross-rating flight: {r['title'].split('(')[1].rstrip(')')} (trainee) under instruction"
+        elif rstate[r["request_id"]].get("subject"):
+            note = f"currency check: {PERSON[rstate[r['request_id']]['subject']]['name']}"
         out = place(r, D, known, busy_assets, busy_people, prog_tails, note)
-        if isinstance(out, str):
+        if out == "subject_busy":
+            set_plan_date(r, next_open_day(D + timedelta(days=1), r["airframe"]))
+            event(r, stamp(known, 15, 30), "rescheduled", None,
+                  f"subject on another sortie — re-queued for {r['plan_date']}", day=D)
+        elif isinstance(out, str):
             defer(r, D, out)
         else:
             asset, w, op, pi = out
@@ -963,6 +994,8 @@ def execute_day(D):
         event(r, stamp(D, 7 if a["window"] == "AM" else 12, drng.randint(0, 59)), "scrubbed", scrub,
               f"{a['asset_id']} {a['window']} scrubbed", day=D)
         if scrub == "requester_withdrew":
+            event(r, stamp(D, 8 if a["window"] == "AM" else 13, drng.randint(0, 59)), "withdrawn",
+                  "requester_withdrew", "withdrawn on the day", day=D)
             r["status"], r["deferral_reason"] = "withdrawn", "requester_withdrew"
             set_plan_date(r, None)
             continue
@@ -1047,6 +1080,10 @@ for r in runs:
 # ---------------------------------------------------------------- rule check on the seed
 def check_rules():
     seen_asset, seen_person = set(), set()
+    for a in assignments:                                                           # one per (date, asset, window)
+        key = (a["asset_id"], a["date"], a["window"])
+        assert key not in seen_asset, ("R2 asset slot used twice", a)
+        seen_asset.add(key)
     for a in assignments:
         if a["status"] == "scrubbed":
             continue
@@ -1061,9 +1098,6 @@ def check_rules():
                 key = (pid, a["date"], a["window"])
                 assert key not in seen_person, ("R2 person double-booked", a)             # R2
                 seen_person.add(key)
-        key = (a["asset_id"], a["date"], a["window"])
-        assert key not in seen_asset, ("R2 asset double-booked", a)                       # R2
-        seen_asset.add(key)
         st, rb = asset_status_on(ASSET[a["asset_id"]], D)
         assert st not in ("grounded", "maintenance"), ("R3 unassignable", a)              # R3
         assert st != "reserved" or rb == r["program_id"], ("R3 reserved", a)

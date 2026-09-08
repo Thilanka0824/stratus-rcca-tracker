@@ -92,10 +92,13 @@ describe('R2 · double booking', () => {
     const vs = checkAssignment({ assignment_id: 'AS-1', date: D, window: 'AM', request_id: 'RQ-A1', asset_id: 'HM-01', operator_id: 'P-OP', pilot_id: 'P-HP' }, fx());
     expect(rules(vs)).not.toContain('R2');
   });
-  it('ignores scrubbed sorties', () => {
+  it('a scrubbed sortie frees its crew but still owns its slot', () => {
     const db = fx();
-    db.assignments[0].status = 'scrubbed';
-    expect(rules(checkAssignment(cand({ window: 'AM', asset_id: 'HM-01' }), db))).not.toContain('R2');
+    db.assignments[0].status = 'scrubbed';                       // AS-1: HM-01 AM with P-OP / P-HP
+    const sameSlot = checkAssignment(cand({ window: 'AM', asset_id: 'HM-01', operator_id: null, pilot_id: null }), db);
+    expect(sameSlot.filter((v) => v.rule === 'R2').map((v) => v.message)).toEqual(['HM-01 is already used (scrubbed sortie) in AM on 2026-07-01.']);
+    const sameCrew = checkAssignment(cand({ window: 'AM', asset_id: 'HM-02' }), db);
+    expect(rules(sameCrew)).not.toContain('R2');
   });
 });
 
@@ -279,7 +282,8 @@ describe('seed data', () => {
   });
   it("tomorrow's rail holds two unscheduled P0 and R6 fires for the late showcase", () => {
     const rail = queuedFor(meta.tomorrow, db);
-    expect(rail.filter((r) => r.priority === 'P0')).toHaveLength(2);
+    const live = rail.filter((r) => (r.status === 'submitted' || r.status === 'deferred') && r.plan_date <= meta.tomorrow);
+    expect(live.filter((r) => r.priority === 'P0')).toHaveLength(2);
     const w = dayWarnings(meta.tomorrow, db);
     expect(w.some((v) => v.rule === 'R6')).toBe(true);
     expect(w.find((v) => v.rule === 'R5' && db.program.get(v.program_id).code === 'SBU').level).toBe('under');

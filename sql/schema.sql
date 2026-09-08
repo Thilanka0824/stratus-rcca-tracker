@@ -166,7 +166,8 @@ CREATE TABLE assignments (                       -- one per (date, asset, window
   status        TEXT NOT NULL CHECK (status IN ('planned','in_progress','done','scrubbed')),
   scrub_reason  TEXT,
   run_id        TEXT REFERENCES test_runs(run_id),
-  notes         TEXT
+  notes         TEXT,
+  UNIQUE (date, asset_id, window)                -- one per slot, scrubbed or not
 );
 
 CREATE TABLE failure_occurrences (
