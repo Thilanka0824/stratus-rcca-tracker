@@ -11,7 +11,7 @@ Flat — the app lives at the project root: `package.json`, `vite.config.js`, `i
 ```bash
 npm install
 npm run dev        # Vite dev server
-npm run build      # production build (the recharts chunk-size warning is expected)
+npm run build      # production build (one chunk-size warning is expected: the index chunk carries the seed JSON; recharts is split out)
 npm run preview    # serve the built bundle
 npm test           # vitest run — src/lib/rules.test.js only
 npm run data       # python3 generate_data.py && render docs/analytics.md — regenerates src/data/*.json and data/stratus.sqlite
@@ -30,9 +30,9 @@ A single-page React dashboard for test operations at a **fictional** drone-robot
 
 The generator has two halves on two RNG streams: the RCCA data (`random.seed(42)`) and, below the `dispatch layer` banner, a day-by-day planner (`random.Random(4242)`) that obeys the same rules the app enforces. Changing the dispatch section never perturbs runs or failures. `check_rules()` re-verifies the seed before writing; the sanity report at the end prints entity counts, the deferral mix and per-arc checks and **asserts that tomorrow's queue holds exactly two P0** — the demo depends on it.
 
-**Derivation layers.** `src/lib/helpers.js` is the RCCA side (aging, weekly pass rate, root-cause Pareto, `chartTheme(theme)`); `src/lib/dispatch.js` is the plan side (deferral Pareto, the misattribution tell, on-window fulfillment, utilization, lead time, churn, rating matrix, demand vs supply, grounding days, `daySummary`). Put cross-view computation in one of those, never in a view. `src/lib/rules.js` is the rules engine: R1–R4 in `checkAssignment()`, R5–R6 in `dayWarnings()`, R7 in `isLate()`/`defaultPlanDate()`, R8 in `deferRequest()`/`scrubAssignment()` (they throw without a reason), plus `queuedFor()` (the rail: live queue + what was deferred from that day) and the immutable transitions the board applies. SVG attributes can't resolve CSS variables, so chart colors come from `chartTheme` — chart views take `theme` as a prop and destructure it rather than hardcoding hex.
+**Derivation layers.** `src/lib/helpers.js` is the RCCA side (aging, weekly pass rate, root-cause Pareto, `chartTheme(theme)`); `src/lib/dispatch.js` is the plan side (deferral Pareto, the misattribution tell, on-window fulfillment, utilization, lead time, churn, rating matrix, demand vs supply, grounding days, `daySummary`). Put cross-view computation in one of those, never in a view. `src/lib/rules.js` is the rules engine: R1–R4 in `checkAssignment()`, R5–R6 in `dayWarnings()`, R7 in `isLate()`/`defaultPlanDate()`, R8 in `deferRequest()`/`scrubAssignment()` (they throw without a reason), intake in `validateRequest()`/`newRequest()` (the late flag and plan day are derived from the submission time, never typed), plus `queuedFor()` (the rail: live queue + what was deferred from that day) and the immutable transitions the board applies. Requests and sorties created in the session get `RQ-L…`/`AS-2026-L…` ids. SVG attributes can't resolve CSS variables, so chart colors come from `chartTheme` — chart views take `theme` as a prop and destructure it rather than hardcoding hex.
 
-Views are `src/views/{RequestsView, DispatchView, CapacityView, RunsView, TriageView, AnalyticsView, ReportsView}.jsx`, selected by tab index in `App.jsx` in two groups (Plan · Execute). `src/styles.css` is one global stylesheet with tokens at `:root` (dark) overridden under `[data-theme='light']` — status color *is* the data encoding, so reuse `--pass`/`--fail`/`--blocked`, `--p0`..`--p3` and derive tints with `color-mix()`. New colors go in both theme blocks and, if charts use them, in both `chartTheme` objects.
+Views are `src/views/{RequestsView, DispatchView, CapacityView, RunsView, TriageView, AnalyticsView, ReportsView}.jsx`, selected by tab index in `App.jsx` in two groups (Plan · Execute); the three chart views are `React.lazy` so recharts loads on first visit. Every dialog (crew picker, reason picker, intake form, confirm) goes through `src/views/Modal.jsx`: a portal with a focus trap, Escape on the topmost dialog only, and focus returned to the opener on close — don't hand-roll a `.modal-bg`, and never use `window.confirm`. `src/styles.css` is one global stylesheet with tokens at `:root` (dark) overridden under `[data-theme='light']` — status color *is* the data encoding, so reuse `--pass`/`--fail`/`--blocked`, `--p0`..`--p3` and derive tints with `color-mix()`. New colors go in both theme blocks and, if charts use them, in both `chartTheme` objects.
 
 ## Domain invariants
 
@@ -65,4 +65,4 @@ Check the sanity report after any change to the generation logic.
 
 ## README roadmap (unimplemented)
 
-Structured intake (free-text request → schema) · live multi-user state · code-split recharts and the seed JSON (bundle ~1.2 MB) · CSV export of the integrity audit.
+Structured intake from free text (the form and its validation exist) · live multi-user state · lazy-load the seed JSON (initial chunk ~780 KB, recharts already split) · CSV export of the integrity audit.

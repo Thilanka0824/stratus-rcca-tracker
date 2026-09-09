@@ -291,6 +291,69 @@ export function dayWarnings(date, db) {
   return out;
 }
 
+
+// ---------------------------------------------------------------- intake
+
+export const CREW_KINDS = ['none', 'pilot_only', 'operator_pilot', 'lone_operator'];
+export const BUILD_STAGES = ['engineering', 'release_candidate'];
+
+// What intake refuses to accept. Every message names the field.
+export function validateRequest(f, db, { tomorrow }) {
+  const out = [];
+  const program = db.program.get(f.program_id);
+  if (!program) out.push({ field: 'program_id', message: 'Pick a program.' });
+  if (!f.title || f.title.trim().length < 4) out.push({ field: 'title', message: 'Give the sortie a title (4+ characters).' });
+  if (!f.build) out.push({ field: 'build', message: 'Name the build.' });
+  if (!BUILD_STAGES.includes(f.build_stage)) out.push({ field: 'build_stage', message: 'Build stage must be engineering or release candidate.' });
+  if (!CREW_KINDS.includes(f.crew)) out.push({ field: 'crew', message: 'Pick a crew requirement.' });
+  if (!PRIORITY_RANK.hasOwnProperty(f.priority)) out.push({ field: 'priority', message: 'Pick a priority.' });
+  if (program && !program.airframes.includes(f.airframe)) {
+    out.push({ field: 'airframe', message: `${program.code} flies ${program.airframes.join(' or ')}, not ${f.airframe || 'nothing'}.` });
+  }
+  const operating = new Set(db.assets.filter((a) => a.airframe === f.airframe).flatMap((a) => a.windows));
+  if (!f.windows?.length) out.push({ field: 'windows', message: 'Ask for at least one window.' });
+  for (const w of f.windows || []) {
+    if (!operating.has(w)) out.push({ field: 'windows', message: `${f.airframe} does not fly in the ${w} window.` });
+  }
+  if (!f.needed_by || f.needed_by < tomorrow) out.push({ field: 'needed_by', message: `Needed-by must be ${tomorrow} or later — today's plan is set.` });
+  if (!f.requester || !f.requester.trim()) out.push({ field: 'requester', message: 'Who is asking?' });
+  return out;
+}
+
+// Windows an airframe operates, in board order — and a picked set pruned to
+// them, so a program switch never leaves a checked box that cannot be
+// un-checked. Falls back to the airframe's first window when nothing survives.
+export function operatingWindows(db, airframe) {
+  const set = new Set(db.assets.filter((a) => a.airframe === airframe).flatMap((a) => a.windows));
+  return WINDOWS.filter((w) => set.has(w));
+}
+
+export function pruneWindows(windows, db, airframe) {
+  const ok = operatingWindows(db, airframe);
+  const kept = windows.filter((w) => ok.includes(w));
+  return kept.length ? kept : ok.slice(0, 1);
+}
+
+// Build a request the way intake would. The late flag and the plan day are
+// derived from the submission time (R7), never typed in.
+export function newRequest(f, { id, submittedAt, cutoff = '15:00', isOpen = () => true }) {
+  const late = isLate(submittedAt, f.needed_by, cutoff);
+  const plan_date = defaultPlanDate({ submitted_at: submittedAt, needed_by: f.needed_by }, { cutoff, isOpen });
+  const timeline = [{ at: submittedAt, day: null, event: 'submitted', reason: null,
+    note: late ? `submitted after the ${cutoff} cutoff` : '' }];
+  if (late) {
+    timeline.push({ at: submittedAt, day: f.needed_by, event: 'deferred', reason: 'late_intake',
+      note: `flagged at intake: after the ${cutoff} cutoff — moved to ${plan_date}` });
+  }
+  return {
+    request_id: id, program_id: f.program_id, requester: f.requester.trim(), title: f.title.trim(),
+    build: f.build, build_stage: f.build_stage, crew: f.crew, windows: [...f.windows], airframe: f.airframe,
+    priority: f.priority, supporting_team: f.supporting_team || null,
+    submitted_at: submittedAt, needed_by: f.needed_by, plan_date,
+    status: late ? 'deferred' : 'submitted', late, deferral_reason: late ? 'late_intake' : null, timeline,
+  };
+}
+
 // ---------------------------------------------------------------- transitions (immutable)
 
 let localSeq = 0;

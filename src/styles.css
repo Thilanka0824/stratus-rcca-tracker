@@ -136,15 +136,21 @@ html, body {
 .stat .v.bad { color: var(--fail); }
 
 /* ---------- tabs ---------- */
+/* A scroll container clips at its padding box, so the padding leaves 4px of
+   room on every side for focus rings, and the hairline is painted 4px up
+   from the bottom edge — exactly where the active tab's 2px underline sits,
+   so the underline still covers it. */
 .tabs {
-  display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 18px;
+  display: flex; gap: 2px; margin-bottom: 18px; padding: 4px;
+  background: linear-gradient(var(--line), var(--line)) left bottom 4px / 100% 1px no-repeat;
   overflow-x: auto; scrollbar-width: none;   /* never clip a tab on a phone */
 }
+.tabs::-webkit-scrollbar { display: none; }
 .tab {
   appearance: none; background: none; border: none; cursor: pointer;
   font-family: var(--display); font-size: 14px; font-weight: 500;
   color: var(--ink-dim); padding: 10px 14px; min-height: 44px; flex: none;
-  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
 }
 .tab:hover { color: var(--ink); }
 .tab.on { color: var(--ink); border-bottom-color: var(--accent); }
@@ -298,6 +304,8 @@ td.scenario { white-space: normal; min-width: 220px; }
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); z-index: 20;
 }
 .toast .btn { min-height: 36px; }
+.panel:focus { outline: none; }               /* programmatic focus after a deep-link; keyboard focus keeps :focus-visible */
+.panel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 
 /* ---------- plan views: requests · dispatch · capacity ---------- */
@@ -438,6 +446,9 @@ table.grid td { vertical-align: top; white-space: normal; padding: 6px 8px; heig
 .modal-bg { position: fixed; inset: 0; background: rgba(0, 0, 0, .55); display: flex; align-items: center; justify-content: center; z-index: 30; padding: 16px; }
 .modal { background: var(--bg1); border: 1px solid var(--accent); border-radius: var(--r); padding: 18px 20px; width: min(520px, 100%); box-shadow: 0 20px 50px rgba(0, 0, 0, .5); }
 .modal h2 { font-family: var(--display); font-size: 17px; margin: 2px 0 8px; }
+.modal.confirm { width: min(420px, 100%); border-color: var(--fail); }
+.modal.confirm .stepper { margin: 4px 0 0; justify-content: flex-end; }
+.btn.danger { background: var(--fail); color: var(--bg0); }
 .modal .caption { font-size: 12.5px; color: var(--ink-dim); margin: 0 0 12px; }
 .seat { display: block; margin-bottom: 10px; }
 .seat .k { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
@@ -473,6 +484,21 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
 .grounding { margin-top: 6px; }
 .grounding .linkish { margin-left: 8px; }
 
+
+/* intake form */
+.banner .btn { margin-left: auto; font-size: 12px; padding: 6px 12px; min-height: 32px; }
+.modal.wide { width: min(760px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 14px; }
+.form-grid .seat { margin-bottom: 4px; }
+.seat select:disabled { opacity: .6; }
+.checks { display: flex; gap: 6px 10px; flex-wrap: wrap; align-items: center; font-family: var(--mono); font-size: 12px; }
+.checks label { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; min-height: 36px; padding: 0 8px 0 4px; border-radius: 4px; }
+.checks label:hover { background: var(--bg2); }
+.checks input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+.checks[aria-invalid='true'] label { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fail) 50%, transparent); }
+.seat [aria-invalid='true'] { border-color: var(--fail); }
+.checks input:disabled + span { color: var(--ink-faint); text-decoration: line-through; }
+
 /* ---------- footer ---------- */
 .foot {
   margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line);
@@ -496,7 +522,7 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
 
 /* Touch: every control clears 44px (Fitts / WCAG 2.5.8). */
 @media (pointer: coarse) {
-  .step, .theme-toggle, .btn, .filters select, .filters input, .cell-btn, .datepick input, .seat select { min-height: 44px; }
+  .step, .theme-toggle, .btn, .toast .btn, .banner .btn, .filters select, .filters input, .cell-btn, .datepick input, .seat select, .seat input, .checks label { min-height: 44px; }
   .fl-card { padding: 12px 14px; }
 }
 

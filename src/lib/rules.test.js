@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   makeDb, checkAssignment, hasBlock, dayWarnings, queuedFor, isLate, defaultPlanDate,
   lateWarning, validateReason, deferRequest, scrubAssignment, ratedOn, assetStatusOn,
-  DEFERRAL_REASONS, SCRUB_REASONS,
+  validateRequest, newRequest, pruneWindows, operatingWindows, DEFERRAL_REASONS, SCRUB_REASONS,
 } from './rules';
 import programs from '../data/programs.json';
 import assets from '../data/assets.json';
@@ -259,6 +259,48 @@ describe('R8 · deferral needs a reason', () => {
     const a = { assignment_id: 'AS-1', status: 'planned' };
     expect(() => scrubAssignment(a, {})).toThrow(/R8/);
     expect(scrubAssignment(a, { reason: 'weather' }).status).toBe('scrubbed');
+  });
+});
+
+
+// ---------------------------------------------------------------- intake
+describe('intake · validateRequest and newRequest', () => {
+  const fields = {
+    program_id: 'PRG-C', title: 'Bring-up — hover envelope check', build: 'v2.16.1', build_stage: 'engineering',
+    crew: 'operator_pilot', windows: ['PM'], airframe: 'Sirocco', priority: 'P0', supporting_team: 'Hardware',
+    requester: 'M. Sato', needed_by: '2026-07-02',
+  };
+  const opts = { tomorrow: '2026-07-01' };
+  it('accepts a complete request', () => {
+    expect(validateRequest(fields, fx(), opts)).toEqual([]);
+  });
+  it('refuses a window the airframe does not fly, a foreign airframe, and a date already planned', () => {
+    const db = fx();
+    const night = validateRequest({ ...fields, windows: ['NIGHT'] }, db, opts);           // Sirocco flies AM/PM only
+    expect(night.map((e) => e.message)).toEqual(['Sirocco does not fly in the NIGHT window.']);
+    const bad = validateRequest({ ...fields, airframe: 'Levant', needed_by: '2026-06-30' }, db, opts);
+    expect(bad.map((e) => e.field).sort()).toEqual(['airframe', 'needed_by']);
+    expect(bad.find((e) => e.field === 'airframe').message).toMatch(/SBU flies Sirocco, not Levant/);
+  });
+  it('derives the R7 flag and plan day from the submission time', () => {
+    const late = newRequest({ ...fields, needed_by: '2026-07-01' }, { id: 'RQ-L001', submittedAt: '2026-06-30T18:05' });
+    expect(late).toMatchObject({ late: true, status: 'deferred', deferral_reason: 'late_intake', plan_date: '2026-07-02' });
+    expect(late.timeline.map((e) => e.event)).toEqual(['submitted', 'deferred']);
+    expect(late.timeline[1]).toMatchObject({ reason: 'late_intake', day: '2026-07-01' });
+    const onTime = newRequest(fields, { id: 'RQ-L002', submittedAt: '2026-06-30T18:05' });
+    expect(onTime).toMatchObject({ late: false, status: 'submitted', plan_date: '2026-07-02', deferral_reason: null });
+    expect(onTime.timeline).toHaveLength(1);
+  });
+  it('prunes picked windows to what the new airframe flies, never to nothing', () => {
+    const db = fx();
+    expect(operatingWindows(db, 'Sirocco')).toEqual(['AM', 'PM']);
+    expect(pruneWindows(['PM', 'NIGHT'], db, 'Sirocco')).toEqual(['PM']);
+    expect(pruneWindows(['NIGHT'], db, 'Harmattan')).toEqual(['AM']);
+    expect(pruneWindows(['NIGHT', 'AM'], db, 'Levant')).toEqual(['NIGHT', 'AM']);
+  });
+  it('skips closed days when defaulting a late request', () => {
+    const r = newRequest({ ...fields, needed_by: '2026-07-01' }, { id: 'RQ-L003', submittedAt: '2026-06-30T18:05', isOpen: (d) => d !== '2026-07-02' });
+    expect(r.plan_date).toBe('2026-07-03');
   });
 });
 

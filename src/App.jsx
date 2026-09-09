@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Component, lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import runsData from './data/test_runs.json';
 import failuresData from './data/failures.json';
 import programsData from './data/programs.json';
@@ -9,14 +9,39 @@ import assignmentsData from './data/assignments.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
 import { daySummary } from './lib/dispatch';
-import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest } from './lib/rules';
+import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, validateRequest, newRequest, isOperatingDay } from './lib/rules';
 import RequestsView from './views/RequestsView';
 import DispatchView from './views/DispatchView';
-import CapacityView from './views/CapacityView';
 import RunsView from './views/RunsView';
 import TriageView from './views/TriageView';
-import AnalyticsView from './views/AnalyticsView';
-import ReportsView from './views/ReportsView';
+
+// The chart views carry recharts (~400 KB minified); they load on first
+// visit so the board and the queue paint without it. A failed chunk (offline,
+// or a redeploy changed the hashed filename under an open tab) must not blank
+// the app and lose the session's edits: the boundary below offers a retry
+// that re-issues the import, and only that.
+function lazyViews() {
+  return {
+    CapacityView: lazy(() => import('./views/CapacityView')),
+    AnalyticsView: lazy(() => import('./views/AnalyticsView')),
+    ReportsView: lazy(() => import('./views/ReportsView')),
+  };
+}
+
+class ChunkBoundary extends Component {
+  state = { error: null };
+  static getDerivedStateFromError(error) { return { error }; }
+  render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <div className="panel" role="alert">
+        <h3>This view didn't load</h3>
+        <p className="caption">The network dropped or a new version was deployed while this tab was open. Your board and triage edits are still here.</p>
+        <button className="btn" onClick={() => { this.setState({ error: null }); this.props.onRetry(); }}>Try again</button>
+      </div>
+    );
+  }
+}
 
 // Two groups by index, no router: Plan is the upstream half (requests in,
 // tails and crew out), Execute is the downstream half (runs → RCCA).
@@ -48,8 +73,11 @@ export default function App() {
   const [requestFocus, setRequestFocus] = useState(null);
   const [triageFocus, setTriageFocus] = useState(null);
 
+  // A focus request is a fresh object every time, so clicking the same stat
+  // card twice scrolls twice (React would otherwise bail out on equal state).
+  const focusSeq = useRef(0);
   function go(i, focus = null) {
-    setReportsFocus(focus);
+    setReportsFocus(focus ? { panel: focus, n: ++focusSeq.current } : null);
     setTab(i);
   }
   function openBoard(date) {
@@ -120,6 +148,21 @@ export default function App() {
     const at = stampNow();
     setRequests((prev) => prev.map((r) => (r.request_id === requestId ? deferRequest(r, { reason, day: boardDate, at, note }) : r)));
   }
+  // Intake: the form's fields become a request only through the rules — the
+  // late flag and plan day are derived from the submission time (R7).
+  const intakeSeq = useRef(0);
+  const builds = useMemo(() => [...new Set(runsData.map((r) => r.build))].sort(), []);
+  function submitRequest(fields) {
+    const errors = validateRequest(fields, db, { tomorrow: meta.tomorrow });
+    if (errors.length) return { errors };
+    intakeSeq.current += 1;
+    const request = newRequest(fields, {
+      id: `RQ-L${String(intakeSeq.current).padStart(3, '0')}`, submittedAt: stampNow(), cutoff: meta.cutoff_local,
+      isOpen: (d) => d > meta.tomorrow || isOperatingDay(d, db),
+    });
+    setRequests((prev) => [...prev, request]);
+    return { request };
+  }
   function scrub(assignmentId, reason) {
     const a = assignments.find((x) => x.assignment_id === assignmentId);
     if (!a) return;
@@ -141,6 +184,10 @@ export default function App() {
 
   // Signature: last 60 runs as a mission-control heartbeat strip.
   const heartbeat = useMemo(() => runsData.slice(-60), []);
+
+  // A retry swaps in fresh lazy wrappers; React.lazy remembers a rejection.
+  const [chunkAttempt, setChunkAttempt] = useState(0);
+  const { CapacityView, AnalyticsView, ReportsView } = useMemo(lazyViews, [chunkAttempt]);
 
   const themeMode = THEMES.find((m) => m.pref === pref);
   const themeNext = THEMES[(THEMES.indexOf(themeMode) + 1) % THEMES.length];
@@ -229,7 +276,8 @@ export default function App() {
       </nav>
 
       {tab === idx('Requests') && (
-        <RequestsView db={db} meta={meta} today={today} onOpenBoard={openBoard} focusId={requestFocus} />
+        <RequestsView db={db} meta={meta} today={today} onOpenBoard={openBoard} focusId={requestFocus}
+          onSubmit={submitRequest} builds={builds} nowAt={`${today}T18:00`} />
       )}
       {tab === idx('Dispatch') && (
         <DispatchView
@@ -237,7 +285,9 @@ export default function App() {
           onAssign={assign} onDefer={defer} onScrub={scrub} onOpenRequest={openRequest} onOpenFailure={openFailure}
         />
       )}
-      {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} />}
+      <ChunkBoundary key={chunkAttempt} onRetry={() => setChunkAttempt((n) => n + 1)}>
+      <Suspense fallback={<div className="empty-hint">Loading charts…</div>}>
+        {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} />}
       {tab === idx('Runs') && <RunsView runs={runsData} db={db} />}
       {tab === idx('Triage') && (
         <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} db={db} focusId={triageFocus} onOpenBoard={openBoard} />
@@ -246,6 +296,8 @@ export default function App() {
       {tab === idx('Reports') && (
         <ReportsView runs={runsData} failures={failures} today={today} theme={theme} focus={reportsFocus} db={db} />
       )}
+      </Suspense>
+      </ChunkBoundary>
 
       <footer className="foot">
         All data is synthetic — generated by generate_data.py to demonstrate test-operations workflow design.

@@ -35,12 +35,17 @@ export default function ReportsView({ runs, failures, today, theme, focus, db })
   const [reportDate, setReportDate] = useState(dates[0]);
   const [copied, setCopied] = useState(false);
 
-  // Arriving from a stat card: land on the panel that number came from.
+  // Arriving from a stat card: land on the panel that number came from, and
+  // put keyboard focus there too, so the next Tab continues from the panel
+  // instead of snapping back to the header. Reduced motion means no animation.
   const trendRef = useRef(null);
   const gapsRef = useRef(null);
   useEffect(() => {
-    const el = focus === 'gaps' ? gapsRef.current : focus === 'trend' ? trendRef.current : null;
-    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const el = focus?.panel === 'gaps' ? gapsRef.current : focus?.panel === 'trend' ? trendRef.current : null;
+    if (!el) return;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    el.focus({ preventScroll: true });
   }, [focus]);
 
   const report = useMemo(
@@ -62,7 +67,7 @@ export default function ReportsView({ runs, failures, today, theme, focus, db })
 
   return (
     <section>
-      <div className="panel" ref={trendRef}>
+      <div className="panel" ref={trendRef} tabIndex={-1}>
         <h3>Weekly pass rate by pipeline</h3>
         <p className="caption">
           The v2.15.0 regression is visible as the early-June dip — and the recovery after the
@@ -89,7 +94,7 @@ export default function ReportsView({ runs, failures, today, theme, focus, db })
         </ResponsiveContainer>
       </div>
 
-      <div className="panel" ref={gapsRef}>
+      <div className="panel" ref={gapsRef} tabIndex={-1}>
         <h3>Artifact integrity — {gaps.length} runs with missing artifacts</h3>
         <p className="caption">
           A test you can't audit is a test you can't trust. The May–June cluster of missing
