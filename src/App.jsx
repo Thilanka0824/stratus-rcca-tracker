@@ -11,12 +11,17 @@ import coverageData from './data/coverage.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
 import { daySummary } from './lib/dispatch';
-import { makeDb, checkAssignment, hasBlock, newAssignment, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, withdrawRequest, validateRequest, newRequest, isOperatingDay } from './lib/rules';
+import {
+  makeDb, checkAssignment, hasBlock, newAssignment, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, withdrawRequest,
+  validateRequest, newRequest, isOperatingDay, checkCover, coverWindow, uncoverWindow, acknowledge,
+  grantRating, revokeRating, grantQualification, setProgramPriority, setProgramTargets, setDeskSettings,
+} from './lib/rules';
 import { can, ROLE_LABELS } from './lib/auth';
 import RequestsView from './views/RequestsView';
 import DispatchView from './views/DispatchView';
 import RunsView from './views/RunsView';
 import TriageView from './views/TriageView';
+import MyDayView from './views/MyDayView';
 
 // The chart views carry recharts (~400 KB minified); they load on first
 // visit so the board and the queue paint without it. A failed chunk (offline,
@@ -53,6 +58,7 @@ const TABS = [
   { label: 'Requests', group: 'Plan' },
   { label: 'Dispatch', group: 'Plan' },
   { label: 'Capacity', group: 'Plan' },
+  { label: 'My day', group: 'Plan' },
   { label: 'Runs', group: 'Execute' },
   { label: 'Triage', group: 'Execute' },
   { label: 'Analytics', group: 'Execute' },
@@ -127,13 +133,18 @@ export default function App() {
   const [failures, setFailures] = useState(failuresData);
   const [requests, setRequests] = useState(requestsData);
   const [assignments, setAssignments] = useState(assignmentsData);
-  const [coverage, setCoverage] = useState(coverageData);
+  const [coverage, setCoverage] = useState(coverageData);            // the rider desk roster
+  const [persons, setPersons] = useState(personsData);               // ratings and qualifications the trainer edits
+  const [programs, setPrograms] = useState(programsData);            // priority and targets the authority edits
+  const [desk, setDesk] = useState(meta.rider_desk);                 // ratio and minimum the PM edits
+  // Actions that live outside a request's timeline, with their actor.
+  const [audit, setAudit] = useState([]);
   // The persona: state, not identity. Every mutation below carries it as
   // the actor and is refused by the rules when the role does not permit it.
   const [currentUser, setCurrentUser] = useState(() => usersData.find((u) => u.role === 'coordinator'));
   const db = useMemo(
-    () => makeDb({ programs: programsData, assets: assetsData, persons: personsData, requests, assignments, users: usersData, coverage, desk: meta.rider_desk }),
-    [requests, assignments, coverage],
+    () => makeDb({ programs, assets: assetsData, persons, requests, assignments, users: usersData, coverage, desk }),
+    [programs, persons, requests, assignments, coverage, desk],
   );
 
   const today = useMemo(() => maxDate(runsData), []);
@@ -143,9 +154,16 @@ export default function App() {
   // enforcement is in the rules, the disabled state is a courtesy.
   const allowed = (action, target = null) => can(currentUser, action, target);
   const viewOk = allowed('view.analytics');
+  const isCrew = currentUser.role === 'crew';
   useEffect(() => {
-    if (!viewOk.ok && ANALYTICS_TABS.includes(TABS[tab].label)) setTab(idx('Dispatch'));
-  }, [currentUser, tab, viewOk.ok]);
+    const label = TABS[tab].label;
+    if (!viewOk.ok && ANALYTICS_TABS.includes(label)) setTab(isCrew ? idx('My day') : idx('Dispatch'));
+    else if (!isCrew && label === 'My day') setTab(idx('Dispatch'));
+  }, [currentUser, tab, viewOk.ok, isCrew]);
+  function signIn(user) {
+    setCurrentUser(user);
+    if (user.role === 'crew') setTab(idx('My day'));
+  }
 
   // Board edits go through the rules: a block is returned to the caller and
   // nothing is saved; a deferral or scrub without a reason cannot be built.
@@ -205,6 +223,73 @@ export default function App() {
     setRequests((prev) => [...prev, request]);
     return { request };
   }
+  function record(action, target, detail = '') {
+    setAudit((prev) => [...prev, { at: stampNow(), by: currentUser.user_id, action, target, detail }]);
+  }
+  // The rider desk (desk.cover): a block from checkCover is shown, an R9 refusal too.
+  function cover(cand) {
+    const vs = checkCover(cand, db);
+    if (hasBlock(vs)) return vs;
+    let next;
+    try { next = coverWindow(currentUser, coverage, cand, { at: stampNow() }); } catch (e) { return refused(e); }
+    setCoverage(next);
+    record('desk.cover', `${cand.date} ${cand.window}`, db.person.get(cand.person_id)?.name ?? cand.person_id);
+    return vs;
+  }
+  function uncover(cand) {
+    let next;
+    try { next = uncoverWindow(currentUser, coverage, cand); } catch (e) { return e.message; }
+    setCoverage(next);
+    record('desk.uncover', `${cand.date} ${cand.window}`, db.person.get(cand.person_id)?.name ?? cand.person_id);
+    return null;
+  }
+  // Crew acknowledge their own seat: a sortie or a coverage row.
+  function ack(target) {
+    let next;
+    try { next = acknowledge(currentUser, target); } catch (e) { return e.message; }
+    if (target.assignment_id) setAssignments((prev) => prev.map((a) => (a.assignment_id === target.assignment_id ? next : a)));
+    else setCoverage((prev) => prev.map((c) => (c.date === target.date && c.window === target.window && c.person_id === target.person_id ? next : c)));
+    record('sortie.ack', target.assignment_id || `${target.date} ${target.window}`);
+    return null;
+  }
+  // The trainer: ratings by airframe, or the desk qualification ('rider_ops'), effective-dated.
+  function grant(personId, kind, effective) {
+    const p = db.person.get(personId);
+    let next;
+    try {
+      next = kind === 'rider_ops' ? grantQualification(currentUser, p, { effective }) : grantRating(currentUser, p, kind, { effective });
+    } catch (e) { return e.message; }
+    setPersons((prev) => prev.map((x) => (x.person_id === personId ? next : x)));
+    record(kind === 'rider_ops' ? 'qualification.grant' : 'rating.grant', p.name, `${kind === 'rider_ops' ? 'rider desk' : kind} from ${effective}`);
+    return null;
+  }
+  function revoke(personId, airframe) {
+    const p = db.person.get(personId);
+    let next;
+    try { next = revokeRating(currentUser, p, airframe); } catch (e) { return e.message; }
+    setPersons((prev) => prev.map((x) => (x.person_id === personId ? next : x)));
+    record('rating.revoke', p.name, airframe);
+    return null;
+  }
+  // Authority: a program's default priority or its tail band; the PM, the desk's settings.
+  function editProgram(programId, patch) {
+    const p = db.program.get(programId);
+    let next;
+    try {
+      next = 'priority_default' in patch ? setProgramPriority(currentUser, p, patch.priority_default) : setProgramTargets(currentUser, p, patch);
+    } catch (e) { return e.message; }
+    setPrograms((prev) => prev.map((x) => (x.program_id === programId ? next : x)));
+    record('priority_default' in patch ? 'program.priority' : 'program.targets', p.code,
+      'priority_default' in patch ? patch.priority_default : `${patch.asset_min}–${patch.asset_max} tails`);
+    return null;
+  }
+  function editDesk(patch) {
+    let next;
+    try { next = setDeskSettings(currentUser, desk, patch); } catch (e) { return e.message; }
+    setDesk(next);
+    record('desk.settings', 'rider desk', `ratio ${next.ratio} · min ${next.min_per_window}`);
+    return null;
+  }
   function scrub(assignmentId, reason) {
     const a = assignments.find((x) => x.assignment_id === assignmentId);
     const r = a && requests.find((x) => x.request_id === a.request_id);
@@ -258,7 +343,7 @@ export default function App() {
         <label className="whoami">
           <span className="k">Signed in as</span>
           <span className="whoami-row">
-            <select aria-label="Signed in as" value={currentUser.user_id} onChange={(e) => setCurrentUser(usersData.find((u) => u.user_id === e.target.value))}>
+            <select aria-label="Signed in as" value={currentUser.user_id} onChange={(e) => signIn(usersData.find((u) => u.user_id === e.target.value))}>
               {meta.app_roles.map((role) => (
                 <optgroup key={role} label={ROLE_LABELS[role]}>
                   {usersData.filter((u) => u.role === role).map((u) => (
@@ -327,8 +412,8 @@ export default function App() {
             <span className="tab-group" aria-hidden="true">{g}</span>
             {TABS.map((t, i) => t.group === g && (
               <button key={t.label} className={`tab ${tab === i ? 'on' : ''}`} aria-current={tab === i ? 'page' : undefined} onClick={() => go(i)}
-                disabled={ANALYTICS_TABS.includes(t.label) && !viewOk.ok}
-                title={ANALYTICS_TABS.includes(t.label) && !viewOk.ok ? viewOk.message : undefined}>
+                disabled={(ANALYTICS_TABS.includes(t.label) && !viewOk.ok) || (t.label === 'My day' && !isCrew)}
+                title={ANALYTICS_TABS.includes(t.label) && !viewOk.ok ? viewOk.message : t.label === 'My day' && !isCrew ? allowed('sortie.ack').message : undefined}>
                 {t.label}
               </button>
             ))}
@@ -353,12 +438,13 @@ export default function App() {
         <DispatchView
           db={db} meta={meta} today={today} date={boardDate} setDate={setBoardDate}
           onAssign={assign} onDefer={defer} onScrub={scrub} onOpenRequest={openRequest} onOpenFailure={openFailure}
-          me={currentUser} allowed={allowed}
+          me={currentUser} allowed={allowed} onCover={cover} onUncover={uncover} onEditProgram={editProgram} onEditDesk={editDesk}
         />
       )}
+      {tab === idx('My day') && <MyDayView db={db} meta={meta} me={currentUser} allowed={allowed} onAck={ack} />}
       <ChunkBoundary key={chunkAttempt} onRetry={() => setChunkAttempt((n) => n + 1)}>
       <Suspense fallback={<div className="empty-hint">Loading charts…</div>}>
-        {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} />}
+        {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} me={currentUser} allowed={allowed} onGrant={grant} onRevoke={revoke} audit={audit} />}
       {tab === idx('Runs') && <RunsView runs={runsData} db={db} />}
       {tab === idx('Triage') && (
         <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} db={db} focusId={triageFocus} onOpenBoard={openBoard}

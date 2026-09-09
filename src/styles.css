@@ -559,3 +559,26 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
   .fl-card.aging { animation: none; border-left-color: var(--fail); }
   .stat:active { transform: none; }
 }
+
+/* ---------- the rider desk · my day · the trainer's matrix ---------- */
+.prog.desk { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+table.desk-grid td { height: auto; vertical-align: middle; }
+table.desk-grid th.col-act, table.desk-grid td.col-act { width: 96px; text-align: right; }
+.desk-people { display: flex; flex-wrap: wrap; gap: 6px; }
+.desk-people .runchip { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); }
+.desk-people .release { color: var(--fail); text-decoration: none; font-size: 12px; }
+.pill.desk-green { color: var(--pass); border-color: color-mix(in srgb, var(--pass) 40%, transparent); background: color-mix(in srgb, var(--pass) 8%, transparent); }
+.pill.desk-amber { color: var(--blocked); border-color: color-mix(in srgb, var(--blocked) 40%, transparent); background: color-mix(in srgb, var(--blocked) 8%, transparent); }
+.pill.desk-red { color: var(--fail); border-color: color-mix(in srgb, var(--fail) 40%, transparent); background: color-mix(in srgb, var(--fail) 8%, transparent); }
+.pill.desk-quiet { color: var(--ink-faint); border-color: var(--line); }
+.pill.desk-green, .pill.desk-amber, .pill.desk-red, .pill.desk-quiet { text-transform: none; letter-spacing: 0; font-size: 11px; }
+.chip.desk-red { border-left-color: var(--fail); }
+.chip.desk-amber { border-left-color: var(--blocked); }
+.chip.desk-green { border-left-color: var(--pass); }
+.flag.riders { color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.btn.small { font-size: 12px; padding: 5px 10px; min-height: 32px; }
+.btn.ghost.on { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.seat input[type='number'] { width: 100%; }
+.myday .chip { margin-bottom: 8px; }
+.myday .chip-actions .btn { margin-top: 4px; }
+.prog-hd .meter-k + .meter-k { margin-left: 0; }
