@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { fmtDate } from '../lib/helpers';
 import {
   WINDOWS, DEFERRAL_REASONS, SCRUB_REASONS, REASON_LABELS, CREW_LABELS,
@@ -11,11 +11,15 @@ import { fmtDate as fd } from '../lib/helpers';
 
 // The board: one day, every program's plan against its target, and the
 // queue of what is still waiting. Click a rail request, then a free cell.
-export default function DispatchView({ db, meta, today, date, setDate, onAssign, onDefer, onScrub, onOpenRequest, onOpenFailure }) {
+// `allowed(action, target)` is the matrix's answer for the signed-in persona:
+// a refused control is disabled with the R9 message as its tooltip, never
+// hidden — enforcement is in rules.js, the disabled state is a courtesy.
+export default function DispatchView({ db, meta, today, date, setDate, onAssign, onDefer, onScrub, onOpenRequest, onOpenFailure, me = null, allowed = () => ({ ok: true }) }) {
   const editable = date > today;                       // the past is history; tomorrow is the plan
   const [selReq, setSelReq] = useState(null);          // rail request being placed
   const [picker, setPicker] = useState(null);          // { asset, window } → crew picker
   const [reasonFor, setReasonFor] = useState(null);    // { kind: 'defer'|'scrub', id, label }
+  useEffect(() => { setSelReq(null); setPicker(null); }, [me?.user_id]);   // a new persona starts with nothing in hand
 
   const warnings = useMemo(() => dayWarnings(date, db), [date, db]);
   const rail = useMemo(() => queuedFor(date, db), [date, db]);
@@ -70,7 +74,7 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
           {db.programs.map((p) => (
             <ProgramGroup
               key={p.program_id} p={p} db={db} date={date} sorties={sorties} warnings={warnings}
-              selected={selected} editable={editable}
+              selected={selected} editable={editable} allowed={allowed}
               onCell={(asset, window) => setPicker({ asset, window })}
               onScrub={(a) => setReasonFor({ kind: 'scrub', id: a.assignment_id, label: `Scrub ${a.assignment_id} · ${a.asset_id} ${a.window}` })}
               onOpenRequest={onOpenRequest} onOpenFailure={onOpenFailure}
@@ -91,6 +95,8 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
             const deferredHere = r.timeline.filter((e) => e.event === 'deferred' && e.day === date);
             const reason = deferredHere.at(-1)?.reason;
             const isSel = selReq === r.request_id;
+            const aOk = allowed('plan.assign', r);
+            const dOk = allowed('plan.defer', r);
             return (
               <div key={r.request_id} className={`rail-card ${isSel ? 'sel' : ''} ${queued ? '' : 'past'}`}>
                 <div className="fl-top">
@@ -110,10 +116,12 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
                 {reason && queued && <div className="rail-reason">deferred once already · {REASON_LABELS[reason]}</div>}
                 {(queued || later) && editable && (
                   <div className="rail-actions">
-                    <button className={`btn ${isSel ? '' : 'ghost'}`} onClick={() => { setSelReq(isSel ? null : r.request_id); setPicker(null); }}>
+                    <button className={`btn ${isSel ? '' : 'ghost'}`} disabled={!aOk.ok} title={aOk.ok ? undefined : aOk.message}
+                      onClick={() => { setSelReq(isSel ? null : r.request_id); setPicker(null); }}>
                       {isSel ? 'Pick a cell ↑' : later ? 'Assign here (pull forward)' : 'Assign'}
                     </button>
-                    <button className="btn ghost" onClick={() => setReasonFor({ kind: 'defer', id: r.request_id, label: `Defer ${r.request_id}` })}>Defer…</button>
+                    <button className="btn ghost" disabled={!dOk.ok} title={dOk.ok ? undefined : dOk.message}
+                      onClick={() => setReasonFor({ kind: 'defer', id: r.request_id, label: `Defer ${r.request_id}` })}>Defer…</button>
                   </div>
                 )}
                 {onOpenRequest && <button className="linkish small" onClick={() => onOpenRequest(r.request_id)}>open request</button>}
@@ -159,7 +167,7 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
 
 // One program: its target meter, then a row per tail. Tails without a sortie
 // for this program stay collapsed unless one of its requests is being placed.
-function ProgramGroup({ p, db, date, sorties, warnings, selected, editable, onCell, onScrub, onOpenRequest, onOpenFailure }) {
+function ProgramGroup({ p, db, date, sorties, warnings, selected, editable, allowed, onCell, onScrub, onOpenRequest, onOpenFailure }) {
   const tails = programTails(date, p.program_id, db);
   const r5 = warnings.find((w) => w.rule === 'R5' && w.program_id === p.program_id);
   const placing = selected && selected.program_id === p.program_id;
@@ -212,7 +220,7 @@ function ProgramGroup({ p, db, date, sorties, warnings, selected, editable, onCe
                       const mine = req?.program_id === p.program_id;
                       return (
                         <td key={w} className={`cell ${mine ? '' : 'held'}`}>
-                          <Chip a={a} req={req} db={db} mine={mine} editable={editable} onScrub={onScrub} onOpenRequest={onOpenRequest} />
+                          <Chip a={a} req={req} db={db} mine={mine} editable={editable} allowed={allowed} onScrub={onScrub} onOpenRequest={onOpenRequest} />
                         </td>
                       );
                     }
@@ -242,7 +250,8 @@ function ProgramGroup({ p, db, date, sorties, warnings, selected, editable, onCe
   );
 }
 
-function Chip({ a, req, db, mine, editable, onScrub, onOpenRequest }) {
+function Chip({ a, req, db, mine, editable, allowed, onScrub, onOpenRequest }) {
+  const sOk = allowed('plan.scrub', a);
   return (
     <div className={`chip ${a.status} ${mine ? '' : 'held'}`}>
       <div className="chip-top">
@@ -255,7 +264,9 @@ function Chip({ a, req, db, mine, editable, onScrub, onOpenRequest }) {
       {a.notes && <div className="chip-memo">{a.notes}</div>}
       <div className="chip-actions">
         {onOpenRequest && <button className="linkish small" onClick={() => onOpenRequest(a.request_id)}>request</button>}
-        {editable && a.status === 'planned' && mine && <button className="linkish small" onClick={() => onScrub(a)}>scrub…</button>}
+        {editable && a.status === 'planned' && mine && (
+          <button className="linkish small" disabled={!sOk.ok} title={sOk.ok ? undefined : sOk.message} onClick={() => onScrub(a)}>scrub…</button>
+        )}
       </div>
     </div>
   );

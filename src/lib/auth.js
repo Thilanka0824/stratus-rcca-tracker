@@ -1,6 +1,6 @@
 // Authorization without authentication (R9). A persona (src/data/users.json)
 // is a user record the header switches between: the title is display, the
-// role is behaviour, and this file is the only place that decides what a
+// role is behavior, and this file is the only place that decides what a
 // role can do. PERMISSIONS is data — every mutating action names, per app
 // role, whether it is allowed outright or only under a named predicate;
 // anything absent is refused with the role and the action named. Ownership

@@ -7,8 +7,12 @@ import { STATUS_ORDER, fmtStamp, requestAge, isQueued, programCode, latestAssign
 const PRIO = { P0: 0, P1: 1, P2: 2, P3: 3 };
 
 // The intake queue: everything that came in, what happened to it, and why.
-export default function RequestsView({ db, meta, today, onOpenBoard, focusId = null, onSubmit, builds = [], nowAt }) {
+// A requester lands on their own requests; everyone else on the whole queue.
+// Controls the persona cannot use are disabled with the R9 message as the
+// tooltip, never hidden.
+export default function RequestsView({ db, meta, today, onOpenBoard, focusId = null, onSubmit, onWithdraw, builds = [], nowAt, me = null, allowed = () => ({ ok: true }), defaultMine = false }) {
   const [showForm, setShowForm] = useState(false);
+  const [who, setWho] = useState(defaultMine ? 'mine' : 'all');
   const [program, setProgram] = useState('all');
   const [status, setStatus] = useState('all');
   const [priority, setPriority] = useState('all');
@@ -27,6 +31,7 @@ export default function RequestsView({ db, meta, today, onOpenBoard, focusId = n
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return db.requests
+      .filter((r) => (who === 'all' ? true : r.requester_id === me?.user_id))
       .filter((r) => (program === 'all' ? true : r.program_id === program))
       .filter((r) => (status === 'all' ? true : status === 'queued' ? isQueued(r) : r.status === status))
       .filter((r) => (priority === 'all' ? true : r.priority === priority))
@@ -36,9 +41,12 @@ export default function RequestsView({ db, meta, today, onOpenBoard, focusId = n
       .sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
         || PRIO[a.priority] - PRIO[b.priority]
         || b.submitted_at.localeCompare(a.submitted_at));
-  }, [db, program, status, priority, airframe, q]);
+  }, [db, who, me, program, status, priority, airframe, q]);
 
   const sel = db.request.get(selId) || rows[0] || null;
+  // Filing is allowed when any program is in the persona's scope; the form
+  // then offers only those programs.
+  const createOk = db.programs.some((p) => allowed('request.create', p).ok) ? { ok: true } : allowed('request.create', db.programs[0]);
 
   return (
     <section>
@@ -47,10 +55,16 @@ export default function RequestsView({ db, meta, today, onOpenBoard, focusId = n
         <span>intake closed {meta.cutoff_local}</span>
         <span>{planning.total} requests · {planning.queued} unscheduled</span>
         <span className={planning.late ? 'late' : ''}>{planning.late} late</span>
-        {onSubmit && <button className="btn" onClick={() => setShowForm(true)}>+ New request</button>}
+        {onSubmit && (
+          <button className="btn" disabled={!createOk.ok} title={createOk.ok ? undefined : createOk.message} onClick={() => setShowForm(true)}>+ New request</button>
+        )}
       </div>
 
       <div className="filters">
+        <select value={who} onChange={(e) => setWho(e.target.value)} aria-label="Filed by">
+          <option value="all">All requesters</option>
+          <option value="mine">Mine{me ? ` · ${me.name}` : ''}</option>
+        </select>
         <select value={program} onChange={(e) => setProgram(e.target.value)} aria-label="Program">
           <option value="all">All programs</option>
           {db.programs.map((p) => <option key={p.program_id} value={p.program_id}>{p.code} · {p.name}</option>)}
@@ -117,13 +131,13 @@ export default function RequestsView({ db, meta, today, onOpenBoard, focusId = n
           </table>
         </div>
 
-        {sel ? <Drawer r={sel} db={db} today={today} onOpenBoard={onOpenBoard} />
+        {sel ? <Drawer r={sel} db={db} today={today} onOpenBoard={onOpenBoard} onWithdraw={onWithdraw} allowed={allowed} />
              : <div className="detail empty-hint">No request matches these filters.</div>}
       </div>
 
       {showForm && (
         <IntakeForm
-          db={db} meta={meta} builds={builds} nowAt={nowAt} onSubmit={onSubmit}
+          db={db} meta={meta} builds={builds} nowAt={nowAt} onSubmit={onSubmit} allowed={allowed}
           onCancel={() => setShowForm(false)}
           onCreated={(r) => { setShowForm(false); setStatus('all'); setQ(''); setSelId(r.request_id); }}
         />
@@ -135,13 +149,14 @@ export default function RequestsView({ db, meta, today, onOpenBoard, focusId = n
 // Intake: what a requesting engineer fills in before the cutoff. Validation
 // runs live and names the field; the R7 verdict is shown before you submit,
 // because a late request should never be a surprise to the person who filed it.
-function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) {
-  const first = db.programs[0];
+function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated, allowed = () => ({ ok: true }) }) {
+  // A lead files only inside their scope; the first program they can file for is the default.
+  const first = db.programs.find((p) => allowed('request.create', p).ok) || db.programs[0];
   const teams = useMemo(() => [...new Set(db.requests.map((r) => r.supporting_team).filter(Boolean))].sort(), [db]);
   const [f, setF] = useState({
     program_id: first.program_id, title: '', build: builds.at(-1) || '', build_stage: 'engineering',
     crew: 'operator_pilot', windows: ['AM'], airframe: first.airframes[0], priority: first.priority_default,
-    supporting_team: teams[0] || '', requester: '', needed_by: meta.tomorrow,
+    supporting_team: teams[0] || '', requester: '', needed_by: meta.tomorrow, rider_facing: first.code === 'SF',
   });
   const [tried, setTried] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -159,7 +174,8 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) 
   // never be checked and disabled at once.
   function setProgram(e) {
     const p = db.program.get(e.target.value);
-    setF((x) => ({ ...x, program_id: p.program_id, airframe: p.airframes[0], priority: p.priority_default, windows: pruneWindows(x.windows, db, p.airframes[0]) }));
+    setF((x) => ({ ...x, program_id: p.program_id, airframe: p.airframes[0], priority: p.priority_default, windows: pruneWindows(x.windows, db, p.airframes[0]),
+      rider_facing: p.code === 'SF' ? true : x.rider_facing }));   // a showcase always carries guests
   }
   function setAirframe(e) {
     setF((x) => ({ ...x, airframe: e.target.value, windows: pruneWindows(x.windows, db, e.target.value) }));
@@ -189,7 +205,10 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) 
         <div className="form-grid">
           <label className="seat"><span className="k">Program</span>
             <select autoFocus name="program_id" value={f.program_id} onChange={setProgram}>
-              {db.programs.map((p) => <option key={p.program_id} value={p.program_id}>{p.code} · {p.name}</option>)}
+              {db.programs.map((p) => {
+                const ok = allowed('request.create', p);
+                return <option key={p.program_id} value={p.program_id} disabled={!ok.ok}>{p.code} · {p.name}{ok.ok ? '' : ' · outside your scope'}</option>;
+              })}
             </select>
           </label>
           <label className="seat"><span className="k">Airframe</span>
@@ -231,6 +250,14 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) 
           <label className="seat"><span className="k">Supporting team</span>
             <select name="supporting_team" value={f.supporting_team} onChange={set('supporting_team')}>{teams.map((t) => <option key={t}>{t}</option>)}</select>
           </label>
+          <div className="seat"><span className="k">Riders</span>
+            <div className="checks">
+              <label>
+                <input type="checkbox" name="rider_facing" checked={f.rider_facing} onChange={(e) => setF((x) => ({ ...x, rider_facing: e.target.checked }))} />
+                <span>Riders aboard — the desk must cover it (R10)</span>
+              </label>
+            </div>
+          </div>
         </div>
 
         <div className={`tell ${late ? 'hot' : ''}`}>
@@ -265,10 +292,17 @@ const FIELD_LABELS = {
   airframe: 'Airframe', windows: 'Windows', needed_by: 'Needed by', requester: 'Requester',
 };
 
-function Drawer({ r, db, today, onOpenBoard }) {
+function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: true }) }) {
   const prog = db.program.get(r.program_id);
   const a = latestAssignment(db, r.request_id);
   const boardDate = a?.date || r.plan_date || r.needed_by;
+  const [confirming, setConfirming] = useState(false);
+  const [refusal, setRefusal] = useState(null);
+  // Withdraw: the requester's own, a coordinator's, or the program lead's —
+  // and only while the request is still queued (after that it is a scrub).
+  const wOk = !isQueued(r)
+    ? { ok: false, message: `${r.request_id} is ${r.status}; a request can only be withdrawn before it is scheduled.` }
+    : allowed('request.withdraw', r);
   return (
     <div className="detail">
       <div className="fl-top">
@@ -324,10 +358,21 @@ function Drawer({ r, db, today, onOpenBoard }) {
         ))}
       </ol>
 
-      {onOpenBoard && (
-        <div className="stepper">
-          <button className="btn ghost" onClick={() => onOpenBoard(boardDate)}>Open {fmtDate(boardDate)} on the board</button>
-        </div>
+      <div className="stepper">
+        {onOpenBoard && <button className="btn ghost" onClick={() => onOpenBoard(boardDate)}>Open {fmtDate(boardDate)} on the board</button>}
+        {onWithdraw && r.status !== 'withdrawn' && r.status !== 'executed' && (
+          <button className="btn ghost" disabled={!wOk.ok} title={wOk.ok ? undefined : wOk.message} onClick={() => setConfirming(true)}>Withdraw…</button>
+        )}
+      </div>
+      {refusal && <ul className="rule-list"><li className="block"><strong>R9</strong> {refusal}</li></ul>}
+      {confirming && (
+        <ConfirmDialog
+          title={`Withdraw ${r.request_id}?`}
+          body="It leaves the queue with the reason 'requester withdrew'. The timeline keeps the record."
+          confirmLabel="Withdraw" cancelLabel="Keep it" danger
+          onConfirm={() => { const msg = onWithdraw(r.request_id); setConfirming(false); setRefusal(msg); }}
+          onCancel={() => setConfirming(false)}
+        />
       )}
     </div>
   );

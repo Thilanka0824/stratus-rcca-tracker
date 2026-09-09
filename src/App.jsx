@@ -11,7 +11,8 @@ import coverageData from './data/coverage.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
 import { daySummary } from './lib/dispatch';
-import { makeDb, checkAssignment, hasBlock, newAssignment, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, validateRequest, newRequest, isOperatingDay } from './lib/rules';
+import { makeDb, checkAssignment, hasBlock, newAssignment, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, withdrawRequest, validateRequest, newRequest, isOperatingDay } from './lib/rules';
+import { can, ROLE_LABELS } from './lib/auth';
 import RequestsView from './views/RequestsView';
 import DispatchView from './views/DispatchView';
 import RunsView from './views/RunsView';
@@ -58,6 +59,8 @@ const TABS = [
   { label: 'Reports', group: 'Execute' },
 ];
 const idx = (label) => TABS.findIndex((t) => t.label === label);
+// The views everyone but crew can open (the matrix's "Capacity, Reports, RCCA analytics" row).
+const ANALYTICS_TABS = ['Capacity', 'Analytics', 'Reports'];
 
 // Theme modes cycle in this order; 'system' follows the OS preference live.
 const THEMES = [
@@ -135,6 +138,15 @@ export default function App() {
 
   const today = useMemo(() => maxDate(runsData), []);
 
+  // The UI's question, answered by the matrix: { ok } or { ok: false, message }.
+  // Controls are disabled with the message as their tooltip, never hidden;
+  // enforcement is in the rules, the disabled state is a courtesy.
+  const allowed = (action, target = null) => can(currentUser, action, target);
+  const viewOk = allowed('view.analytics');
+  useEffect(() => {
+    if (!viewOk.ok && ANALYTICS_TABS.includes(TABS[tab].label)) setTab(idx('Dispatch'));
+  }, [currentUser, tab, viewOk.ok]);
+
   // Board edits go through the rules: a block is returned to the caller and
   // nothing is saved; a deferral or scrub without a reason cannot be built.
   // Edits are stamped in the evening of dataset "today", in order.
@@ -155,9 +167,23 @@ export default function App() {
     setRequests((prev) => prev.map((r) => (r.request_id === cand.request_id ? scheduleRequest(currentUser, r, a, at) : r)));
     return violations;
   }
+  // Transitions are built outside the state updater so an R9 or R8 refusal
+  // is a returned message, never an error thrown inside React.
   function defer(requestId, reason, note) {
-    const at = stampNow();
-    setRequests((prev) => prev.map((r) => (r.request_id === requestId ? deferRequest(currentUser, r, { reason, day: boardDate, at, note }) : r)));
+    const r = requests.find((x) => x.request_id === requestId);
+    if (!r) return null;
+    let next;
+    try { next = deferRequest(currentUser, r, { reason, day: boardDate, at: stampNow(), note }); } catch (e) { return e.message; }
+    setRequests((prev) => prev.map((x) => (x.request_id === requestId ? next : x)));
+    return null;
+  }
+  function withdraw(requestId) {
+    const r = requests.find((x) => x.request_id === requestId);
+    if (!r) return null;
+    let next;
+    try { next = withdrawRequest(currentUser, r, { at: stampNow(), note: 'withdrawn from the queue' }); } catch (e) { return e.message; }
+    setRequests((prev) => prev.map((x) => (x.request_id === requestId ? next : x)));
+    return null;
   }
   // Intake: the form's fields become a request only through the rules — the
   // late flag and plan day are derived from the submission time (R7).
@@ -181,10 +207,17 @@ export default function App() {
   }
   function scrub(assignmentId, reason) {
     const a = assignments.find((x) => x.assignment_id === assignmentId);
-    if (!a) return;
-    const at = stampNow();
-    setAssignments((prev) => prev.map((x) => (x.assignment_id === assignmentId ? scrubAssignment(currentUser, x, { reason }) : x)));
-    setRequests((prev) => prev.map((r) => (r.request_id === a.request_id ? scrubRequest(currentUser, r, a, { reason, at }) : r)));
+    const r = a && requests.find((x) => x.request_id === a.request_id);
+    if (!a || !r) return null;
+    let nextA;
+    let nextR;
+    try {
+      nextA = scrubAssignment(currentUser, a, { reason });
+      nextR = scrubRequest(currentUser, r, a, { reason, at: stampNow() });
+    } catch (e) { return e.message; }
+    setAssignments((prev) => prev.map((x) => (x.assignment_id === assignmentId ? nextA : x)));
+    setRequests((prev) => prev.map((x) => (x.request_id === a.request_id ? nextR : x)));
+    return null;
   }
 
   const stats = useMemo(() => {
@@ -219,6 +252,24 @@ export default function App() {
             {fmtDate(meta.window_start)} – {fmtDate(meta.window_end)} 2026 · 90-day window
           </div>
         </div>
+        {/* Authorization without authentication: the persona is state, not
+            identity. Switching it never resets the plan; it changes what the
+            plan allows. */}
+        <label className="whoami">
+          <span className="k">Signed in as</span>
+          <span className="whoami-row">
+            <select aria-label="Signed in as" value={currentUser.user_id} onChange={(e) => setCurrentUser(usersData.find((u) => u.user_id === e.target.value))}>
+              {meta.app_roles.map((role) => (
+                <optgroup key={role} label={ROLE_LABELS[role]}>
+                  {usersData.filter((u) => u.role === role).map((u) => (
+                    <option key={u.user_id} value={u.user_id}>{u.name} — {u.title}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <span className={`role-badge ${currentUser.role}`} title={`App role: ${currentUser.role}`}>{ROLE_LABELS[currentUser.role]}</span>
+          </span>
+        </label>
         <div className="heartbeat" role="img"
           aria-label={`Last 60 runs: ${heartbeat.filter((r) => r.status === 'pass').length} pass, ${heartbeat.filter((r) => r.status === 'fail').length} fail, ${heartbeat.filter((r) => r.status === 'blocked').length} blocked`}>
           <div className="hb-label">
@@ -275,7 +326,9 @@ export default function App() {
           <div key={g} className="tab-set" role="group" aria-label={`${g} views`}>
             <span className="tab-group" aria-hidden="true">{g}</span>
             {TABS.map((t, i) => t.group === g && (
-              <button key={t.label} className={`tab ${tab === i ? 'on' : ''}`} aria-current={tab === i ? 'page' : undefined} onClick={() => go(i)}>
+              <button key={t.label} className={`tab ${tab === i ? 'on' : ''}`} aria-current={tab === i ? 'page' : undefined} onClick={() => go(i)}
+                disabled={ANALYTICS_TABS.includes(t.label) && !viewOk.ok}
+                title={ANALYTICS_TABS.includes(t.label) && !viewOk.ok ? viewOk.message : undefined}>
                 {t.label}
               </button>
             ))}
@@ -292,13 +345,15 @@ export default function App() {
       </nav>
 
       {tab === idx('Requests') && (
-        <RequestsView db={db} meta={meta} today={today} onOpenBoard={openBoard} focusId={requestFocus}
-          onSubmit={submitRequest} builds={builds} nowAt={`${today}T18:00`} />
+        <RequestsView key={currentUser.user_id} db={db} meta={meta} today={today} onOpenBoard={openBoard} focusId={requestFocus}
+          onSubmit={submitRequest} onWithdraw={withdraw} builds={builds} nowAt={`${today}T18:00`}
+          me={currentUser} allowed={allowed} defaultMine={currentUser.role === 'requester'} />
       )}
       {tab === idx('Dispatch') && (
         <DispatchView
           db={db} meta={meta} today={today} date={boardDate} setDate={setBoardDate}
           onAssign={assign} onDefer={defer} onScrub={scrub} onOpenRequest={openRequest} onOpenFailure={openFailure}
+          me={currentUser} allowed={allowed}
         />
       )}
       <ChunkBoundary key={chunkAttempt} onRetry={() => setChunkAttempt((n) => n + 1)}>
@@ -306,7 +361,8 @@ export default function App() {
         {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} />}
       {tab === idx('Runs') && <RunsView runs={runsData} db={db} />}
       {tab === idx('Triage') && (
-        <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} db={db} focusId={triageFocus} onOpenBoard={openBoard} />
+        <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} db={db} focusId={triageFocus} onOpenBoard={openBoard}
+          canEdit={allowed('triage.edit')} />
       )}
       {tab === idx('Analytics') && <AnalyticsView failures={failures} theme={theme} />}
       {tab === idx('Reports') && (
@@ -317,7 +373,8 @@ export default function App() {
 
       <footer className="foot">
         All data is synthetic — generated by generate_data.py to demonstrate test-operations workflow design.
-        Board and triage edits live in this session only. Built by Thilanka Rodrigo.
+        Board and triage edits live in this session only. Demo personas, not accounts: no passwords, nothing persists.
+        Built by Thilanka Rodrigo.
       </footer>
     </div>
   );
