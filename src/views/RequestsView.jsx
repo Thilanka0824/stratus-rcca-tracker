@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { fmtDate } from '../lib/helpers';
 import { REASON_LABELS, CREW_LABELS, CREW_KINDS, BUILD_STAGES, WINDOWS, validateRequest, isLate, addDays, operatingWindows, pruneWindows } from '../lib/rules';
-import Modal from './Modal';
+import Modal, { ConfirmDialog } from './Modal';
 import { STATUS_ORDER, fmtStamp, requestAge, isQueued, programCode, latestAssignment, personName } from '../lib/dispatch';
 
 const PRIO = { P0: 0, P1: 1, P2: 2, P3: 3 };
@@ -144,6 +144,7 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) 
     supporting_team: teams[0] || '', requester: '', needed_by: meta.tomorrow,
   });
   const [tried, setTried] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [initial] = useState(f);
   const program = db.program.get(f.program_id);
   const operating = useMemo(() => operatingWindows(db, f.airframe), [db, f.airframe]);
@@ -164,7 +165,8 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) 
     setF((x) => ({ ...x, airframe: e.target.value, windows: pruneWindows(x.windows, db, e.target.value) }));
   }
   function close() {
-    if (!dirty || window.confirm('Discard this request?')) onCancel();
+    if (dirty) setConfirming(true);
+    else onCancel();
   }
   function toggleWindow(w) {
     setF((x) => ({ ...x, windows: x.windows.includes(w) ? x.windows.filter((v) => v !== w) : [...x.windows, w].sort((a, b) => WINDOWS.indexOf(a) - WINDOWS.indexOf(b)) }));
@@ -246,6 +248,14 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) 
           <button className="btn" type="submit">Submit request</button>
           <button className="btn ghost" type="button" onClick={close}>Cancel</button>
         </div>
+        {confirming && (
+          <ConfirmDialog
+            title="Discard this request?"
+            body="Nothing has been submitted; what you typed will be lost."
+            confirmLabel="Discard" cancelLabel="Keep editing" danger
+            onConfirm={onCancel} onCancel={() => setConfirming(false)}
+          />
+        )}
     </Modal>
   );
 }
