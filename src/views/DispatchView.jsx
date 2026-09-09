@@ -25,7 +25,8 @@ export default function DispatchView({
   const [reasonFor, setReasonFor] = useState(null);    // { kind: 'defer'|'scrub', id, label, initial }
   const [deskAction, setDeskAction] = useState(null);  // { kind: 'cover', window } | { kind: 'settings' }
   const [progEdit, setProgEdit] = useState(null);      // program being edited by its authority
-  useEffect(() => { setSelReq(null); setPicker(null); setDeskAction(null); setProgEdit(null); }, [me?.user_id]);   // a new persona starts with nothing in hand
+  const [deskNote, setDeskNote] = useState(null);      // a refusal from a release, shown on the desk row
+  useEffect(() => { setSelReq(null); setPicker(null); setReasonFor(null); setDeskAction(null); setProgEdit(null); setDeskNote(null); }, [me?.user_id]);   // a new persona starts with nothing in hand
 
   const warnings = useMemo(() => dayWarnings(date, db), [date, db]);
   const rail = useMemo(() => queuedFor(date, db), [date, db]);
@@ -95,9 +96,9 @@ export default function DispatchView({
       <div className="board-grid">
         <div className="board-main">
           <DeskPanel
-            rows={deskRows} db={db} date={date} editable={editable} coverOk={coverOk} settingsOk={settingsOk}
+            rows={deskRows} db={db} date={date} editable={editable} coverOk={coverOk} settingsOk={settingsOk} note={deskNote}
             onCover={(w) => setDeskAction({ kind: 'cover', window: w })}
-            onUncover={(cand) => onUncover?.(cand)}
+            onUncover={(cand) => setDeskNote(onUncover?.(cand) ?? null)}
             onSettings={() => setDeskAction({ kind: 'settings' })}
           />
           {db.programs.map((p) => (
@@ -146,6 +147,7 @@ export default function DispatchView({
                 {reason && !queued && !later && <div className="rail-reason">deferred · {REASON_LABELS[reason]}</div>}
                 {reason && later && <div className="rail-reason">deferred · {REASON_LABELS[reason]} · now planned for {fd(r.plan_date)}</div>}
                 {reason && queued && <div className="rail-reason">deferred once already · {REASON_LABELS[reason]}</div>}
+                {deferredHere.at(-1)?.note && <div className="rail-note">{deferredHere.at(-1).note}</div>}
                 {short && <div className="rail-reason">R10 · no room on the desk in {r.windows.join('/')} — defer as No rider operator?</div>}
                 {(queued || later) && editable && (
                   <div className="rail-actions">
@@ -188,10 +190,11 @@ export default function DispatchView({
           reasons={reasonFor.kind === 'scrub' ? SCRUB_REASONS : DEFERRAL_REASONS}
           onCancel={() => setReasonFor(null)}
           onConfirm={(reason, note) => {
-            if (reasonFor.kind === 'defer') onDefer(reasonFor.id, reason, note);
-            else onScrub(reasonFor.id, reason, note);
+            const msg = reasonFor.kind === 'defer' ? onDefer(reasonFor.id, reason, note) : onScrub(reasonFor.id, reason, note);
+            if (msg) return msg;
             setReasonFor(null);
             if (selReq === reasonFor.id) setSelReq(null);
+            return null;
           }}
         />
       )}
@@ -210,7 +213,7 @@ export default function DispatchView({
         <DeskSettings desk={db.desk} onCancel={() => setDeskAction(null)} onConfirm={(patch) => onEditDesk?.(patch)} onDone={() => setDeskAction(null)} />
       )}
       {progEdit && db.program.get(progEdit) && (
-        <ProgramDialog p={db.program.get(progEdit)} allowed={allowed} onCancel={() => setProgEdit(null)} onConfirm={(patch) => onEditProgram?.(progEdit, patch)} />
+        <ProgramDialog p={db.program.get(progEdit)} allowed={allowed} onCancel={() => setProgEdit(null)} onConfirm={(patch) => onEditProgram?.(progEdit, patch) ?? null} />
       )}
     </section>
   );
@@ -219,9 +222,10 @@ export default function DispatchView({
 // The rider desk, per window: who is on comms, how many rider-facing sorties
 // they hold, and the colour R10 would give the next one. Coordinators roster
 // it (desk.cover); the PM or the rider ops lead sets its ratio (desk.settings).
-function DeskPanel({ rows, db, date, editable, coverOk, settingsOk, onCover, onUncover, onSettings }) {
+function DeskPanel({ rows, db, date, editable, coverOk, settingsOk, note, onCover, onUncover, onSettings }) {
   return (
     <div className="prog desk">
+      {note && <ul className="rule-list desk-note" aria-live="polite"><li className="block"><strong>{/^R\d+/.test(note) ? '' : 'R10'}</strong> {note}</li></ul>}
       <div className="prog-hd">
         <span className="prog-code">DESK</span>
         <span className="prog-name">Rider desk</span>
@@ -392,6 +396,7 @@ function Chip({ a, req, db, mine, editable, allowed, onScrub, onOpenRequest }) {
 function CrewPicker({ db, date, request, asset, window, onCancel, onConfirm }) {
   const [operator, setOperator] = useState('');
   const [pilot, setPilot] = useState('');
+  const [refused, setRefused] = useState([]);           // what the app returned on confirm
   const seats = { none: [], pilot_only: ['pilot'], operator_pilot: ['operator', 'pilot'], lone_operator: ['operator'] }[request.crew];
   const cand = { date, window, request_id: request.request_id, asset_id: asset.asset_id, operator_id: operator || null, pilot_id: pilot || null };
   const violations = checkAssignment(cand, db);
@@ -427,11 +432,12 @@ function CrewPicker({ db, date, request, asset, window, onCancel, onConfirm }) {
         ))}
         <ul className="rule-list" aria-live="polite">
           {blocks.map((v, i) => <li key={`b${i}`} className="block"><strong>{v.rule}</strong> {v.message}</li>)}
+          {refused.map((v, i) => <li key={`r${i}`} className="block"><strong>{v.rule}</strong> {v.message.replace(/^R9 · /, '')}</li>)}
           {warns.map((v, i) => <li key={`w${i}`} className="warn"><strong>{v.rule}</strong> {v.message}</li>)}
-          {violations.length === 0 && <li className="ok">All rules pass.</li>}
+          {violations.length === 0 && refused.length === 0 && <li className="ok">All rules pass.</li>}
         </ul>
         <div className="stepper">
-          <button className="btn" disabled={blocks.length > 0} onClick={() => onConfirm(cand)}>Confirm assignment</button>
+          <button className="btn" disabled={blocks.length > 0} onClick={() => setRefused((onConfirm(cand) || []).filter((v) => v.severity === 'block'))}>Confirm assignment</button>
           <button className="btn ghost" onClick={onCancel}>Cancel</button>
         </div>
     </Modal>
@@ -443,6 +449,7 @@ function CrewPicker({ db, date, request, asset, window, onCancel, onConfirm }) {
 function ReasonPicker({ label, reasons, initial = '', onCancel, onConfirm }) {
   const [reason, setReason] = useState(initial);
   const [note, setNote] = useState('');
+  const [error, setError] = useState(null);
   return (
     <Modal label={label} onClose={onCancel} fallbackFocus=".board">
         <div className="sect-label">Reason required · R8</div>
@@ -458,8 +465,11 @@ function ReasonPicker({ label, reasons, initial = '', onCancel, onConfirm }) {
           <span className="k">Note (optional)</span>
           <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="what you'd have said in the thread" />
         </label>
+        <ul className="rule-list" aria-live="polite">
+          {error && <li className="block"><strong>{/^R\d+/.exec(error)?.[0] ?? 'R8'}</strong> {error.replace(/^R\d+ · /, '')}</li>}
+        </ul>
         <div className="stepper">
-          <button className="btn" disabled={!reason} onClick={() => onConfirm(reason, note)}>Confirm</button>
+          <button className="btn" disabled={!reason} onClick={() => setError(onConfirm(reason, note))}>Confirm</button>
           <button className="btn ghost" onClick={onCancel}>Cancel</button>
         </div>
     </Modal>
@@ -470,6 +480,7 @@ function ReasonPicker({ label, reasons, initial = '', onCancel, onConfirm }) {
 // person; R2 says nobody covers a window they fly in, or covers it twice.
 function CoverPicker({ db, date, window, onCancel, onConfirm }) {
   const [pid, setPid] = useState('');
+  const [refused, setRefused] = useState([]);
   const people = db.persons
     .filter((p) => p.roles.includes('rider_ops'))
     .map((p) => ({ p, qualified: qualifiedOn(p, date), rostered: availableOn(p, date, window) }))
@@ -496,11 +507,12 @@ function CoverPicker({ db, date, window, onCancel, onConfirm }) {
         </label>
         <ul className="rule-list" aria-live="polite">
           {blocks.map((v, i) => <li key={`b${i}`} className="block"><strong>{v.rule}</strong> {v.message}</li>)}
+          {refused.map((v, i) => <li key={`r${i}`} className="block"><strong>{v.rule}</strong> {v.message.replace(/^R9 · /, '')}</li>)}
           {warns.map((v, i) => <li key={`w${i}`} className="warn"><strong>{v.rule}</strong> {v.message}</li>)}
-          {pid && violations.length === 0 && <li className="ok">All rules pass.</li>}
+          {pid && violations.length === 0 && refused.length === 0 && <li className="ok">All rules pass.</li>}
         </ul>
         <div className="stepper">
-          <button className="btn" disabled={!pid || blocks.length > 0} onClick={() => onConfirm(cand)}>Confirm coverage</button>
+          <button className="btn" disabled={!pid || blocks.length > 0} onClick={() => setRefused((onConfirm(cand) || []).filter((v) => v.severity === 'block'))}>Confirm coverage</button>
           <button className="btn ghost" onClick={onCancel}>Cancel</button>
         </div>
     </Modal>
@@ -550,10 +562,7 @@ function ProgramDialog({ p, allowed, onCancel, onConfirm }) {
   const pOk = allowed('program.priority', p);
   const tOk = allowed('program.targets', p);
   function save() {
-    const msgs = [];
-    if (priority !== p.priority_default) msgs.push(onConfirm({ priority_default: priority }));
-    if (min !== p.asset_min || max !== p.asset_max) msgs.push(onConfirm({ asset_min: min, asset_max: max }));
-    const m = msgs.find(Boolean);
+    const m = onConfirm({ priority_default: priority, asset_min: min, asset_max: max });
     if (m) setError(m); else onCancel();
   }
   return (

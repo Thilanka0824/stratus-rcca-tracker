@@ -369,9 +369,9 @@ function GrantDialog({ person, kind, defaultDate, onCancel, onConfirm }) {
     <Modal label="Grant" onClose={onCancel}>
         <div className="sect-label">{kind === 'rider_ops' ? 'Qualification · trainer' : 'Rating · trainer'}</div>
         <h2>Grant {what} to {person.name}</h2>
-        <p className="caption">Effective from the date below. The board re-evaluates {kind === 'rider_ops' ? 'R10 (the desk)' : 'R1 (type rating)'} from that day.</p>
+        <p className="caption">Effective from the date below — tomorrow at the earliest; history is not rewritten. The board re-evaluates {kind === 'rider_ops' ? 'R10 (the desk)' : 'R1 (type rating)'} from that day.</p>
         <label className="seat"><span className="k">Effective from</span>
-          <input type="date" autoFocus aria-label="Effective from" value={effective} onChange={(e) => setEffective(e.target.value)} />
+          <input type="date" autoFocus aria-label="Effective from" min={defaultDate} value={effective} onChange={(e) => setEffective(e.target.value)} />
         </label>
         <ul className="rule-list" aria-live="polite">
           {error && <li className="block"><strong>R9</strong> {error.replace(/^R9 · /, '')}</li>}

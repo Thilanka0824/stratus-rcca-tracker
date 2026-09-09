@@ -6,6 +6,7 @@
 WITH ev AS (
   SELECT e.actor_id AS user_id,
          CASE WHEN e.event = 'submitted' OR (e.event = 'deferred' AND e.reason = 'late_intake') THEN 'filed'
+              WHEN e.event = 'withdrawn' THEN 'withdrawn'
               WHEN e.event IN ('scheduled', 'reassigned', 'executed') THEN 'assigned'
               WHEN e.event IN ('deferred', 'rescheduled') THEN 'deferred'
               WHEN e.event = 'scrubbed' THEN 'scrubbed'
@@ -19,8 +20,9 @@ WITH ev AS (
   SELECT r.granted_by, 'granted' FROM person_ratings r WHERE r.granted_by IS NOT NULL
 )
 SELECT u.user_id, u.name, u.role,
-       sum(action = 'filed')    AS filed,
-       sum(action = 'assigned') AS assigned,
+       sum(action = 'filed')     AS filed,
+       sum(action = 'withdrawn') AS withdrawn,
+       sum(action = 'assigned')  AS assigned,
        sum(action = 'deferred') AS deferred,
        sum(action = 'scrubbed') AS scrubbed,
        sum(action = 'covered')  AS covered,

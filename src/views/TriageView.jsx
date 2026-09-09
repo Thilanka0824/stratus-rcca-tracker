@@ -7,7 +7,7 @@ const STEPS = ['Open', 'Investigating', 'Corrective Action', 'Verified'];
 // canEdit is the matrix's answer to triage.edit: the stepper is disabled, not
 // hidden, with the R9 message as its tooltip, so every persona can see what
 // triage is and who owns it.
-export default function TriageView({ failures, setFailures, runs, today, db, focusId = null, onOpenBoard, canEdit = { ok: true } }) {
+export default function TriageView({ failures, onTriage, runs, today, db, focusId = null, onOpenBoard, canEdit = { ok: true } }) {
   const [selId, setSelId] = useState(focusId);   // arriving from a grounded tail on the board
 
   // Unresolved first, then severity, then age (oldest first) — triage order,
@@ -55,17 +55,18 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
     }
   }
 
+  // Every change goes through the rules with the persona as the actor (R9);
+  // a refusal comes back as a message and lands in the toast, with no undo.
   function applyStatus(id, status, resolved) {
-    setFailures((prev) =>
-      prev.map((f) => (f.failure_id === id ? { ...f, triage_status: status, resolved } : f)),
-    );
+    return onTriage(id, status, resolved);
   }
 
   function setStatus(id, status) {
     const before = failures.find((f) => f.failure_id === id);
     if (!before || before.triage_status === status) return;
     setSelId(id); // keep the changed card selected even as the queue re-sorts
-    applyStatus(id, status, status === 'Verified' ? today : null);
+    const refusal = applyStatus(id, status, undefined);
+    if (refusal) { setToast({ text: refusal, undo: null }); return; }
     const verb =
       status === 'Verified'
         ? `verified · closed in ${failureAge({ ...before, resolved: today }, today)}d`
@@ -125,9 +126,11 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
           onBlur={() => setFocused(false)}
         >
           <span className="mono">{toast.text}</span>
-          <button ref={undoRef} className="btn ghost" onClick={() => { toast.undo(); dismissToast(true); }}>
-            Undo
-          </button>
+          {toast.undo && (
+            <button ref={undoRef} className="btn ghost" onClick={() => { toast.undo(); dismissToast(true); }}>
+              Undo
+            </button>
+          )}
         </div>
       )}
     </div>

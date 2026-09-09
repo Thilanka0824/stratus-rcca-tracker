@@ -14,7 +14,7 @@ import { daySummary } from './lib/dispatch';
 import {
   makeDb, checkAssignment, hasBlock, newAssignment, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, withdrawRequest,
   validateRequest, newRequest, isOperatingDay, checkCover, checkUncover, coverWindow, uncoverWindow, acknowledge,
-  grantRating, revokeRating, grantQualification, setProgramPriority, setProgramTargets, setDeskSettings,
+  grantRating, revokeRating, grantQualification, editProgram as editProgramRule, setDeskSettings, triageFailure,
 } from './lib/rules';
 import { can, ROLE_LABELS } from './lib/auth';
 import RequestsView from './views/RequestsView';
@@ -179,10 +179,13 @@ export default function App() {
     if (hasBlock(violations)) return violations;
     const request = db.request.get(cand.request_id);
     let a;
-    try { a = newAssignment(currentUser, request, cand); } catch (e) { return refused(e); }
-    const at = stampNow();
+    let nextR;
+    try {
+      a = newAssignment(currentUser, request, cand);
+      nextR = scheduleRequest(currentUser, request, a, stampNow());
+    } catch (e) { return refused(e); }
     setAssignments((prev) => [...prev, a]);
-    setRequests((prev) => prev.map((r) => (r.request_id === cand.request_id ? scheduleRequest(currentUser, r, a, at) : r)));
+    setRequests((prev) => prev.map((r) => (r.request_id === cand.request_id ? nextR : r)));
     return violations;
   }
   // Transitions are built outside the state updater so an R9 or R8 refusal
@@ -259,7 +262,9 @@ export default function App() {
     const p = db.person.get(personId);
     let next;
     try {
-      next = kind === 'rider_ops' ? grantQualification(currentUser, p, { effective }) : grantRating(currentUser, p, kind, { effective });
+      next = kind === 'rider_ops'
+        ? grantQualification(currentUser, p, { effective, notBefore: meta.tomorrow })
+        : grantRating(currentUser, p, kind, { effective, notBefore: meta.tomorrow });
     } catch (e) { return e.message; }
     setPersons((prev) => prev.map((x) => (x.person_id === personId ? next : x)));
     record(kind === 'rider_ops' ? 'qualification.grant' : 'rating.grant', p.name, `${kind === 'rider_ops' ? 'rider desk' : kind} from ${effective}`);
@@ -273,16 +278,26 @@ export default function App() {
     record('rating.revoke', p.name, airframe);
     return null;
   }
-  // Authority: a program's default priority or its tail band; the PM, the desk's settings.
+  // Authority: a program's default priority and its tail band, applied as one
+  // transition; the PM, the desk's settings.
   function editProgram(programId, patch) {
     const p = db.program.get(programId);
     let next;
-    try {
-      next = 'priority_default' in patch ? setProgramPriority(currentUser, p, patch.priority_default) : setProgramTargets(currentUser, p, patch);
-    } catch (e) { return e.message; }
+    try { next = editProgramRule(currentUser, p, patch); } catch (e) { return e.message; }
+    if (next === p) return null;
     setPrograms((prev) => prev.map((x) => (x.program_id === programId ? next : x)));
-    record('priority_default' in patch ? 'program.priority' : 'program.targets', p.code,
-      'priority_default' in patch ? patch.priority_default : `${patch.asset_min}–${patch.asset_max} tails`);
+    if (next.priority_default !== p.priority_default) record('program.priority', p.code, next.priority_default);
+    if (next.asset_min !== p.asset_min || next.asset_max !== p.asset_max) record('program.targets', p.code, `${next.asset_min}–${next.asset_max} tails`);
+    return null;
+  }
+  // Triage is the requester's (triage.edit): the stepper and its undo both come through here.
+  function triage(failureId, status, resolved) {
+    const f = failures.find((x) => x.failure_id === failureId);
+    if (!f) return null;
+    let next;
+    try { next = triageFailure(currentUser, f, status, { today, resolved }); } catch (e) { return e.message; }
+    setFailures((prev) => prev.map((x) => (x.failure_id === failureId ? next : x)));
+    record('triage.edit', failureId, status);
     return null;
   }
   function editDesk(patch) {
@@ -292,7 +307,7 @@ export default function App() {
     record('desk.settings', 'rider desk', `ratio ${next.ratio} · min ${next.min_per_window}`);
     return null;
   }
-  function scrub(assignmentId, reason) {
+  function scrub(assignmentId, reason, note = '') {
     const a = assignments.find((x) => x.assignment_id === assignmentId);
     const r = a && requests.find((x) => x.request_id === a.request_id);
     if (!a || !r) return null;
@@ -300,7 +315,7 @@ export default function App() {
     let nextR;
     try {
       nextA = scrubAssignment(currentUser, a, { reason });
-      nextR = scrubRequest(currentUser, r, a, { reason, at: stampNow() });
+      nextR = scrubRequest(currentUser, r, a, { reason, at: stampNow(), note });
     } catch (e) { return e.message; }
     setAssignments((prev) => prev.map((x) => (x.assignment_id === assignmentId ? nextA : x)));
     setRequests((prev) => prev.map((x) => (x.request_id === a.request_id ? nextR : x)));
@@ -449,7 +464,7 @@ export default function App() {
         {tab === idx('Capacity') && <CapacityView db={db} meta={meta} today={today} theme={theme} failures={failures} me={currentUser} allowed={allowed} onGrant={grant} onRevoke={revoke} audit={audit} />}
       {tab === idx('Runs') && <RunsView runs={runsData} db={db} />}
       {tab === idx('Triage') && (
-        <TriageView failures={failures} setFailures={setFailures} runs={runsData} today={today} db={db} focusId={triageFocus} onOpenBoard={openBoard}
+        <TriageView failures={failures} onTriage={triage} runs={runsData} today={today} db={db} focusId={triageFocus} onOpenBoard={openBoard}
           canEdit={allowed('triage.edit')} />
       )}
       {tab === idx('Analytics') && <AnalyticsView failures={failures} theme={theme} />}

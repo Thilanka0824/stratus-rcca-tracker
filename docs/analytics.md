@@ -341,16 +341,16 @@ ORDER BY logged_no_rated_operator DESC;
 
 Actions by role. Every request event carries its actor (R9) and the desk roster carries who built it. Deferrals and scrubs are the coordinators'; filings are the requesters' and the leads' — a coordinator files on behalf of people without a persona. The late-intake deferral is stamped at intake by the filer, so it counts as filing, not as a plan decision.
 
-| user_id | name | role | filed | assigned | deferred | scrubbed | covered | granted | total |
-|---|---|---|---|---|---|---|---|---|---|
-| U-04 | T. Ibarra | coordinator | 34 | 973 | 145 | 0 | 321 | 0 | 1473 |
-| U-03 | P. Nwosu | coordinator | 86 | 57 | 4 | 14 | 0 | 0 | 167 |
-| U-13 | M. Sato | requester | 148 | 0 | 0 | 0 | 0 | 0 | 152 |
-| U-07 | A. Okafor | authority | 138 | 0 | 0 | 0 | 0 | 0 | 143 |
-| U-05 | S. Tanaka | authority | 85 | 0 | 0 | 0 | 0 | 0 | 87 |
-| U-12 | L. Alvarez | requester | 69 | 0 | 0 | 0 | 0 | 0 | 71 |
-| U-08 | K. Osei | authority | 14 | 0 | 0 | 0 | 0 | 0 | 14 |
-| U-15 | E. Lindqvist | trainer | 0 | 0 | 0 | 0 | 0 | 6 | 6 |
+| user_id | name | role | filed | withdrawn | assigned | deferred | scrubbed | covered | granted | total |
+|---|---|---|---|---|---|---|---|---|---|---|
+| U-04 | T. Ibarra | coordinator | 34 | 0 | 973 | 145 | 0 | 321 | 0 | 1473 |
+| U-03 | P. Nwosu | coordinator | 86 | 6 | 57 | 4 | 14 | 0 | 0 | 167 |
+| U-13 | M. Sato | requester | 148 | 4 | 0 | 0 | 0 | 0 | 0 | 152 |
+| U-07 | A. Okafor | authority | 138 | 5 | 0 | 0 | 0 | 0 | 0 | 143 |
+| U-05 | S. Tanaka | authority | 85 | 2 | 0 | 0 | 0 | 0 | 0 | 87 |
+| U-12 | L. Alvarez | requester | 69 | 2 | 0 | 0 | 0 | 0 | 0 | 71 |
+| U-08 | K. Osei | authority | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 14 |
+| U-15 | E. Lindqvist | trainer | 0 | 0 | 0 | 0 | 0 | 0 | 6 | 6 |
 
 <details><summary>query</summary>
 
@@ -363,6 +363,7 @@ Actions by role. Every request event carries its actor (R9) and the desk roster 
 WITH ev AS (
   SELECT e.actor_id AS user_id,
          CASE WHEN e.event = 'submitted' OR (e.event = 'deferred' AND e.reason = 'late_intake') THEN 'filed'
+              WHEN e.event = 'withdrawn' THEN 'withdrawn'
               WHEN e.event IN ('scheduled', 'reassigned', 'executed') THEN 'assigned'
               WHEN e.event IN ('deferred', 'rescheduled') THEN 'deferred'
               WHEN e.event = 'scrubbed' THEN 'scrubbed'
@@ -376,8 +377,9 @@ WITH ev AS (
   SELECT r.granted_by, 'granted' FROM person_ratings r WHERE r.granted_by IS NOT NULL
 )
 SELECT u.user_id, u.name, u.role,
-       sum(action = 'filed')    AS filed,
-       sum(action = 'assigned') AS assigned,
+       sum(action = 'filed')     AS filed,
+       sum(action = 'withdrawn') AS withdrawn,
+       sum(action = 'assigned')  AS assigned,
        sum(action = 'deferred') AS deferred,
        sum(action = 'scrubbed') AS scrubbed,
        sum(action = 'covered')  AS covered,

@@ -64,7 +64,7 @@ reason and an actor.
 | **Test coordinator** (primary) | Intake everything, prioritize, build tomorrow's plan, roster the rider desk, handle day-of scrubs, explain shortages with data | Requests · Dispatch · Capacity |
 | **Requesting engineer** | Submit a complete request before cutoff, withdraw it while it waits, know when it will run and why it didn't; triage failures | Requests (intake form, timeline drawer) · Triage |
 | **Program lead / PM** | Set priority and tail targets inside scope; demand vs supply, deferral causes; the PM also sets the desk's ratio | Dispatch (program header) · Capacity · Reports |
-| **Rider ops lead** | The desk's settings and who covers it | Dispatch (desk row) · Capacity |
+| **Rider ops lead** | The desk's ratio and minimum, and a view of who covers it — the coordinator rosters it | Dispatch (desk row) · Capacity |
 | **Trainer** | Grant ratings and the desk qualification, effective-dated — never their own | Capacity (rating matrix) |
 | **Operator / safety pilot / rider operator** | See tomorrow's sortie or desk window, and acknowledge it | My day |
 | **Manager** | Read everything, change nothing | Capacity · Reports |
@@ -110,7 +110,8 @@ what's allowed.
 | R10 | Coverage: a rider-facing sortie can't be saved into a window with no qualified rider operator covering, and can't push the desk over its ratio (rider-facing sorties ÷ coverers) | block |
 
 R2 extends to the desk: a person covering a window can't fly in it, and can't cover
-it twice. A block is rejected with the rule id and a message, for example "R1 · H.
+it twice; and a coverer can't be released while the window's riders would be left
+uncovered. A block is rejected with the rule id and a message, for example "R1 · H.
 Brandt is not rated on Sirocco", "R9 · coordinator only (signed in as Observer)",
 "R9 · you can't assign your own request" or "R10 · desk at 3:1, ratio is 2". A
 warning renders inline and in the day summary. Intake runs the same way: the form
@@ -147,7 +148,7 @@ role × every action. The short version:
 | Action | requester | coordinator | authority | trainer | crew | observer |
 |---|---|---|---|---|---|---|
 | file a request | yes | yes (on behalf) | in scope | · | · | · |
-| withdraw or edit, before it is scheduled | own | yes | in scope | · | · | · |
+| withdraw, before it is scheduled | own | yes | in scope | · | · | · |
 | assign, reassign, defer, scrub, cover the desk | · | **yes** | · | · | · | · |
 | program priority and tail targets | · | · | **in scope** | · | · | · |
 | the desk's ratio and minimum | · | · | **PM or rider ops lead** | · | · | · |
@@ -166,7 +167,9 @@ Three separation-of-duties rules, each a test and each true of the seed:
 
 Two more hold on the seed and are checked on every regeneration: every actor's role
 permits the event it stamped (I4), and every rider-facing sortie flew with a
-qualified coverer in its window, at or under ratio (I5).
+qualified coverer in its window, at or under ratio (I5). The matrix also carries
+`request.edit` and `plan.reassign` ahead of their controls; today's edits are
+withdraw and the board's assign.
 
 ## Metrics
 
@@ -249,7 +252,9 @@ arcs are planted so every view has something to say.
    failures. The weekly chart shows the dip and the recovery after v2.15.2 ships.
    This is the failure that grounded the two Levants in arc 3.
 
-## The five-minute demo
+## The ten-minute demo
+
+The app opens as the AM coordinator; steps that need another persona say so.
 
 1. Open **Dispatch** for tomorrow. The rail shows two unscheduled P0.
 2. Assign the Sirocco request with an unrated pilot. R1 blocks with the message.
@@ -292,7 +297,7 @@ arcs are planted so every view has something to say.
   `sql/analytics/*.sql` holds the metric queries and `docs/analytics.md` is rendered
   from them. The app renders live from state; the notebook answers the same
   questions against the seed database. Reviewable SQL in the repo, no server.
-- **No router.** Seven tabs in two groups by index. Hash routing only if it hurts.
+- **No router.** Eight tabs in two groups by index. Hash routing only if it hurts.
 - **"Today" is the last date in the dataset.** Tomorrow (today + 1) exists as a
   planned day with an unscheduled queue, which is the board's default view. Nothing
   ages by the wall clock.
@@ -377,7 +382,7 @@ src/data/*.json           the emitted seed the app imports at build time — use
   form already validates.
 - Live multi-user state, once there's something worth persisting.
 - Lazy-load the seed JSON the way the chart views already are. The initial chunk
-  is about 780 KB before gzip, most of it the seed.
+  is about 920 KB before gzip (about 120 KB gzipped), most of it the seed.
 
 The shortage you hear about isn't always the shortage you have. That's what the
 data is for.

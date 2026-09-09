@@ -584,3 +584,13 @@ table.desk-grid th.col-act, table.desk-grid td.col-act { width: 96px; text-align
 .prog-hd .meter-k + .meter-k { margin-left: 0; }
 
 .tl .tl-by { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+
+/* review follow-ups: the header fits a phone, low-emphasis text clears AA, the rail shows the desk's note */
+.whoami { max-width: 100%; }
+.whoami-row { flex-wrap: wrap; }
+.whoami select { width: min(300px, 100%); }
+.role-badge.observer { border-color: var(--ink-faint); color: var(--ink-dim); border-style: dashed; }
+.dim-note-inline { color: var(--ink-dim); }
+.pill.desk-quiet { color: var(--ink-dim); }
+.rail-note { font-family: var(--mono); font-size: 10.5px; color: var(--ink-dim); margin-top: 3px; line-height: 1.4; white-space: normal; }
+.desk-note { margin: 10px 14px 0; }

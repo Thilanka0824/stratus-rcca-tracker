@@ -143,7 +143,8 @@ export function checkUncover(cand, db) {
   const left = coverers.length - 1;
   const riders = riderLoad(db, cand.date, cand.window);
   if (riders > 0 && left < desk.min_per_window) {
-    return [{ rule: 'R10', severity: 'block', message: `${riders} rider-facing sortie${riders > 1 ? 's' : ''} in ${cand.window} on ${fmtDate(cand.date)} would be left with no rider operator covering` }];
+    const who = left === 0 ? 'no rider operator covering' : `only ${left} covering, below the minimum of ${desk.min_per_window}`;
+    return [{ rule: 'R10', severity: 'block', message: `${riders} rider-facing sortie${riders > 1 ? 's' : ''} in ${cand.window} on ${fmtDate(cand.date)} would be left with ${who}` }];
   }
   if (riders > desk.ratio * left) {
     return [{ rule: 'R10', severity: 'block', message: `desk would be at ${riders}:${left}, ratio is ${desk.ratio}` }];
@@ -444,6 +445,8 @@ export function validateRequest(f, db, { tomorrow }) {
   }
   if (!f.needed_by || f.needed_by < tomorrow) out.push({ field: 'needed_by', message: `Needed-by must be ${tomorrow} or later — today's plan is set.` });
   if (!f.requester || !f.requester.trim()) out.push({ field: 'requester', message: 'Who is asking?' });
+  // A showcase always carries guests: riders aboard is not optional there (R10 follows).
+  if (program && program.code === 'SF' && !f.rider_facing) out.push({ field: 'rider_facing', message: 'A showcase always carries guests — riders aboard is not optional (R10).' });
   return out;
 }
 
@@ -534,14 +537,25 @@ export function scrubAssignment(actor, assignment, { reason }) {
 
 // A scrubbed sortie puts its request back on the same day's rail, so the
 // coordinator can reassign it before deciding to defer.
-export function scrubRequest(actor, request, assignment, { reason, at }) {
+export function scrubRequest(actor, request, assignment, { reason, at, note = '' }) {
   authorize(actor, 'plan.scrub', request);
   assertReason(reason, SCRUB_REASONS);
   return {
     ...request, status: 'deferred', plan_date: assignment.date,
     timeline: [...request.timeline, { at, day: assignment.date, event: 'scrubbed', reason,
-      note: `${assignment.asset_id} ${assignment.window} scrubbed (board)`, by: actor.user_id }],
+      note: `${assignment.asset_id} ${assignment.window} scrubbed (board)${note ? ` — ${note}` : ''}`, by: actor.user_id }],
   };
+}
+
+// ---------------------------------------------------------------- triage (the requester's)
+// The status ladder. Verified stamps resolved = today and anything else
+// clears it; an undo passes the previous resolved date back explicitly.
+export const TRIAGE_STEPS = ['Open', 'Investigating', 'Corrective Action', 'Verified'];
+
+export function triageFailure(actor, failure, status, { today, resolved } = {}) {
+  authorize(actor, 'triage.edit', failure);
+  if (!TRIAGE_STEPS.includes(status)) throw new Error(`Triage status must be one of ${TRIAGE_STEPS.join(' → ')}.`);
+  return { ...failure, triage_status: status, resolved: resolved !== undefined ? resolved : status === 'Verified' ? today : null };
 }
 
 // A requester takes back their own request; a coordinator or the program's
@@ -579,8 +593,14 @@ export function acknowledge(actor, target) {
 // Effective-dated: the board re-evaluates R1 and R10 from that day. Never
 // to oneself (I2).
 
-export function grantRating(actor, person, airframe, { effective }) {
+function assertGrantDate(effective, notBefore) {
+  if (!effective) throw new Error('A grant needs the day it takes effect.');
+  if (notBefore && effective < notBefore) throw new Error(`A grant takes effect from ${fmtDate(notBefore)} at the earliest — history is not rewritten.`);
+}
+
+export function grantRating(actor, person, airframe, { effective, notBefore = null }) {
   authorize(actor, 'rating.grant', person);
+  assertGrantDate(effective, notBefore);
   return {
     ...person,
     ratings: person.ratings.includes(airframe) ? person.ratings : [...person.ratings, airframe],
@@ -596,8 +616,9 @@ export function revokeRating(actor, person, airframe) {
   return { ...person, ratings: person.ratings.filter((a) => a !== airframe), ratings_effective, granted_by };
 }
 
-export function grantQualification(actor, person, { effective }) {
+export function grantQualification(actor, person, { effective, notBefore = null }) {
   authorize(actor, 'qualification.grant', person);
+  assertGrantDate(effective, notBefore);
   return {
     ...person,
     roles: person.roles.includes('rider_ops') ? person.roles : [...person.roles, 'rider_ops'],
@@ -622,13 +643,28 @@ export function setProgramTargets(actor, program, { asset_min, asset_max }) {
   return { ...program, asset_min, asset_max };
 }
 
+// Both of a program's dials in one transition, each behind its own
+// permission, so a dialog that changes priority and targets together cannot
+// lose one to a stale base.
+export function editProgram(actor, program, patch) {
+  let next = program;
+  if ('priority_default' in patch && patch.priority_default !== program.priority_default) {
+    next = setProgramPriority(actor, next, patch.priority_default);
+  }
+  const min = patch.asset_min ?? program.asset_min;
+  const max = patch.asset_max ?? program.asset_max;
+  if (min !== program.asset_min || max !== program.asset_max) next = setProgramTargets(actor, next, { asset_min: min, asset_max: max });
+  return next;
+}
+
 // Never below one coverer, never above ratio 4: the principle has a floor
-// and the desk has a ceiling. A waiver is not among the settings.
+// and the desk has a ceiling. A waiver is not among the settings — only
+// these two keys exist, whatever a patch carries.
 export const DESK_BOUNDS = { min_per_window: [1, 4], ratio: [1, 4] };
 
 export function setDeskSettings(actor, desk, patch) {
   authorize(actor, 'desk.settings');
-  const next = { ...desk, ...patch };
+  const next = { ratio: patch.ratio ?? desk.ratio, min_per_window: patch.min_per_window ?? desk.min_per_window };
   for (const [k, [lo, hi]] of Object.entries(DESK_BOUNDS)) {
     if (!(Number.isInteger(next[k]) && next[k] >= lo && next[k] <= hi)) {
       throw new Error(`${k === 'ratio' ? 'The ratio' : 'Coverers per window'} must be a whole number between ${lo} and ${hi}.`);

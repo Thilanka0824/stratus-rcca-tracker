@@ -374,11 +374,12 @@ export function riderFulfillment(db, today, from = null, to = null) {
 
 // ---------------------------------------------------------------- actions by role
 
-export const ACTION_COLUMNS = ['filed', 'assigned', 'deferred', 'scrubbed', 'covered', 'granted', 'set'];
+export const ACTION_COLUMNS = ['filed', 'withdrawn', 'assigned', 'deferred', 'scrubbed', 'covered', 'granted', 'set'];
 
 // Who did what: every timeline event by its actor, the desk roster by who
-// built it, and the session's audit (grants, priority and target changes,
-// desk settings, acknowledgements). Occurrence-weighted by event. An intake
+// built it (session covers land there too), the seed's grants by their
+// grantor, and the session's audit (grants, priority and target changes, desk
+// settings). Occurrence-weighted by event, in the date range. An intake
 // deferral is part of filing, not a plan decision, so it counts as 'filed'.
 export function actionsByRole(db, audit = [], { from = null, to = null } = {}) {
   const rows = new Map();
@@ -393,6 +394,7 @@ export function actionsByRole(db, audit = [], { from = null, to = null } = {}) {
   };
   const column = (e) => {
     if (eventAction(e) === 'request.create') return 'filed';
+    if (e.event === 'withdrawn') return 'withdrawn';
     if (e.event === 'scheduled' || e.event === 'reassigned' || e.event === 'executed') return 'assigned';
     if (e.event === 'deferred' || e.event === 'rescheduled') return 'deferred';
     if (e.event === 'scrubbed') return 'scrubbed';
@@ -406,9 +408,15 @@ export function actionsByRole(db, audit = [], { from = null, to = null } = {}) {
     }
   }
   for (const c of db.coverage || []) if (inRange(c.date)) bump(c.assigned_by, 'covered');
+  for (const p of db.persons) {
+    for (const [key, by] of Object.entries(p.granted_by || {})) {
+      const day = key === 'rider_ops' ? p.qualifications?.rider_ops : p.ratings_effective?.[key];
+      if (day && inRange(day)) bump(by, 'granted');
+    }
+  }
   for (const a of audit) {
-    if (a.action === 'desk.cover') bump(a.by, 'covered');
-    else if (a.action === 'rating.grant' || a.action === 'qualification.grant' || a.action === 'rating.revoke') bump(a.by, 'granted');
+    if (!inRange(a.at.slice(0, 10))) continue;
+    if (a.action === 'rating.grant' || a.action === 'qualification.grant' || a.action === 'rating.revoke') bump(a.by, 'granted');
     else if (a.action === 'program.priority' || a.action === 'program.targets' || a.action === 'desk.settings') bump(a.by, 'set');
   }
   return [...rows.values()].sort((a, b) => b.total - a.total || a.user.user_id.localeCompare(b.user.user_id));

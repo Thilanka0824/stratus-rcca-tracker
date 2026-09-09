@@ -5,7 +5,7 @@ import {
   withdrawRequest, ratedOn, qualifiedOn, assetStatusOn, validateRequest, newRequest, pruneWindows, operatingWindows,
   deskCoverers, riderLoad, checkCoverage, checkCover, checkUncover, coverWindow, uncoverWindow, acknowledge,
   grantRating, revokeRating, grantQualification, setProgramPriority, setProgramTargets, setDeskSettings,
-  DEFERRAL_REASONS, SCRUB_REASONS, DEFAULT_DESK,
+  editProgram, triageFailure, TRIAGE_STEPS, DEFERRAL_REASONS, SCRUB_REASONS, DEFAULT_DESK,
 } from './rules';
 import { can, authorize, PERMISSIONS, ACTIONS, ROLES, eventAction } from './auth';
 import programs from '../data/programs.json';
@@ -459,6 +459,7 @@ describe('R10 · the rider desk', () => {
     expect(() => setDeskSettings(U.pm, DEFAULT_DESK, { min_per_window: 0 })).toThrow(/between 1 and 4/);
     expect(() => setDeskSettings(U.lead, DEFAULT_DESK, { ratio: 3 })).toThrow(/PM or rider ops lead only/);
     expect(Object.keys(setDeskSettings(U.pm, DEFAULT_DESK, {}))).toEqual(['ratio', 'min_per_window']);
+    expect(setDeskSettings(U.pm, DEFAULT_DESK, { ratio: 3, waiver: true })).toEqual({ ratio: 3, min_per_window: 1 });   // no third key, ever
   });
   it('a coverer cannot be released while riders in the window depend on them', () => {
     const db = fx();                                                          // PM: P-RO alone, ratio 2
@@ -472,6 +473,8 @@ describe('R10 · the rider desk', () => {
     db.assignments.push({ assignment_id: 'AS-r3', ...rider('RQ-R3', 'LV-06', { pilot_id: 'P-HP' }), status: 'planned' });
     expect(checkUncover({ date: D, window: 'PM', person_id: 'P-RO' }, db).find((v) => v.rule === 'R10').message).toBe('desk would be at 3:1, ratio is 2');
     expect(checkUncover({ date: D, window: 'PM', person_id: 'P-LP' }, db).find((v) => v.rule === 'R2').message).toMatch(/is not covering PM/);
+    db.desk = { ratio: 4, min_per_window: 2 };
+    expect(checkUncover({ date: D, window: 'PM', person_id: 'P-RO' }, db).find((v) => v.rule === 'R10').message).toMatch(/only 1 covering, below the minimum of 2/);
   });
   it('rostering the desk carries the actor; the roster is immutable', () => {
     const roster = coverWindow(U.coordinator, [], { date: D, window: 'PM', person_id: 'P-RO' }, { at: AT });
@@ -508,7 +511,9 @@ describe('transitions · the actor comes first and the timeline names them', () 
     expect(ratedOn(lp, 'Harmattan', '2026-07-10')).toBe(true);
     expect(revokeRating(U.trainer, lp, 'Harmattan').ratings).not.toContain('Harmattan');
     expect(() => grantRating(U.trainer, db.person.get('P-HP'), 'Sirocco', { effective: D })).toThrow(/own rating/);
-    const op = grantQualification(U.trainer, db.person.get('P-OP'), { effective: D });
+    expect(() => grantRating(U.trainer, db.person.get('P-LP'), 'Harmattan', { effective: '2026-04-01', notBefore: D })).toThrow(/from Jul 1 at the earliest/);
+    expect(() => grantQualification(U.trainer, db.person.get('P-OP'), { effective: '2026-06-30', notBefore: D })).toThrow(/history is not rewritten/);
+    const op = grantQualification(U.trainer, db.person.get('P-OP'), { effective: D, notBefore: D });
     expect(op.roles).toContain('rider_ops');
     expect(qualifiedOn(op, D)).toBe(true);
     expect(qualifiedOn(op, '2026-06-30')).toBe(false);
@@ -516,6 +521,13 @@ describe('transitions · the actor comes first and the timeline names them', () 
     db.person.set('P-OP', op);
     expect(hasBlock(checkCover({ date: D, window: 'NIGHT', person_id: 'P-OP' }, db))).toBe(false);
     expect(db.person.get('P-LP').ratings).not.toContain('Harmattan');           // immutable
+  });
+  it('a program\'s two dials change together, each behind its own permission', () => {
+    const plc = { program_id: 'PRG-A', code: 'PLC', asset_min: 2, asset_max: 3, priority_default: 'P0' };
+    expect(editProgram(U.pm, plc, { priority_default: 'P1', asset_min: 1, asset_max: 3 })).toMatchObject({ priority_default: 'P1', asset_min: 1, asset_max: 3 });
+    expect(editProgram(U.lead, plc, { priority_default: 'P0', asset_min: 2, asset_max: 3 })).toBe(plc);              // nothing changed: same object
+    expect(() => editProgram(U.lead, { ...plc, program_id: 'PRG-B', code: 'PN' }, { priority_default: 'P1' })).toThrow(/outside your scope/);
+    expect(() => editProgram(U.coordinator, plc, { asset_min: 1 })).toThrow(/authority only/);
   });
   it('program priority and targets are set by authority inside scope, with sane values', () => {
     const plc = { program_id: 'PRG-A', code: 'PLC', asset_min: 2, asset_max: 3, priority_default: 'P0' };
@@ -525,6 +537,22 @@ describe('transitions · the actor comes first and the timeline names them', () 
     expect(setProgramPriority(U.pm, plc, 'P1').priority_default).toBe('P1');
     expect(() => setProgramPriority(U.lead, plc, 'P9')).toThrow(/Priority must be/);
     expect(plc.priority_default).toBe('P0');                                   // immutable
+  });
+  it('a scrub keeps the coordinator\'s note', () => {
+    const s = scrubRequest(U.coordinator, other, { date: D, window: 'AM', asset_id: 'HM-02' }, { reason: 'weather', at: AT, note: 'fog until 10' });
+    expect(s.timeline.at(-1).note).toBe('HM-02 AM scrubbed (board) — fog until 10');
+    expect(s.timeline.at(-1)).toMatchObject({ event: 'scrubbed', reason: 'weather', by: 'U-C' });
+  });
+  it('triage is the requester\'s: the ladder, the resolved stamp, the undo, and the refusal', () => {
+    const f = { failure_id: 'F-1', triage_status: 'Open', resolved: null };
+    const v = triageFailure(U.requester, f, 'Verified', { today: '2026-06-30' });
+    expect(v).toMatchObject({ triage_status: 'Verified', resolved: '2026-06-30' });
+    expect(triageFailure(U.requester, v, 'Investigating', { today: '2026-06-30' }).resolved).toBeNull();
+    expect(triageFailure(U.requester, v, 'Open', { today: '2026-06-30', resolved: null })).toMatchObject({ triage_status: 'Open', resolved: null });   // an undo passes the old stamp back
+    expect(() => triageFailure(U.requester, f, 'Done', { today: '2026-06-30' })).toThrow(/Triage status must be/);
+    expect(() => triageFailure(U.coordinator, f, 'Verified', { today: '2026-06-30' })).toThrow('R9 · requester only (signed in as Coordinator)');
+    expect(TRIAGE_STEPS).toEqual(['Open', 'Investigating', 'Corrective Action', 'Verified']);
+    expect(f.triage_status).toBe('Open');                                     // immutable
   });
   it('withdraw is the requester\'s own, and only before the plan', () => {
     const mine = req('RQ-M', 'PRG-A', 'Harmattan', 'operator_pilot', 'P0', ['AM'], { requester_id: 'U-R' });
@@ -547,6 +575,14 @@ describe('intake · validateRequest and newRequest', () => {
   const opts = { tomorrow: '2026-07-01' };
   it('accepts a complete request', () => {
     expect(validateRequest(fields, fx(), opts)).toEqual([]);
+  });
+  it('a showcase always carries guests', () => {
+    const db = fx();
+    db.programs.push({ program_id: 'PRG-SF', code: 'SF', standing: false, airframes: ['Levant'], asset_min: 0, asset_max: 3, priority_default: 'P0' });
+    db.program.set('PRG-SF', db.programs.at(-1));
+    const sf = { ...fields, program_id: 'PRG-SF', airframe: 'Levant', windows: ['PM'], rider_facing: false };
+    expect(validateRequest(sf, db, opts).map((e) => e.field)).toEqual(['rider_facing']);
+    expect(validateRequest({ ...sf, rider_facing: true }, db, opts)).toEqual([]);
   });
   it('refuses a window the airframe does not fly, a foreign airframe, and a date already planned', () => {
     const db = fx();

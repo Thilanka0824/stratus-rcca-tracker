@@ -12,7 +12,7 @@ const PRIO = { P0: 0, P1: 1, P2: 2, P3: 3 };
 // tooltip, never hidden.
 export default function RequestsView({ db, meta, today, onOpenBoard, focusId = null, onSubmit, onWithdraw, builds = [], nowAt, me = null, allowed = () => ({ ok: true }), defaultMine = false }) {
   const [showForm, setShowForm] = useState(false);
-  const [who, setWho] = useState(defaultMine ? 'mine' : 'all');
+  const [who, setWho] = useState(defaultMine && !focusId ? 'mine' : 'all');   // a deep link shows what it points at
   const [program, setProgram] = useState('all');
   const [status, setStatus] = useState('all');
   const [priority, setPriority] = useState('all');
@@ -253,8 +253,10 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated, al
           <div className="seat"><span className="k">Riders</span>
             <div className="checks">
               <label>
-                <input type="checkbox" name="rider_facing" checked={f.rider_facing} onChange={(e) => setF((x) => ({ ...x, rider_facing: e.target.checked }))} />
-                <span>Riders aboard — the desk must cover it (R10)</span>
+                <input type="checkbox" name="rider_facing" checked={f.rider_facing} disabled={program.code === 'SF'}
+                  title={program.code === 'SF' ? 'A showcase always carries guests' : undefined}
+                  onChange={(e) => setF((x) => ({ ...x, rider_facing: e.target.checked }))} />
+                <span>Riders aboard — the desk must cover it (R10){program.code === 'SF' ? ' · always, for a showcase' : ''}</span>
               </label>
             </div>
           </div>
@@ -289,7 +291,7 @@ function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated, al
 
 const FIELD_LABELS = {
   program_id: 'Program', title: 'Title', build: 'Build', build_stage: 'Build stage', crew: 'Crew', priority: 'Priority',
-  airframe: 'Airframe', windows: 'Windows', needed_by: 'Needed by', requester: 'Requester',
+  airframe: 'Airframe', windows: 'Windows', needed_by: 'Needed by', requester: 'Requester', rider_facing: 'Riders',
 };
 
 function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: true }) }) {
@@ -307,7 +309,7 @@ function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: 
     ? { ok: false, message: `${r.request_id} is ${r.status}; a request can only be withdrawn before it is scheduled.` }
     : allowed('request.withdraw', r);
   return (
-    <div className="detail">
+    <div className="detail" tabIndex={-1}>
       <div className="fl-top">
         <span className={`sev ${r.priority}`}>{r.priority}</span>
         <span className="fl-id">{r.request_id}</span>
@@ -375,7 +377,7 @@ function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: 
         <ConfirmDialog
           title={`Withdraw ${r.request_id}?`}
           body="It leaves the queue with the reason 'requester withdrew'. The timeline keeps the record."
-          confirmLabel="Withdraw" cancelLabel="Keep it" danger
+          confirmLabel="Withdraw" cancelLabel="Keep it" danger fallbackFocus=".detail"
           onConfirm={() => { const msg = onWithdraw(r.request_id); setConfirming(false); setRefusal(msg); }}
           onCancel={() => setConfirming(false)}
         />

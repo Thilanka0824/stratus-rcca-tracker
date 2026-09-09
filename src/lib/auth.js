@@ -44,8 +44,9 @@ export const PERMISSIONS = {
   'qualification.grant': { trainer: 'not-self' },
   'sortie.ack':          { crew: 'own' },
   'triage.edit':         { requester: 'yes' },
-  // Capacity, Reports and the RCCA analytics: everyone but crew. A requester
-  // lands on their own program's numbers; that is a filter, not a permission.
+  // Capacity, Reports and the RCCA analytics: everyone but crew. The spec
+  // scopes a requester to their own program's numbers; that filter is on the
+  // roadmap, so today a requester sees every program.
   'view.analytics':      { requester: 'yes', coordinator: 'yes', authority: 'yes', trainer: 'yes', observer: 'yes' },
 };
 export const ACTIONS = Object.keys(PERMISSIONS);
@@ -56,7 +57,7 @@ export const ACTIONS = Object.keys(PERMISSIONS);
 export const EVENT_ACTION = {
   submitted: 'request.create', withdrawn: 'request.withdraw', deferred: 'plan.defer',
   rescheduled: 'plan.defer', scrubbed: 'plan.scrub', scheduled: 'plan.assign',
-  reassigned: 'plan.assign', executed: 'plan.assign',
+  reassigned: 'plan.reassign', executed: 'plan.assign',
 };
 export function eventAction(e) {
   return e.event === 'deferred' && e.reason === 'late_intake' ? 'request.create' : EVENT_ACTION[e.event];
