@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { failureAge, isAging, isUnresolved, fmtDate } from '../lib/helpers';
+import { failureAge, isAging, isUnresolved, fmtDate, daysBetween } from '../lib/helpers';
+import { tailsAgainst } from '../lib/dispatch';
 
 const STEPS = ['Open', 'Investigating', 'Corrective Action', 'Verified'];
 
-export default function TriageView({ failures, setFailures, today }) {
-  const [selId, setSelId] = useState(null);
+export default function TriageView({ failures, setFailures, runs, today, db, focusId = null, onOpenBoard }) {
+  const [selId, setSelId] = useState(focusId);   // arriving from a grounded tail on the board
 
   // Unresolved first, then severity, then age (oldest first) — triage order,
   // not chronological order. The queue should read like a to-do list.
@@ -84,7 +85,7 @@ export default function TriageView({ failures, setFailures, today }) {
         })}
       </div>
 
-      {sel ? <Detail f={sel} today={today} setStatus={setStatus} /> : (
+      {sel ? <Detail f={sel} today={today} setStatus={setStatus} runs={runs} db={db} onOpenBoard={onOpenBoard} /> : (
         <div className="detail empty-hint">Select a failure to triage.</div>
       )}
 
@@ -100,8 +101,20 @@ export default function TriageView({ failures, setFailures, today }) {
   );
 }
 
-function Detail({ f, today, setStatus }) {
+function Detail({ f, today, setStatus, runs, db, onOpenBoard }) {
   const stepIdx = STEPS.indexOf(f.triage_status);
+  // The loop, both directions: which programs this failure hit (through the
+  // sorties its runs came from) and which tails are grounded against it.
+  const programs = useMemo(() => {
+    const counts = new Map();
+    for (const id of f.occurrences) {
+      const run = runs.find((r) => r.run_id === id);
+      const code = run?.request_id ? db.program.get(db.request.get(run.request_id)?.program_id)?.code : null;
+      if (code) counts.set(code, (counts.get(code) || 0) + 1);
+    }
+    return [...counts].sort((a, b) => b[1] - a[1]);
+  }, [f, runs, db]);
+  const grounded = useMemo(() => tailsAgainst(db, f.failure_id), [db, f.failure_id]);
   return (
     <div className="detail">
       <div className="fl-top">
@@ -161,6 +174,25 @@ function Detail({ f, today, setStatus }) {
         <>
           <div className="sect-label">Corrective action</div>
           <div className="corrective">{f.corrective_action}</div>
+        </>
+      )}
+
+      {(programs.length > 0 || grounded.length > 0) && (
+        <>
+          <div className="sect-label">Dispatch impact</div>
+          <div className="corrective">
+            {programs.length > 0 && (
+              <div>Programs hit through their sorties: {programs.map(([code, n]) => `${code} (${n})`).join(' · ')}</div>
+            )}
+            {grounded.map((g) => (
+              <div key={g.asset.asset_id + g.date_from} className="grounding">
+                <strong className="mono">{g.asset.asset_id}</strong> {g.status} {fmtDate(g.date_from)} – {g.date_to ? fmtDate(g.date_to) : 'open'}
+                {' '}({daysBetween(g.date_from, g.date_to || today) + 1} days) · {g.note}
+                {onOpenBoard && <button className="linkish small" onClick={() => onOpenBoard(g.date_from)}>board →</button>}
+              </div>
+            ))}
+            {grounded.length === 0 && programs.length > 0 && <div className="dim-note">No tails grounded against this failure.</div>}
+          </div>
         </>
       )}
 

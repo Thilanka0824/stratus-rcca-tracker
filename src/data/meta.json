@@ -3,5 +3,48 @@
  "dataset": "synthetic",
  "generated_by": "generate_data.py (seeded, reproducible)",
  "window_start": "2026-04-02",
- "window_end": "2026-06-30"
+ "window_end": "2026-06-30",
+ "today": "2026-06-30",
+ "tomorrow": "2026-07-01",
+ "fleet_family": "Windz",
+ "airframes": {
+  "Levant": {
+   "role": "workhorse \u2014 urban 2-pax",
+   "windows": [
+    "AM",
+    "PM",
+    "NIGHT"
+   ]
+  },
+  "Harmattan": {
+   "role": "instrumented mid-size",
+   "windows": [
+    "AM",
+    "PM"
+   ]
+  },
+  "Sirocco": {
+   "role": "bring-up airframe",
+   "windows": [
+    "AM",
+    "PM"
+   ]
+  }
+ },
+ "windows": [
+  "AM",
+  "PM",
+  "NIGHT"
+ ],
+ "cutoff_local": "15:00",
+ "deferral_reasons": [
+  "no_rated_operator",
+  "no_rated_pilot",
+  "no_asset",
+  "asset_grounded",
+  "program_over_max",
+  "build_not_ready",
+  "late_intake",
+  "requester_withdrew"
+ ]
 }

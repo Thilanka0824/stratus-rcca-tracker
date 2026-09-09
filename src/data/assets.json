@@ -1,0 +1,229 @@
+[
+ {
+  "asset_id": "LV-01",
+  "airframe": "Levant",
+  "config": "baseline",
+  "windows": [
+   "AM",
+   "PM",
+   "NIGHT"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-04-02",
+  "status_history": []
+ },
+ {
+  "asset_id": "LV-02",
+  "airframe": "Levant",
+  "config": "instrumented",
+  "windows": [
+   "AM",
+   "PM",
+   "NIGHT"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-04-02",
+  "status_history": []
+ },
+ {
+  "asset_id": "LV-03",
+  "airframe": "Levant",
+  "config": "baseline",
+  "windows": [
+   "AM",
+   "PM",
+   "NIGHT"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-06-19",
+  "status_history": [
+   {
+    "status": "grounded",
+    "date_from": "2026-06-10",
+    "date_to": "2026-06-18",
+    "reserved_by": null,
+    "note": "Grounded pending v2.15.2 \u2014 intruder-track regression (F-0011)",
+    "failure_id": "F-0011"
+   }
+  ]
+ },
+ {
+  "asset_id": "LV-04",
+  "airframe": "Levant",
+  "config": "baseline",
+  "windows": [
+   "AM",
+   "PM",
+   "NIGHT"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-06-18",
+  "status_history": [
+   {
+    "status": "reserved",
+    "date_from": "2026-06-15",
+    "date_to": "2026-06-17",
+    "reserved_by": "PRG-06",
+    "note": "Showcase config \u2014 cabin trim and livery",
+    "failure_id": null
+   }
+  ]
+ },
+ {
+  "asset_id": "LV-05",
+  "airframe": "Levant",
+  "config": "baseline",
+  "windows": [
+   "AM",
+   "PM",
+   "NIGHT"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-06-19",
+  "status_history": [
+   {
+    "status": "grounded",
+    "date_from": "2026-06-10",
+    "date_to": "2026-06-18",
+    "reserved_by": null,
+    "note": "Grounded pending v2.15.2 \u2014 intruder-track regression (F-0011)",
+    "failure_id": "F-0011"
+   }
+  ]
+ },
+ {
+  "asset_id": "LV-06",
+  "airframe": "Levant",
+  "config": "instrumented",
+  "windows": [
+   "AM",
+   "PM",
+   "NIGHT"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-06-18",
+  "status_history": [
+   {
+    "status": "maintenance",
+    "date_from": "2026-06-11",
+    "date_to": "2026-06-17",
+    "reserved_by": null,
+    "note": "100-hour inspection (scheduled before the grounding)",
+    "failure_id": null
+   }
+  ]
+ },
+ {
+  "asset_id": "HM-01",
+  "airframe": "Harmattan",
+  "config": "instrumented",
+  "windows": [
+   "AM",
+   "PM"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-04-02",
+  "status_history": []
+ },
+ {
+  "asset_id": "HM-02",
+  "airframe": "Harmattan",
+  "config": "instrumented",
+  "windows": [
+   "AM",
+   "PM"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-04-02",
+  "status_history": []
+ },
+ {
+  "asset_id": "HM-03",
+  "airframe": "Harmattan",
+  "config": "instrumented",
+  "windows": [
+   "AM",
+   "PM"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-04-02",
+  "status_history": []
+ },
+ {
+  "asset_id": "HM-04",
+  "airframe": "Harmattan",
+  "config": "instrumented",
+  "windows": [
+   "AM",
+   "PM"
+  ],
+  "status": "maintenance",
+  "reserved_by": null,
+  "status_note": "Avionics bay inspection \u2014 return to service Jul 3",
+  "status_since": "2026-06-28",
+  "status_history": [
+   {
+    "status": "reserved",
+    "date_from": "2026-05-04",
+    "date_to": "2026-05-08",
+    "reserved_by": "PRG-01",
+    "note": "PLC cert push \u2014 instrumented config frozen",
+    "failure_id": null
+   },
+   {
+    "status": "maintenance",
+    "date_from": "2026-06-28",
+    "date_to": null,
+    "reserved_by": null,
+    "note": "Avionics bay inspection \u2014 return to service Jul 3",
+    "failure_id": null
+   }
+  ]
+ },
+ {
+  "asset_id": "SR-01",
+  "airframe": "Sirocco",
+  "config": "baseline",
+  "windows": [
+   "AM",
+   "PM"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-04-02",
+  "status_history": []
+ },
+ {
+  "asset_id": "SR-02",
+  "airframe": "Sirocco",
+  "config": "baseline",
+  "windows": [
+   "AM",
+   "PM"
+  ],
+  "status": "available",
+  "reserved_by": null,
+  "status_note": "",
+  "status_since": "2026-04-02",
+  "status_history": []
+ }
+]
