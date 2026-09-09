@@ -635,7 +635,7 @@ USERS = [
     dict(user_id="U-03", name="P. Nwosu",      title="Test Coordinator (AM)", role="coordinator", scope=None,       person_id=None),
     dict(user_id="U-04", name="T. Ibarra",     title="Test Coordinator (PM)", role="coordinator", scope=None,       person_id=None),
     dict(user_id="U-05", name="S. Tanaka",     title="Program Lead, PLC",     role="authority",   scope=["PRG-01"], person_id=None),
-    dict(user_id="U-06", name="R. Adair",      title="PM",                    role="authority",   scope="all",      person_id=None),
+    dict(user_id="U-06", name="T. Rodrigo",     title="PM",                    role="authority",   scope="all",      person_id=None),
     dict(user_id="U-07", name="A. Okafor",     title="Program Lead, PN",      role="authority",   scope=["PRG-02"], person_id=None),
     dict(user_id="U-08", name="K. Osei",       title="Program Lead, SF",      role="authority",   scope=["PRG-06"], person_id=None),
     dict(user_id="U-09", name="D. Varga",      title="Operator / Pilot",      role="crew",        scope=None,       person_id="P-011"),

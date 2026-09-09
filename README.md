@@ -270,7 +270,7 @@ The app opens as the AM coordinator; steps that need another persona say so.
    in as **Coordinator**: the same button works.
 7. Open Jun 15 on the board. The rail shows the third showcase deferred:
    `R10 · desk at 3:1, ratio is 2 · LV-02 and K. Halvorsen / W. Adeyemi were free
-   — asked R. Adair (PM) to waive the ratio; there is no such action`. Switch to
+   — asked T. Rodrigo (PM) to waive the ratio; there is no such action`. Switch to
    **PM**: the desk's settings are a ratio and a minimum, and nothing else. *The
    principle cost us a P0, on purpose.*
 8. Sign in as **Trainer**, open Capacity, edit the matrix: qualify an operator on
