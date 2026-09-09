@@ -136,15 +136,20 @@ html, body {
 .stat .v.bad { color: var(--fail); }
 
 /* ---------- tabs ---------- */
+/* A scroll container clips at its padding box, so the hairline is an inset
+   shadow (the active underline covers it) and the padding leaves room for
+   focus rings — the two things overflow-x:auto used to eat. */
 .tabs {
-  display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 18px;
+  display: flex; gap: 2px; margin-bottom: 18px; padding: 4px 4px 0;
+  box-shadow: inset 0 -1px 0 var(--line);
   overflow-x: auto; scrollbar-width: none;   /* never clip a tab on a phone */
 }
+.tabs::-webkit-scrollbar { display: none; }
 .tab {
   appearance: none; background: none; border: none; cursor: pointer;
   font-family: var(--display); font-size: 14px; font-weight: 500;
   color: var(--ink-dim); padding: 10px 14px; min-height: 44px; flex: none;
-  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
 }
 .tab:hover { color: var(--ink); }
 .tab.on { color: var(--ink); border-bottom-color: var(--accent); }
@@ -298,6 +303,9 @@ td.scenario { white-space: normal; min-width: 220px; }
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); z-index: 20;
 }
 .toast .btn { min-height: 36px; }
+.toast-region:empty { display: none; }
+.panel:focus { outline: none; }               /* programmatic focus after a deep-link; keyboard focus keeps :focus-visible */
+.panel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 
 /* ---------- plan views: requests · dispatch · capacity ---------- */
@@ -496,7 +504,7 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
 
 /* Touch: every control clears 44px (Fitts / WCAG 2.5.8). */
 @media (pointer: coarse) {
-  .step, .theme-toggle, .btn, .filters select, .filters input, .cell-btn, .datepick input, .seat select { min-height: 44px; }
+  .step, .theme-toggle, .btn, .toast .btn, .filters select, .filters input, .cell-btn, .datepick input, .seat select { min-height: 44px; }
   .fl-card { padding: 12px 14px; }
 }
 

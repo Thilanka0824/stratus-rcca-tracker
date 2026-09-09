@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { failureAge, isAging, isUnresolved, fmtDate, daysBetween } from '../lib/helpers';
 import { tailsAgainst } from '../lib/dispatch';
 
@@ -27,12 +27,27 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
   // Every status change is reversible for a few seconds. A mis-click on
   // "Verified" would otherwise silently close a failure and sink it in the
   // queue — the kind of ending a triager remembers (Peak-End rule).
+  // The timer pauses while the toast is hovered or focused, and closing it
+  // hands keyboard focus back to the stepper instead of dropping it on body.
   const [toast, setToast] = useState(null);
+  const [paused, setPaused] = useState(false);
+  const undoRef = useRef(null);
+  const stepperRef = useRef(null);
   useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 6000);
+    if (!toast || paused) return;
+    const t = setTimeout(() => dismissToast(), 6000);
     return () => clearTimeout(t);
-  }, [toast]);
+  }, [toast, paused]);
+
+  function dismissToast(returnFocus = false) {
+    const hadFocus = document.activeElement === undoRef.current;
+    setToast(null);
+    setPaused(false);
+    if (returnFocus || hadFocus) {
+      // after React has removed the toast (a timeout, not rAF: rAF stalls in a background tab)
+      setTimeout(() => stepperRef.current?.querySelector('[aria-current="step"]')?.focus(), 0);
+    }
+  }
 
   function applyStatus(id, status, resolved) {
     setFailures((prev) =>
@@ -85,23 +100,33 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
         })}
       </div>
 
-      {sel ? <Detail f={sel} today={today} setStatus={setStatus} runs={runs} db={db} onOpenBoard={onOpenBoard} /> : (
+      {sel ? <Detail f={sel} today={today} setStatus={setStatus} runs={runs} db={db} onOpenBoard={onOpenBoard} stepperRef={stepperRef} /> : (
         <div className="detail empty-hint">Select a failure to triage.</div>
       )}
 
-      {toast && (
-        <div className="toast" role="status">
-          <span className="mono">{toast.text}</span>
-          <button className="btn ghost" onClick={() => { toast.undo(); setToast(null); }}>
-            Undo
-          </button>
-        </div>
-      )}
+      {/* The live region is always mounted so screen readers announce the
+          toast when its text arrives, not just when the node does. */}
+      <div className="toast-region" role="status" aria-live="polite">
+        {toast && (
+          <div
+            className="toast"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onFocus={() => setPaused(true)}
+            onBlur={() => setPaused(false)}
+          >
+            <span className="mono">{toast.text}</span>
+            <button ref={undoRef} className="btn ghost" onClick={() => { toast.undo(); dismissToast(true); }}>
+              Undo
+            </button>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
 
-function Detail({ f, today, setStatus, runs, db, onOpenBoard }) {
+function Detail({ f, today, setStatus, runs, db, onOpenBoard, stepperRef }) {
   const stepIdx = STEPS.indexOf(f.triage_status);
   // The loop, both directions: which programs this failure hit (through the
   // sorties its runs came from) and which tails are grounded against it.
@@ -145,7 +170,7 @@ function Detail({ f, today, setStatus, runs, db, onOpenBoard }) {
       </div>
 
       <div className="sect-label">Triage status</div>
-      <div className="stepper" role="group" aria-label="Advance triage status">
+      <div className="stepper" role="group" aria-label="Advance triage status" ref={stepperRef}>
         {STEPS.map((s, i) => (
           <button
             key={s}

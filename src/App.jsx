@@ -48,8 +48,11 @@ export default function App() {
   const [requestFocus, setRequestFocus] = useState(null);
   const [triageFocus, setTriageFocus] = useState(null);
 
+  // A focus request is a fresh object every time, so clicking the same stat
+  // card twice scrolls twice (React would otherwise bail out on equal state).
+  const focusSeq = useRef(0);
   function go(i, focus = null) {
-    setReportsFocus(focus);
+    setReportsFocus(focus ? { panel: focus, n: ++focusSeq.current } : null);
     setTab(i);
   }
   function openBoard(date) {

@@ -278,15 +278,15 @@ function CrewPicker({ db, date, request, asset, window, onCancel, onConfirm }) {
     .sort((x, y) => (y.rated - x.rated) || (y.rostered - x.rostered) || x.p.name.localeCompare(y.p.name));
 
   return (
-    <div className="modal-bg" onClick={onCancel}>
+    <div className="modal-bg" onClick={onCancel} onKeyDown={(e) => e.key === 'Escape' && onCancel()}>
       <div className="modal" role="dialog" aria-modal="true" aria-label="Assign crew" onClick={(e) => e.stopPropagation()}>
         <div className="sect-label">Assign</div>
         <h2>{request.request_id} → {asset.asset_id} · {window}</h2>
         <p className="caption">{request.title} · {CREW_LABELS[request.crew]}{request.windows.includes(window) ? '' : ` · ${window} is not a requested window`}</p>
-        {seats.map((role) => (
+        {seats.map((role, i) => (
           <label key={role} className="seat">
             <span className="k">{role === 'pilot' ? 'Safety pilot' : 'Operator'}</span>
-            <select value={role === 'pilot' ? pilot : operator} onChange={(e) => (role === 'pilot' ? setPilot : setOperator)(e.target.value)}>
+            <select autoFocus={i === 0} value={role === 'pilot' ? pilot : operator} onChange={(e) => (role === 'pilot' ? setPilot : setOperator)(e.target.value)}>
               <option value="">— choose —</option>
               {options(role).map(({ p, rated, rostered }) => (
                 <option key={p.person_id} value={p.person_id}>
@@ -315,13 +315,13 @@ function ReasonPicker({ label, reasons, onCancel, onConfirm }) {
   const [reason, setReason] = useState('');
   const [note, setNote] = useState('');
   return (
-    <div className="modal-bg" onClick={onCancel}>
+    <div className="modal-bg" onClick={onCancel} onKeyDown={(e) => e.key === 'Escape' && onCancel()}>
       <div className="modal" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
         <div className="sect-label">Reason required · R8</div>
         <h2>{label}</h2>
         <label className="seat">
           <span className="k">Reason</span>
-          <select value={reason} onChange={(e) => setReason(e.target.value)}>
+          <select autoFocus value={reason} onChange={(e) => setReason(e.target.value)}>
             <option value="">— choose —</option>
             {reasons.map((r) => <option key={r} value={r}>{REASON_LABELS[r]}</option>)}
           </select>
