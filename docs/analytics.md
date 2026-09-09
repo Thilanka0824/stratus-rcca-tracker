@@ -8,10 +8,10 @@ On-window fulfillment (north star). Requests executed within a requested window 
 
 | priority | requests | on_window | pct |
 |---|---|---|---|
-| P0 | 182 | 133 | 73.1 |
-| P1 | 270 | 266 | 98.5 |
-| P2 | 17 | 13 | 76.5 |
-| all | 469 | 412 | 87.8 |
+| P0 | 184 | 132 | 71.7 |
+| P1 | 259 | 247 | 95.4 |
+| P2 | 16 | 13 | 81.3 |
+| all | 459 | 392 | 85.4 |
 
 <details><summary>query</summary>
 
@@ -51,15 +51,21 @@ Deferral share by cause, per airframe. Occurrence-weighted: every deferral event
 
 | airframe | reason | n | share_pct | cumulative_pct |
 |---|---|---|---|---|
-| Harmattan | no_rated_pilot | 28 | 45.2 | 45.2 |
-| Harmattan | no_rated_operator | 22 | 35.5 | 80.6 |
-| Harmattan | late_intake | 11 | 17.7 | 98.4 |
-| Harmattan | program_over_max | 1 | 1.6 | 100.0 |
-| Levant | late_intake | 17 | 81.0 | 81.0 |
-| Levant | asset_grounded | 4 | 19.0 | 100.0 |
-| Sirocco | no_asset | 44 | 81.5 | 81.5 |
-| Sirocco | late_intake | 8 | 14.8 | 96.3 |
-| Sirocco | build_not_ready | 2 | 3.7 | 100.0 |
+| Harmattan | no_rated_pilot | 26 | 44.1 | 44.1 |
+| Harmattan | no_rated_operator | 20 | 33.9 | 78.0 |
+| Harmattan | late_intake | 8 | 13.6 | 91.5 |
+| Harmattan | program_over_max | 4 | 6.8 | 98.3 |
+| Harmattan | asset_grounded | 1 | 1.7 | 100.0 |
+| Levant | late_intake | 23 | 50.0 | 50.0 |
+| Levant | no_rider_ops | 8 | 17.4 | 67.4 |
+| Levant | asset_grounded | 6 | 13.0 | 80.4 |
+| Levant | program_over_max | 4 | 8.7 | 89.1 |
+| Levant | no_rated_operator | 3 | 6.5 | 95.7 |
+| Levant | no_rated_pilot | 2 | 4.3 | 100.0 |
+| Sirocco | no_asset | 44 | 80.0 | 80.0 |
+| Sirocco | late_intake | 8 | 14.5 | 94.5 |
+| Sirocco | build_not_ready | 2 | 3.6 | 98.2 |
+| Sirocco | no_rated_operator | 1 | 1.8 | 100.0 |
 
 <details><summary>query</summary>
 
@@ -89,10 +95,10 @@ Asset utilization: assigned asset-windows over available asset-windows, on opera
 
 | airframe | available_windows | used_windows | pct |
 |---|---|---|---|
-| Harmattan | 524 | 143 | 27.3 |
-| Levant | 1131 | 306 | 27.1 |
+| Harmattan | 524 | 138 | 26.3 |
+| Levant | 1131 | 304 | 26.9 |
 | Sirocco | 264 | 55 | 20.8 |
-| all | 1919 | 504 | 26.3 |
+| all | 1919 | 497 | 25.9 |
 
 <details><summary>query</summary>
 
@@ -139,8 +145,8 @@ Crew utilization: seats filled over person-windows rostered, per role, up to dat
 | role | used | person_windows | pct |
 |---|---|---|---|
 | operator | 274 | 1028 | 26.7 |
-| pilot | 489 | 1220 | 40.1 |
-| all | 763 | 2248 | 33.9 |
+| pilot | 482 | 1220 | 39.5 |
+| all | 756 | 2248 | 33.6 |
 
 <details><summary>query</summary>
 
@@ -175,13 +181,13 @@ Lead time: submitted → executed, in days, p50 and p90 per program. The percent
 
 | program | n | p50_days | p90_days |
 |---|---|---|---|
-| CQ | 18 | 1 | 23 |
-| PLC | 141 | 1 | 3 |
-| PN | 230 | 1 | 1 |
+| CQ | 16 | 1 | 8 |
+| PLC | 137 | 1 | 3 |
+| PN | 223 | 1 | 1 |
 | SBU | 55 | 1 | 5 |
-| SF | 5 | 1 | 1 |
-| URC | 55 | 1 | 1 |
-| all | 504 | 1 | 2 |
+| SF | 7 | 1 | 3 |
+| URC | 59 | 1 | 2 |
+| all | 497 | 1 | 3 |
 
 <details><summary>query</summary>
 
@@ -224,16 +230,16 @@ Plan churn: scrubs plus same-day reassignments per day, after the plan for that 
 
 | day | scrubs | reassignments | churn |
 |---|---|---|---|
-| 2026-06-10 | 2 | 2 | 4 |
+| 2026-04-16 | 2 | 2 | 4 |
 | 2026-04-09 | 1 | 1 | 2 |
-| 2026-04-16 | 1 | 1 | 2 |
-| 2026-05-04 | 1 | 1 | 2 |
-| 2026-05-06 | 1 | 1 | 2 |
-| 2026-05-22 | 1 | 1 | 2 |
+| 2026-05-08 | 1 | 1 | 2 |
+| 2026-05-26 | 1 | 1 | 2 |
 | 2026-06-08 | 1 | 1 | 2 |
-| 2026-04-02 | 1 | 0 | 1 |
-| 2026-04-08 | 1 | 0 | 1 |
-| 2026-05-20 | 1 | 0 | 1 |
+| 2026-06-10 | 1 | 1 | 2 |
+| 2026-06-26 | 1 | 1 | 2 |
+| 2026-04-13 | 1 | 0 | 1 |
+| 2026-05-04 | 1 | 0 | 1 |
+| 2026-05-27 | 1 | 0 | 1 |
 
 <details><summary>query</summary>
 
@@ -291,7 +297,9 @@ The tell. Of the deferrals logged as "no rated operator", how many fell on a day
 
 | airframe | logged_no_rated_operator | with_rated_operator_idle | pct_refuted |
 |---|---|---|---|
-| Harmattan | 22 | 15 | 68.2 |
+| Harmattan | 20 | 14 | 70.0 |
+| Levant | 3 | 3 | 100.0 |
+| Sirocco | 1 | 1 | 100.0 |
 
 <details><summary>query</summary>
 

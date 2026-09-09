@@ -80,17 +80,40 @@ CREATE TABLE persons (
   self_pilot INTEGER NOT NULL CHECK (self_pilot IN (0,1))
 );
 
-CREATE TABLE person_roles (
+CREATE TABLE person_roles (                      -- seats and desks: a person can hold more than one
   person_id TEXT NOT NULL REFERENCES persons(person_id),
-  role      TEXT NOT NULL CHECK (role IN ('operator','pilot')),
+  role      TEXT NOT NULL CHECK (role IN ('operator','pilot','rider_ops')),
   PRIMARY KEY (person_id, role)
+);
+
+CREATE TABLE users (                             -- personas: authorization without authentication
+  user_id   TEXT PRIMARY KEY,
+  name      TEXT NOT NULL,
+  title     TEXT NOT NULL,                       -- display
+  role      TEXT NOT NULL CHECK (role IN ('requester','coordinator','authority','trainer','crew','observer')),  -- behaviour
+  person_id TEXT REFERENCES persons(person_id)   -- crew personas are also people on the roster
+);
+
+CREATE TABLE user_scopes (                       -- authority scope: a program_id, 'desk', or 'all'
+  user_id TEXT NOT NULL REFERENCES users(user_id),
+  scope   TEXT NOT NULL,
+  PRIMARY KEY (user_id, scope)
 );
 
 CREATE TABLE person_ratings (                    -- type ratings; effective_from NULL = before the window
   person_id      TEXT NOT NULL REFERENCES persons(person_id),
   airframe       TEXT NOT NULL,
   effective_from TEXT,
+  granted_by     TEXT REFERENCES users(user_id), -- the trainer, never the person themself (I2)
   PRIMARY KEY (person_id, airframe)
+);
+
+CREATE TABLE qualifications (                    -- desk qualifications, effective-dated like ratings
+  person_id      TEXT NOT NULL REFERENCES persons(person_id),
+  kind           TEXT NOT NULL CHECK (kind IN ('rider_ops')),
+  effective_from TEXT NOT NULL,
+  granted_by     TEXT REFERENCES users(user_id),
+  PRIMARY KEY (person_id, kind)
 );
 
 CREATE TABLE person_availability (
@@ -98,6 +121,15 @@ CREATE TABLE person_availability (
   date      TEXT NOT NULL,
   window    TEXT NOT NULL CHECK (window IN ('AM','PM','NIGHT')),
   PRIMARY KEY (person_id, date, window)
+);
+
+CREATE TABLE coverage (                          -- the rider desk: who covers a window on comms
+  date        TEXT NOT NULL,
+  window      TEXT NOT NULL CHECK (window IN ('AM','PM','NIGHT')),
+  person_id   TEXT NOT NULL REFERENCES persons(person_id),
+  assigned_by TEXT NOT NULL REFERENCES users(user_id),
+  acked       INTEGER NOT NULL CHECK (acked IN (0,1)),
+  PRIMARY KEY (date, window, person_id)          -- nobody covers a window twice (R2, extended)
 );
 
 CREATE TABLE requests (
@@ -118,7 +150,9 @@ CREATE TABLE requests (
   late            INTEGER NOT NULL CHECK (late IN (0,1)),   -- submitted after cutoff (R7)
   deferral_reason TEXT CHECK (deferral_reason IS NULL OR deferral_reason IN
     ('no_rated_operator','no_rated_pilot','no_asset','asset_grounded',
-     'program_over_max','build_not_ready','late_intake','requester_withdrew'))
+     'program_over_max','build_not_ready','late_intake','requester_withdrew','no_rider_ops')),
+  rider_facing    INTEGER NOT NULL CHECK (rider_facing IN (0,1)),   -- riders aboard: the desk must cover it (R10)
+  requester_id    TEXT NOT NULL REFERENCES users(user_id)           -- the persona that filed it, or the coordinator on their behalf
 );
 
 CREATE TABLE request_windows (                   -- requested windows, in preference order
@@ -137,6 +171,7 @@ CREATE TABLE request_events (                    -- the request timeline; deferr
     ('submitted','scheduled','deferred','rescheduled','reassigned','scrubbed','executed','withdrawn')),
   reason     TEXT,
   note       TEXT,
+  actor_id   TEXT NOT NULL REFERENCES users(user_id),   -- every event carries who did it (R9)
   CHECK (event <> 'deferred' OR reason IS NOT NULL)
 );
 
@@ -167,6 +202,8 @@ CREATE TABLE assignments (                       -- one per (date, asset, window
   scrub_reason  TEXT,
   run_id        TEXT REFERENCES test_runs(run_id),
   notes         TEXT,
+  assigned_by   TEXT NOT NULL REFERENCES users(user_id),   -- never the requester (I1)
+  acked         INTEGER NOT NULL CHECK (acked IN (0,1)),   -- the crew have acknowledged it
   UNIQUE (date, asset_id, window)                -- one per slot, scrubbed or not
 );
 

@@ -207,7 +207,7 @@ export function crewUtilization(db, from, to) {
   for (const p of db.persons) {
     for (const [d, ws] of Object.entries(p.availability)) {
       if (d < from || d > to) continue;
-      for (const role of p.roles) roles[role].avail += ws.length;
+      for (const role of p.roles) if (roles[role]) roles[role].avail += ws.length;   // desk roles are not seats
     }
   }
   for (const a of db.assignments) {

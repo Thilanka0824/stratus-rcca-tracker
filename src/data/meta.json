@@ -45,6 +45,19 @@
   "program_over_max",
   "build_not_ready",
   "late_intake",
-  "requester_withdrew"
+  "requester_withdrew",
+  "no_rider_ops"
+ ],
+ "rider_desk": {
+  "ratio": 2,
+  "min_per_window": 1
+ },
+ "app_roles": [
+  "requester",
+  "coordinator",
+  "authority",
+  "trainer",
+  "crew",
+  "observer"
  ]
 }

@@ -38,7 +38,7 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
   const foot = useMemo(() => {
     const prefix = (af) => db.assets.find((a) => a.airframe === af)?.asset_id.split('-')[0] ?? af;
     const tails = Object.entries(cap).map(([af, c]) => `${prefix(af)} ${c.usedTails.size}/${c.tails}`).join(' · ');
-    const rostered = db.persons.filter((p) => p.availability[date]?.length);
+    const rostered = db.persons.filter((p) => (p.roles.includes('operator') || p.roles.includes('pilot')) && p.availability[date]?.length);
     const flying = new Set(sorties.filter((a) => a.status !== 'scrubbed').flatMap((a) => [a.operator_id, a.pilot_id].filter(Boolean)));
     return { tails, crew: `${flying.size}/${rostered.length}` };
   }, [cap, db, date, sorties]);

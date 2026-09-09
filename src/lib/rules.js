@@ -13,6 +13,7 @@ export const PRIORITY_RANK = { P0: 0, P1: 1, P2: 2, P3: 3 };
 export const DEFERRAL_REASONS = [
   'no_rated_operator', 'no_rated_pilot', 'no_asset', 'asset_grounded',
   'program_over_max', 'build_not_ready', 'late_intake', 'requester_withdrew',
+  'no_rider_ops',
 ];
 export const SCRUB_REASONS = [...DEFERRAL_REASONS, 'weather'];
 
@@ -25,6 +26,7 @@ export const REASON_LABELS = {
   build_not_ready: 'Build not ready',
   late_intake: 'Late intake',
   requester_withdrew: 'Requester withdrew',
+  no_rider_ops: 'No rider operator',
   weather: 'Weather',
 };
 
