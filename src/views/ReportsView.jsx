@@ -7,10 +7,10 @@ import {
   weeklyPassRate, missingArtifacts, fmtDate, failureAge, isUnresolved, isAging,
   chartTheme,
 } from '../lib/helpers';
-import { addDays, REASON_LABELS } from '../lib/rules';
-import { daySummary } from '../lib/dispatch';
+import { addDays, REASON_LABELS, WINDOWS } from '../lib/rules';
+import { daySummary, deskByDay, actionsByRole, ACTION_COLUMNS } from '../lib/dispatch';
 
-export default function ReportsView({ runs, failures, today, theme, focus, db }) {
+export default function ReportsView({ runs, failures, today, theme, focus, db, audit = [] }) {
   const { AXIS, GRID, TIP, INK, ACCENT, AMBER, GREEN } = chartTheme(theme);
   const lineColors = {
     Overall: INK,
@@ -49,8 +49,8 @@ export default function ReportsView({ runs, failures, today, theme, focus, db })
   }, [focus]);
 
   const report = useMemo(
-    () => buildEodReport(runs, failures, reportDate, today, db),
-    [runs, failures, reportDate, today, db],
+    () => buildEodReport(runs, failures, reportDate, today, db, audit),
+    [runs, failures, reportDate, today, db, audit],
   );
 
   async function copyReport() {
@@ -156,7 +156,7 @@ export default function ReportsView({ runs, failures, today, theme, focus, db })
   );
 }
 
-function buildEodReport(runs, failures, date, today, db) {
+function buildEodReport(runs, failures, date, today, db, audit) {
   const day = runs.filter((r) => r.date === date);
   const by = (s) => day.filter((r) => r.status === s).length;
   const pipe = (p) => day.filter((r) => r.pipeline === p).length;
@@ -209,6 +209,20 @@ function buildEodReport(runs, failures, date, today, db) {
     plan.byCause.length === 0
       ? '  deferrals by cause: none'
       : `  deferrals by cause: ${plan.byCause.map((c) => `${REASON_LABELS[c.cause] ?? c.cause} ${c.count}`).join(' · ')}`,
+  );
+  // The desk that covered today, and who did what — every action has an actor (R9).
+  const desk = deskByDay(db, date, date)[0];
+  lines.push('');
+  lines.push('RIDER DESK TODAY:');
+  lines.push(desk
+    ? `  ${WINDOWS.map((w) => `${w} ${desk[`${w} coverers`]} covering / ${desk[`${w} riders`]} rider-facing`).join(' · ')}`
+    : '  no operations');
+  const acts = actionsByRole(db, audit, { from: date, to: date });
+  lines.push('');
+  lines.push('ACTIONS BY ROLE TODAY:');
+  if (acts.length === 0) lines.push('  none');
+  acts.forEach((row) =>
+    lines.push(`  ${row.user.name} (${row.user.role}) — ${ACTION_COLUMNS.filter((c) => row[c]).map((c) => `${c} ${row[c]}`).join(' · ')}`),
   );
   return lines.join('\n');
 }

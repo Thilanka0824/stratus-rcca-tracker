@@ -371,6 +371,7 @@ function Chip({ a, req, db, mine, editable, allowed, onScrub, onOpenRequest }) {
       <div className="chip-title">{req?.title}</div>
       <div className="chip-crew">{personName(db, a.operator_id)} / {personName(db, a.pilot_id)}</div>
       {a.notes && <div className="chip-memo">{a.notes}</div>}
+      {a.assigned_by && <div className="chip-memo">by {db.user?.get(a.assigned_by)?.name ?? a.assigned_by}</div>}
       <div className="chip-actions">
         {onOpenRequest && <button className="linkish small" onClick={() => onOpenRequest(a.request_id)}>request</button>}
         {editable && a.status === 'planned' && mine && (

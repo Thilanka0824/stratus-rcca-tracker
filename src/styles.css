@@ -582,3 +582,5 @@ table.desk-grid th.col-act, table.desk-grid td.col-act { width: 96px; text-align
 .myday .chip { margin-bottom: 8px; }
 .myday .chip-actions .btn { margin-top: 4px; }
 .prog-hd .meter-k + .meter-k { margin-left: 0; }
+
+.tl .tl-by { font-family: var(--mono); font-size: 11px; color: var(--accent); }

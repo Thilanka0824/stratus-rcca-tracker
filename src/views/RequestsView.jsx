@@ -300,6 +300,9 @@ function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: 
   const [refusal, setRefusal] = useState(null);
   // Withdraw: the requester's own, a coordinator's, or the program lead's —
   // and only while the request is still queued (after that it is a scrub).
+  // The persona that filed it; a coordinator filing for someone else says so.
+  const filer = db.user?.get(r.requester_id);
+  const filedBy = !filer ? (r.requester_id ?? '—') : filer.name !== r.requester ? `${filer.name} · on behalf` : filer.name;
   const wOk = !isQueued(r)
     ? { ok: false, message: `${r.request_id} is ${r.status}; a request can only be withdrawn before it is scheduled.` }
     : allowed('request.withdraw', r);
@@ -317,6 +320,7 @@ function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: 
       <div className="meta-grid">
         <div><div className="k">Program</div><div className="v">{prog?.name}</div></div>
         <div><div className="k">Requester</div><div className="v">{r.requester}</div></div>
+        <div><div className="k">Filed by</div><div className="v">{filedBy}</div></div>
         <div><div className="k">Needed by</div><div className="v">{fmtDate(r.needed_by)}</div></div>
         <div><div className="k">Planned for</div><div className="v">{r.plan_date ? fmtDate(r.plan_date) : '—'}</div></div>
         <div><div className="k">Airframe · windows</div><div className="v">{r.airframe} · {r.windows.join(' / ')}</div></div>
@@ -339,6 +343,7 @@ function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: 
           <div className="corrective">
             <span className="mono">{a.assignment_id}</span> · {fmtDate(a.date)} {a.window} · <strong>{a.asset_id}</strong>
             {' · '}{personName(db, a.operator_id)} / {personName(db, a.pilot_id)} · <span className={`pill ${a.status}`}>{a.status}</span>
+            {a.assigned_by && <> · assigned by {db.user?.get(a.assigned_by)?.name ?? a.assigned_by}</>}
             {a.scrub_reason && <> · scrubbed: {REASON_LABELS[a.scrub_reason]}</>}
             {a.run_id && <> · run <span className="mono">{a.run_id}</span></>}
             {a.notes && <div className="dim-note">{a.notes}</div>}
@@ -353,6 +358,7 @@ function Drawer({ r, db, today, onOpenBoard, onWithdraw, allowed = () => ({ ok: 
             <span className="tl-at">{fmtStamp(e.at)}</span>
             <span className="tl-ev">{e.event}{e.reason ? ` · ${REASON_LABELS[e.reason] ?? e.reason}` : ''}</span>
             {e.day && e.day !== e.at.slice(0, 10) && <span className="tl-day">for {fmtDate(e.day)}</span>}
+            {e.by && <span className="tl-by" title={db.user?.get(e.by)?.title}>by {db.user?.get(e.by)?.name ?? e.by}</span>}
             {e.note && <span className="tl-note">{e.note}</span>}
           </li>
         ))}

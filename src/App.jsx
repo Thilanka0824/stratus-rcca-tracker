@@ -452,7 +452,7 @@ export default function App() {
       )}
       {tab === idx('Analytics') && <AnalyticsView failures={failures} theme={theme} />}
       {tab === idx('Reports') && (
-        <ReportsView runs={runsData} failures={failures} today={today} theme={theme} focus={reportsFocus} db={db} />
+        <ReportsView runs={runsData} failures={failures} today={today} theme={theme} focus={reportsFocus} db={db} audit={audit} />
       )}
       </Suspense>
       </ChunkBoundary>
