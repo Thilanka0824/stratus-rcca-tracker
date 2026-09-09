@@ -41,7 +41,7 @@ Everything else is on the cut list, on purpose.
 | Persona | Job to be done | Where it lives |
 |---|---|---|
 | **Test coordinator** (primary) | Intake everything, prioritize, build tomorrow's plan, handle day-of scrubs, explain shortages with data | Requests · Dispatch · Capacity |
-| **Requesting engineer** | Submit a complete request before cutoff; know when it will run and why it didn't | Requests (timeline drawer) |
+| **Requesting engineer** | Submit a complete request before cutoff; know when it will run and why it didn't | Requests (intake form, timeline drawer) |
 | **Operator / safety pilot** | See tomorrow's assignment; know what they're rated on | Dispatch · rating matrix |
 | **Program lead** | Demand vs supply, deferral causes, whether the target is being met | Capacity · Reports |
 
@@ -82,7 +82,9 @@ what's allowed.
 | R8 | A deferral (or scrub) without a reason cannot be saved | structural |
 
 A block is rejected with the rule id and a message, for example "R1 · H. Brandt is
-not rated on Sirocco". A warning renders inline and in the day summary.
+not rated on Sirocco". A warning renders inline and in the day summary. Intake runs
+the same way: the form validates each field by name and shows the R7 verdict before
+you submit, so a late request is never a surprise to the person who filed it.
 
 ## Metrics
 
@@ -238,10 +240,11 @@ src/data/*.json           the emitted seed the app imports at build time
 
 ## Next
 
-- Structured intake: parse a free-text request into the schema, with the same
-  rules validating the result.
+- Structured intake from free text: parse a request into the schema the intake
+  form already validates.
 - Live multi-user state, once there's something worth persisting.
-- Code-split recharts and the seed JSON. The bundle is about 1.2 MB before gzip.
+- Lazy-load the seed JSON the way the chart views already are. The initial chunk
+  is about 780 KB before gzip, most of it the seed.
 
 The shortage you hear about isn't always the shortage you have. That's what the
 data is for.

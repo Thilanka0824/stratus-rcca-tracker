@@ -9,7 +9,7 @@ import assignmentsData from './data/assignments.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
 import { daySummary } from './lib/dispatch';
-import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest } from './lib/rules';
+import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, validateRequest, newRequest, isOperatingDay } from './lib/rules';
 import RequestsView from './views/RequestsView';
 import DispatchView from './views/DispatchView';
 import RunsView from './views/RunsView';
@@ -126,6 +126,21 @@ export default function App() {
     const at = stampNow();
     setRequests((prev) => prev.map((r) => (r.request_id === requestId ? deferRequest(r, { reason, day: boardDate, at, note }) : r)));
   }
+  // Intake: the form's fields become a request only through the rules — the
+  // late flag and plan day are derived from the submission time (R7).
+  const intakeSeq = useRef(0);
+  const builds = useMemo(() => [...new Set(runsData.map((r) => r.build))].sort(), []);
+  function submitRequest(fields) {
+    const errors = validateRequest(fields, db, { tomorrow: meta.tomorrow });
+    if (errors.length) return { errors };
+    intakeSeq.current += 1;
+    const request = newRequest(fields, {
+      id: `RQ-L${String(intakeSeq.current).padStart(3, '0')}`, submittedAt: stampNow(), cutoff: meta.cutoff_local,
+      isOpen: (d) => d > meta.tomorrow || isOperatingDay(d, db),
+    });
+    setRequests((prev) => [...prev, request]);
+    return { request };
+  }
   function scrub(assignmentId, reason) {
     const a = assignments.find((x) => x.assignment_id === assignmentId);
     if (!a) return;
@@ -235,7 +250,8 @@ export default function App() {
       </nav>
 
       {tab === idx('Requests') && (
-        <RequestsView db={db} meta={meta} today={today} onOpenBoard={openBoard} focusId={requestFocus} />
+        <RequestsView db={db} meta={meta} today={today} onOpenBoard={openBoard} focusId={requestFocus}
+          onSubmit={submitRequest} builds={builds} nowAt={`${today}T18:00`} />
       )}
       {tab === idx('Dispatch') && (
         <DispatchView

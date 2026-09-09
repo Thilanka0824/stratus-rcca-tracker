@@ -481,6 +481,17 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
 .grounding { margin-top: 6px; }
 .grounding .linkish { margin-left: 8px; }
 
+
+/* intake form */
+.banner .btn { margin-left: auto; font-size: 12px; padding: 6px 12px; min-height: 32px; }
+.modal.wide { width: min(760px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 14px; }
+.form-grid .seat { margin-bottom: 4px; }
+.seat select:disabled { opacity: .6; }
+.checks { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; min-height: 36px; font-family: var(--mono); font-size: 12px; }
+.checks label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.checks input:disabled + span { color: var(--ink-faint); text-decoration: line-through; }
+
 /* ---------- footer ---------- */
 .foot {
   margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line);

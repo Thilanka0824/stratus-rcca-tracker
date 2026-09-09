@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
 import { fmtDate } from '../lib/helpers';
-import { REASON_LABELS, CREW_LABELS } from '../lib/rules';
+import { REASON_LABELS, CREW_LABELS, CREW_KINDS, BUILD_STAGES, WINDOWS, validateRequest, isLate, addDays } from '../lib/rules';
 import { STATUS_ORDER, fmtStamp, requestAge, isQueued, programCode, latestAssignment, personName } from '../lib/dispatch';
 
 const PRIO = { P0: 0, P1: 1, P2: 2, P3: 3 };
 
 // The intake queue: everything that came in, what happened to it, and why.
-export default function RequestsView({ db, meta, today, onOpenBoard, focusId = null }) {
+export default function RequestsView({ db, meta, today, onOpenBoard, focusId = null, onSubmit, builds = [], nowAt }) {
+  const [showForm, setShowForm] = useState(false);
   const [program, setProgram] = useState('all');
   const [status, setStatus] = useState('all');
   const [priority, setPriority] = useState('all');
@@ -45,6 +46,7 @@ export default function RequestsView({ db, meta, today, onOpenBoard, focusId = n
         <span>intake closed {meta.cutoff_local}</span>
         <span>{planning.total} requests · {planning.queued} unscheduled</span>
         <span className={planning.late ? 'late' : ''}>{planning.late} late</span>
+        {onSubmit && <button className="btn" onClick={() => setShowForm(true)}>+ New request</button>}
       </div>
 
       <div className="filters">
@@ -117,7 +119,121 @@ export default function RequestsView({ db, meta, today, onOpenBoard, focusId = n
         {sel ? <Drawer r={sel} db={db} today={today} onOpenBoard={onOpenBoard} />
              : <div className="detail empty-hint">No request matches these filters.</div>}
       </div>
+
+      {showForm && (
+        <IntakeForm
+          db={db} meta={meta} builds={builds} nowAt={nowAt} onSubmit={onSubmit}
+          onCancel={() => setShowForm(false)}
+          onCreated={(r) => { setShowForm(false); setStatus('all'); setQ(''); setSelId(r.request_id); }}
+        />
+      )}
     </section>
+  );
+}
+
+// Intake: what a requesting engineer fills in before the cutoff. Validation
+// runs live and names the field; the R7 verdict is shown before you submit,
+// because a late request should never be a surprise to the person who filed it.
+function IntakeForm({ db, meta, builds, nowAt, onSubmit, onCancel, onCreated }) {
+  const first = db.programs[0];
+  const teams = useMemo(() => [...new Set(db.requests.map((r) => r.supporting_team).filter(Boolean))].sort(), [db]);
+  const [f, setF] = useState({
+    program_id: first.program_id, title: '', build: builds.at(-1) || '', build_stage: 'engineering',
+    crew: 'operator_pilot', windows: ['AM'], airframe: first.airframes[0], priority: first.priority_default,
+    supporting_team: teams[0] || '', requester: '', needed_by: meta.tomorrow,
+  });
+  const [tried, setTried] = useState(false);
+  const program = db.program.get(f.program_id);
+  const operating = useMemo(() => [...new Set(db.assets.filter((a) => a.airframe === f.airframe).flatMap((a) => a.windows))], [db, f.airframe]);
+  const errors = validateRequest(f, db, { tomorrow: meta.tomorrow });
+  const late = f.needed_by && isLate(nowAt, f.needed_by, meta.cutoff_local);
+
+  const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
+  function setProgram(e) {
+    const p = db.program.get(e.target.value);
+    setF((x) => ({ ...x, program_id: p.program_id, airframe: p.airframes[0], priority: p.priority_default }));
+  }
+  function toggleWindow(w) {
+    setF((x) => ({ ...x, windows: x.windows.includes(w) ? x.windows.filter((v) => v !== w) : [...x.windows, w].sort((a, b) => WINDOWS.indexOf(a) - WINDOWS.indexOf(b)) }));
+  }
+  function submit(e) {
+    e.preventDefault();
+    setTried(true);
+    if (errors.length) return;
+    const res = onSubmit(f);
+    if (res.request) onCreated(res.request);
+  }
+
+  return (
+    <div className="modal-bg" onClick={onCancel} onKeyDown={(e) => e.key === 'Escape' && onCancel()}>
+      <form className="modal wide" role="dialog" aria-modal="true" aria-label="New request" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
+        <div className="sect-label">Intake · cutoff {meta.cutoff_local}</div>
+        <h2>New request</h2>
+        <div className="form-grid">
+          <label className="seat"><span className="k">Program</span>
+            <select autoFocus value={f.program_id} onChange={setProgram}>
+              {db.programs.map((p) => <option key={p.program_id} value={p.program_id}>{p.code} · {p.name}</option>)}
+            </select>
+          </label>
+          <label className="seat"><span className="k">Airframe</span>
+            <select value={f.airframe} onChange={set('airframe')} disabled={program.airframes.length === 1}>
+              {program.airframes.map((af) => <option key={af}>{af}</option>)}
+            </select>
+          </label>
+          <label className="seat" style={{ gridColumn: '1 / -1' }}><span className="k">Title</span>
+            <input value={f.title} onChange={set('title')} placeholder="what the sortie is for" />
+          </label>
+          <label className="seat"><span className="k">Build</span>
+            <select value={f.build} onChange={set('build')}>{builds.map((b) => <option key={b}>{b}</option>)}</select>
+          </label>
+          <label className="seat"><span className="k">Build stage</span>
+            <select value={f.build_stage} onChange={set('build_stage')}>{BUILD_STAGES.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}</select>
+          </label>
+          <label className="seat"><span className="k">Crew</span>
+            <select value={f.crew} onChange={set('crew')}>{CREW_KINDS.map((c) => <option key={c} value={c}>{CREW_LABELS[c]}</option>)}</select>
+          </label>
+          <label className="seat"><span className="k">Priority</span>
+            <select value={f.priority} onChange={set('priority')}><option>P0</option><option>P1</option><option>P2</option></select>
+          </label>
+          <div className="seat"><span className="k">Windows · {f.airframe} flies {operating.join(' / ')}</span>
+            <div className="checks" role="group" aria-label="Requested windows">
+              {WINDOWS.map((w) => (
+                <label key={w}>
+                  <input type="checkbox" checked={f.windows.includes(w)} disabled={!operating.includes(w)} onChange={() => toggleWindow(w)} />
+                  <span>{w}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <label className="seat"><span className="k">Needed by</span>
+            <input type="date" value={f.needed_by} min={meta.tomorrow} onChange={set('needed_by')} />
+          </label>
+          <label className="seat"><span className="k">Requester</span>
+            <input value={f.requester} onChange={set('requester')} placeholder="initial and surname" />
+          </label>
+          <label className="seat"><span className="k">Supporting team</span>
+            <select value={f.supporting_team} onChange={set('supporting_team')}>{teams.map((t) => <option key={t}>{t}</option>)}</select>
+          </label>
+        </div>
+
+        <div className={`tell ${late ? 'hot' : ''}`}>
+          <div className="sect-label">R7 · intake cutoff</div>
+          {late
+            ? <>Submitting now ({fmtStamp(nowAt)}) is after the {meta.cutoff_local} cutoff for {fmtDate(f.needed_by)}. This request will be flagged <strong>late</strong> and default to {fmtDate(addDays(f.needed_by, 1))}; the coordinator can still pull it forward on the board.</>
+            : <>Before the cutoff for {f.needed_by ? fmtDate(f.needed_by) : 'that day'}: it goes straight into that day's queue.</>}
+        </div>
+
+        {tried && errors.length > 0 && (
+          <ul className="rule-list" aria-live="polite">
+            {errors.map((e, i) => <li key={i} className="block"><strong>{e.field}</strong> {e.message}</li>)}
+          </ul>
+        )}
+        <div className="stepper">
+          <button className="btn" type="submit">Submit request</button>
+          <button className="btn ghost" type="button" onClick={onCancel}>Cancel</button>
+        </div>
+      </form>
+    </div>
   );
 }
 
