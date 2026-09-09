@@ -19,6 +19,9 @@ idle AS (
     SELECT 1 FROM assignments a
     WHERE a.date = l.day AND a.window = w.window AND a.status <> 'scrubbed'
       AND (a.operator_id = pa.person_id OR a.pilot_id = pa.person_id))
+    AND NOT EXISTS (                      -- on the rider desk is on comms, not idle
+    SELECT 1 FROM coverage c
+    WHERE c.date = l.day AND c.window = w.window AND c.person_id = pa.person_id)
 )
 SELECT l.airframe,
        count(*)                                    AS logged_no_rated_operator,

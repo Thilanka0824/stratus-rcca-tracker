@@ -10,7 +10,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0002",
@@ -23,7 +25,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0003",
@@ -36,7 +40,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0004",
@@ -49,7 +55,9 @@
   "status": "scrubbed",
   "scrub_reason": "requester_withdrew",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0005",
@@ -62,7 +70,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0006",
@@ -75,7 +85,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0007",
@@ -88,7 +100,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0008",
@@ -101,7 +115,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0009",
@@ -114,7 +130,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0010",
@@ -127,7 +145,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0011",
@@ -140,7 +160,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0012",
@@ -153,7 +175,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0013",
@@ -166,7 +190,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0014",
@@ -179,7 +205,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0015",
@@ -192,7 +220,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0016",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0016",
@@ -205,7 +235,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0017",
@@ -218,7 +250,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0018",
@@ -231,7 +265,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0019",
@@ -244,7 +280,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0020",
@@ -257,7 +295,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0022",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0021",
@@ -270,7 +310,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0022",
@@ -283,7 +325,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: L. Ferreira"
+  "notes": "currency check: L. Ferreira",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0023",
@@ -296,7 +340,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0024",
@@ -309,7 +355,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0025",
@@ -322,7 +370,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0026",
@@ -335,7 +385,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0024",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0027",
@@ -348,7 +400,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0028",
@@ -361,7 +415,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0029",
@@ -374,7 +430,9 @@
   "status": "scrubbed",
   "scrub_reason": "requester_withdrew",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0030",
@@ -387,7 +445,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0031",
@@ -400,7 +460,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0032",
@@ -413,7 +475,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0033",
@@ -426,7 +490,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0034",
@@ -439,7 +505,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0035",
@@ -452,7 +520,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0036",
@@ -465,7 +535,9 @@
   "status": "scrubbed",
   "scrub_reason": "weather",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0037",
@@ -478,7 +550,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from LV-01 NIGHT (weather)"
+  "notes": "reassigned from LV-01 NIGHT (weather)",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0038",
@@ -491,7 +565,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0039",
@@ -504,7 +580,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0040",
@@ -517,7 +595,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0041",
@@ -530,7 +610,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0042",
@@ -543,7 +625,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: E. Lindqvist"
+  "notes": "currency check: E. Lindqvist",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0043",
@@ -556,7 +640,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0044",
@@ -569,7 +655,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0045",
@@ -582,7 +670,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0046",
@@ -595,7 +685,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0047",
@@ -608,7 +700,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0048",
@@ -621,7 +715,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0049",
@@ -634,7 +730,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: H. Brandt"
+  "notes": "currency check: H. Brandt",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0050",
@@ -647,7 +745,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0051",
@@ -660,7 +760,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0052",
@@ -673,7 +775,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0053",
@@ -686,7 +790,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0054",
@@ -699,7 +805,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0055",
@@ -712,7 +820,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0056",
@@ -725,7 +835,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0057",
@@ -738,7 +850,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0058",
@@ -751,7 +865,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0059",
@@ -764,7 +880,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0060",
@@ -777,7 +895,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0061",
@@ -790,7 +910,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0062",
@@ -803,7 +925,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0063",
@@ -816,7 +940,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0064",
@@ -829,7 +955,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0045",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0065",
@@ -842,7 +970,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0066",
@@ -855,7 +985,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0067",
@@ -868,7 +1000,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0068",
@@ -881,7 +1015,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0069",
@@ -894,7 +1030,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0070",
@@ -907,7 +1045,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0071",
@@ -920,7 +1060,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0072",
@@ -933,7 +1075,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0073",
@@ -946,7 +1090,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0074",
@@ -959,7 +1105,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0075",
@@ -972,7 +1120,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0050",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0076",
@@ -985,7 +1135,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from LV-03 PM (weather)"
+  "notes": "reassigned from LV-03 PM (weather)",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0077",
@@ -998,7 +1150,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0078",
@@ -1011,7 +1165,9 @@
   "status": "scrubbed",
   "scrub_reason": "weather",
   "run_id": null,
-  "notes": "currency check: T. Achebe"
+  "notes": "currency check: T. Achebe",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0079",
@@ -1024,7 +1180,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0052",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0080",
@@ -1037,7 +1195,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0081",
@@ -1050,7 +1210,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0082",
@@ -1063,7 +1225,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0083",
@@ -1076,7 +1240,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0084",
@@ -1089,7 +1255,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0055",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0085",
@@ -1102,7 +1270,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0086",
@@ -1115,7 +1285,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0087",
@@ -1128,7 +1300,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0088",
@@ -1141,7 +1315,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0089",
@@ -1154,7 +1330,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0090",
@@ -1167,7 +1345,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0091",
@@ -1180,7 +1360,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0092",
@@ -1193,7 +1375,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0093",
@@ -1206,7 +1390,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0094",
@@ -1219,7 +1405,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0095",
@@ -1232,7 +1420,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0096",
@@ -1245,7 +1435,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0097",
@@ -1258,7 +1450,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0098",
@@ -1271,7 +1465,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0099",
@@ -1284,7 +1480,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0100",
@@ -1297,7 +1495,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0101",
@@ -1310,7 +1510,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0102",
@@ -1323,7 +1525,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0103",
@@ -1336,7 +1540,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0104",
@@ -1349,7 +1555,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0105",
@@ -1362,7 +1570,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0106",
@@ -1375,7 +1585,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0107",
@@ -1388,7 +1600,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0108",
@@ -1401,7 +1615,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0109",
@@ -1414,7 +1630,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0110",
@@ -1427,7 +1645,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0111",
@@ -1440,7 +1660,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0069",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0112",
@@ -1453,7 +1675,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: W. Adeyemi"
+  "notes": "currency check: W. Adeyemi",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0113",
@@ -1466,7 +1690,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0114",
@@ -1479,7 +1705,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0115",
@@ -1492,7 +1720,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0116",
@@ -1505,7 +1735,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0117",
@@ -1518,7 +1750,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0118",
@@ -1531,7 +1765,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0119",
@@ -1544,7 +1780,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0071",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0120",
@@ -1557,7 +1795,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0121",
@@ -1570,7 +1810,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0122",
@@ -1583,7 +1825,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0123",
@@ -1596,7 +1840,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0124",
@@ -1609,7 +1855,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0125",
@@ -1622,7 +1870,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0126",
@@ -1635,7 +1885,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0075",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0127",
@@ -1648,7 +1900,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0128",
@@ -1661,7 +1915,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0129",
@@ -1674,7 +1930,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0130",
@@ -1687,7 +1945,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0131",
@@ -1700,7 +1960,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0132",
@@ -1713,7 +1975,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0133",
@@ -1726,7 +1990,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0134",
@@ -1739,7 +2005,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0135",
@@ -1752,7 +2020,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0136",
@@ -1765,7 +2035,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0137",
@@ -1778,7 +2050,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0138",
@@ -1791,7 +2065,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: C. Delacroix"
+  "notes": "currency check: C. Delacroix",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0139",
@@ -1804,7 +2080,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0085",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0140",
@@ -1817,7 +2095,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0141",
@@ -1830,7 +2110,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0142",
@@ -1843,7 +2125,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0143",
@@ -1856,7 +2140,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0144",
@@ -1869,7 +2155,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0092",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0145",
@@ -1882,7 +2170,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0146",
@@ -1895,7 +2185,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0147",
@@ -1908,7 +2200,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0148",
@@ -1921,7 +2215,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0149",
@@ -1934,7 +2230,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0150",
@@ -1947,7 +2245,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0151",
@@ -1960,7 +2260,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0152",
@@ -1973,7 +2275,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0153",
@@ -1986,7 +2290,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0154",
@@ -1999,7 +2305,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0155",
@@ -2012,7 +2320,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0156",
@@ -2025,7 +2335,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0157",
@@ -2038,7 +2350,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0158",
@@ -2051,7 +2365,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0098",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0159",
@@ -2064,7 +2380,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0160",
@@ -2077,7 +2395,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: I. Castellanos"
+  "notes": "currency check: I. Castellanos",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0161",
@@ -2090,7 +2410,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0162",
@@ -2103,7 +2425,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0163",
@@ -2116,7 +2440,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0164",
@@ -2129,7 +2455,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: L. Ferreira"
+  "notes": "currency check: L. Ferreira",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0165",
@@ -2142,7 +2470,9 @@
   "status": "scrubbed",
   "scrub_reason": "weather",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0166",
@@ -2155,7 +2485,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from HM-01 PM (weather)"
+  "notes": "reassigned from HM-01 PM (weather)",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0167",
@@ -2168,7 +2500,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0168",
@@ -2181,7 +2515,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0104",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0169",
@@ -2194,7 +2530,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0170",
@@ -2207,7 +2545,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0171",
@@ -2220,7 +2560,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0172",
@@ -2233,7 +2575,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0173",
@@ -2246,7 +2590,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0174",
@@ -2259,7 +2605,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0175",
@@ -2272,7 +2620,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0176",
@@ -2285,7 +2635,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0177",
@@ -2298,7 +2650,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0111",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0178",
@@ -2311,7 +2665,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0179",
@@ -2324,7 +2680,9 @@
   "status": "scrubbed",
   "scrub_reason": "weather",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0180",
@@ -2337,7 +2695,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0181",
@@ -2350,7 +2710,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from HM-01 PM (weather)"
+  "notes": "reassigned from HM-01 PM (weather)",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0182",
@@ -2363,7 +2725,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0110",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0183",
@@ -2376,7 +2740,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0112",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0184",
@@ -2389,7 +2755,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0185",
@@ -2402,7 +2770,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0186",
@@ -2415,7 +2785,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0187",
@@ -2428,7 +2800,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0188",
@@ -2441,7 +2815,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0116",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0189",
@@ -2454,7 +2830,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0190",
@@ -2467,7 +2845,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0191",
@@ -2480,7 +2860,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0192",
@@ -2493,7 +2875,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0193",
@@ -2506,7 +2890,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0194",
@@ -2519,7 +2905,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0119",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0195",
@@ -2532,7 +2920,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0196",
@@ -2545,7 +2935,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0197",
@@ -2558,7 +2950,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0198",
@@ -2571,7 +2965,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0199",
@@ -2584,7 +2980,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0200",
@@ -2597,7 +2995,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0201",
@@ -2610,7 +3010,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0202",
@@ -2623,7 +3025,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0203",
@@ -2636,7 +3040,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0204",
@@ -2649,7 +3055,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0205",
@@ -2662,7 +3070,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0131",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0206",
@@ -2675,7 +3085,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0207",
@@ -2688,7 +3100,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0208",
@@ -2701,7 +3115,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0209",
@@ -2714,7 +3130,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0210",
@@ -2727,7 +3145,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0211",
@@ -2740,7 +3160,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0212",
@@ -2753,7 +3175,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0213",
@@ -2766,7 +3190,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0214",
@@ -2779,7 +3205,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0215",
@@ -2792,7 +3220,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0216",
@@ -2805,7 +3235,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0217",
@@ -2818,7 +3250,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0218",
@@ -2831,7 +3265,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0219",
@@ -2844,7 +3280,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0220",
@@ -2857,7 +3295,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0221",
@@ -2870,7 +3310,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0140",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0222",
@@ -2883,7 +3325,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: E. Lindqvist"
+  "notes": "currency check: E. Lindqvist",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0223",
@@ -2896,7 +3340,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0224",
@@ -2909,7 +3355,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0225",
@@ -2922,7 +3370,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0226",
@@ -2935,7 +3385,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0227",
@@ -2948,7 +3400,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0228",
@@ -2961,7 +3415,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0229",
@@ -2974,7 +3430,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0230",
@@ -2987,7 +3445,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0231",
@@ -3000,7 +3460,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0232",
@@ -3013,7 +3475,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0233",
@@ -3026,7 +3490,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0234",
@@ -3039,7 +3505,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0235",
@@ -3052,7 +3520,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0145",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0236",
@@ -3065,7 +3535,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0237",
@@ -3078,7 +3550,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0238",
@@ -3091,7 +3565,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0239",
@@ -3104,7 +3580,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0240",
@@ -3117,7 +3595,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0241",
@@ -3130,7 +3610,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0242",
@@ -3143,7 +3625,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0155",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0243",
@@ -3156,7 +3640,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0244",
@@ -3169,7 +3655,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0245",
@@ -3182,7 +3670,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0246",
@@ -3195,7 +3685,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0247",
@@ -3208,7 +3700,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0163",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0248",
@@ -3221,7 +3715,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0249",
@@ -3234,7 +3730,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0250",
@@ -3247,7 +3745,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0251",
@@ -3260,7 +3760,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0252",
@@ -3273,7 +3775,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0253",
@@ -3286,7 +3790,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0254",
@@ -3299,7 +3805,9 @@
   "status": "scrubbed",
   "scrub_reason": "requester_withdrew",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0255",
@@ -3312,7 +3820,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0256",
@@ -3325,7 +3835,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0257",
@@ -3338,7 +3850,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0258",
@@ -3351,7 +3865,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0259",
@@ -3364,7 +3880,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0260",
@@ -3377,7 +3895,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0261",
@@ -3390,7 +3910,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0262",
@@ -3403,7 +3925,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0263",
@@ -3416,7 +3940,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0264",
@@ -3429,7 +3955,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0265",
@@ -3442,7 +3970,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0266",
@@ -3455,7 +3985,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0267",
@@ -3468,7 +4000,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0268",
@@ -3481,7 +4015,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0169",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0269",
@@ -3494,7 +4030,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0270",
@@ -3507,7 +4045,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0271",
@@ -3520,7 +4060,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0272",
@@ -3533,7 +4075,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0273",
@@ -3546,7 +4090,9 @@
   "status": "scrubbed",
   "scrub_reason": "weather",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0274",
@@ -3559,7 +4105,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from LV-03 AM (weather)"
+  "notes": "reassigned from LV-03 AM (weather)",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0275",
@@ -3572,7 +4120,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0276",
@@ -3585,7 +4135,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0277",
@@ -3598,7 +4150,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0278",
@@ -3611,7 +4165,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0279",
@@ -3624,7 +4180,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0280",
@@ -3637,7 +4195,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0281",
@@ -3650,7 +4210,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0282",
@@ -3663,7 +4225,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0283",
@@ -3676,7 +4240,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0284",
@@ -3689,7 +4255,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0285",
@@ -3702,7 +4270,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0286",
@@ -3715,7 +4285,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: O. Reyes"
+  "notes": "currency check: O. Reyes",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0287",
@@ -3728,7 +4300,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0288",
@@ -3741,7 +4315,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0289",
@@ -3754,7 +4330,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0290",
@@ -3767,7 +4345,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0291",
@@ -3780,7 +4360,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0292",
@@ -3793,7 +4375,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0293",
@@ -3806,7 +4390,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0294",
@@ -3819,7 +4405,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0295",
@@ -3832,7 +4420,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0296",
@@ -3845,7 +4435,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0297",
@@ -3858,7 +4450,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0191",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0298",
@@ -3871,7 +4465,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0299",
@@ -3884,7 +4480,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0300",
@@ -3897,7 +4495,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "cross-rating flight: D. Varga (trainee) under instruction"
+  "notes": "cross-rating flight: D. Varga (trainee) under instruction",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0301",
@@ -3910,7 +4510,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0302",
@@ -3923,7 +4525,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0303",
@@ -3936,7 +4540,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0304",
@@ -3949,7 +4555,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0305",
@@ -3962,7 +4570,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0306",
@@ -3975,7 +4585,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0307",
@@ -3988,7 +4600,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "cross-rating flight: S. Oyelaran (trainee) under instruction"
+  "notes": "cross-rating flight: S. Oyelaran (trainee) under instruction",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0308",
@@ -4001,7 +4615,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0192",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0309",
@@ -4014,7 +4630,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0310",
@@ -4027,7 +4645,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0311",
@@ -4040,7 +4660,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0312",
@@ -4053,7 +4675,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0313",
@@ -4066,7 +4690,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0314",
@@ -4079,7 +4705,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0315",
@@ -4092,7 +4720,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0316",
@@ -4105,7 +4735,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0317",
@@ -4118,7 +4750,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0318",
@@ -4131,7 +4765,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0319",
@@ -4144,7 +4780,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0320",
@@ -4157,7 +4795,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0321",
@@ -4170,7 +4810,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0204",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0322",
@@ -4183,7 +4825,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0323",
@@ -4196,7 +4840,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0324",
@@ -4209,7 +4855,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0325",
@@ -4222,7 +4870,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0326",
@@ -4235,7 +4885,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0327",
@@ -4248,7 +4900,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0328",
@@ -4261,7 +4915,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0329",
@@ -4274,7 +4930,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0206",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0330",
@@ -4287,7 +4945,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0331",
@@ -4300,7 +4960,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0332",
@@ -4313,7 +4975,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0333",
@@ -4326,7 +4990,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0334",
@@ -4339,7 +5005,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0335",
@@ -4352,7 +5020,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: I. Castellanos"
+  "notes": "currency check: I. Castellanos",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0336",
@@ -4365,7 +5035,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0337",
@@ -4378,7 +5050,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0338",
@@ -4391,7 +5065,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0339",
@@ -4404,7 +5080,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0340",
@@ -4417,7 +5095,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0341",
@@ -4430,7 +5110,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0342",
@@ -4443,7 +5125,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0343",
@@ -4456,7 +5140,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0344",
@@ -4469,7 +5155,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0213",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0345",
@@ -4482,7 +5170,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0346",
@@ -4495,7 +5185,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0347",
@@ -4508,7 +5200,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0348",
@@ -4521,7 +5215,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0349",
@@ -4534,7 +5230,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0350",
@@ -4547,7 +5245,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0351",
@@ -4560,7 +5260,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0352",
@@ -4573,7 +5275,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0353",
@@ -4586,7 +5290,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0354",
@@ -4599,7 +5305,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from HM-02 AM (weather)"
+  "notes": "reassigned from HM-02 AM (weather)",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0355",
@@ -4612,7 +5320,9 @@
   "status": "scrubbed",
   "scrub_reason": "weather",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0356",
@@ -4625,7 +5335,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0357",
@@ -4638,7 +5350,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0358",
@@ -4651,7 +5365,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0359",
@@ -4664,7 +5380,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0360",
@@ -4677,7 +5395,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0361",
@@ -4690,7 +5410,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0362",
@@ -4703,7 +5425,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0363",
@@ -4716,7 +5440,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0364",
@@ -4729,7 +5455,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0365",
@@ -4742,7 +5470,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0366",
@@ -4755,7 +5485,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0367",
@@ -4768,7 +5500,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0368",
@@ -4781,7 +5515,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0369",
@@ -4794,7 +5530,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0370",
@@ -4807,7 +5545,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0371",
@@ -4820,7 +5560,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0372",
@@ -4833,7 +5575,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0373",
@@ -4846,7 +5590,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0374",
@@ -4859,7 +5605,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0375",
@@ -4872,7 +5620,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from LV-03 AM (asset_grounded)"
+  "notes": "reassigned from LV-03 AM (asset_grounded)",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0376",
@@ -4885,7 +5635,9 @@
   "status": "scrubbed",
   "scrub_reason": "asset_grounded",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0377",
@@ -4898,7 +5650,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0232",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0378",
@@ -4911,7 +5665,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0379",
@@ -4924,7 +5680,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0380",
@@ -4937,7 +5695,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0381",
@@ -4950,7 +5710,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "reassigned from LV-05 NIGHT (asset_grounded)"
+  "notes": "reassigned from LV-05 NIGHT (asset_grounded)",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0382",
@@ -4963,7 +5725,9 @@
   "status": "scrubbed",
   "scrub_reason": "asset_grounded",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0383",
@@ -4976,7 +5740,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0384",
@@ -4989,7 +5755,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0385",
@@ -5002,7 +5770,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0386",
@@ -5015,7 +5785,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0387",
@@ -5028,7 +5800,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0388",
@@ -5041,7 +5815,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0389",
@@ -5054,7 +5830,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: O. Reyes"
+  "notes": "currency check: O. Reyes",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0390",
@@ -5067,7 +5845,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0391",
@@ -5080,7 +5860,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0392",
@@ -5093,7 +5875,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0393",
@@ -5106,7 +5890,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0394",
@@ -5119,7 +5905,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0395",
@@ -5132,7 +5920,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0396",
@@ -5145,7 +5935,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0397",
@@ -5158,7 +5950,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: I. Castellanos"
+  "notes": "currency check: I. Castellanos",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0398",
@@ -5171,7 +5965,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0399",
@@ -5184,7 +5980,9 @@
   "status": "scrubbed",
   "scrub_reason": "requester_withdrew",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0400",
@@ -5197,7 +5995,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0240",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0401",
@@ -5210,7 +6010,9 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0252",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0402",
@@ -5223,10 +6025,27 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0403",
+  "date": "2026-06-15",
+  "window": "AM",
+  "request_id": "RQ-0409",
+  "asset_id": "LV-01",
+  "operator_id": "P-006",
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0250",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0404",
   "date": "2026-06-15",
   "window": "AM",
   "request_id": "RQ-0408",
@@ -5236,1012 +6055,1063 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0404",
-  "date": "2026-06-15",
-  "window": "PM",
-  "request_id": "RQ-0407",
-  "asset_id": "LV-01",
-  "operator_id": null,
-  "pilot_id": "P-005",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0254",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0405",
   "date": "2026-06-15",
   "window": "PM",
-  "request_id": "RQ-0409",
-  "asset_id": "LV-02",
-  "operator_id": "P-009",
+  "request_id": "RQ-0415",
+  "asset_id": "LV-01",
+  "operator_id": "P-014",
   "pilot_id": "P-016",
   "status": "done",
   "scrub_reason": null,
-  "run_id": "TR-2026-0250",
-  "notes": ""
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0406",
   "date": "2026-06-15",
-  "window": "NIGHT",
-  "request_id": "RQ-0412",
-  "asset_id": "LV-01",
-  "operator_id": null,
-  "pilot_id": "P-015",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0255",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0407",
-  "date": "2026-06-15",
-  "window": "NIGHT",
-  "request_id": "RQ-0413",
+  "window": "PM",
+  "request_id": "RQ-0407",
   "asset_id": "LV-02",
   "operator_id": null,
   "pilot_id": "P-017",
   "status": "done",
   "scrub_reason": null,
+  "run_id": "TR-2026-0254",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0407",
+  "date": "2026-06-15",
+  "window": "PM",
+  "request_id": "RQ-0413",
+  "asset_id": "LV-04",
+  "operator_id": "P-009",
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0408",
-  "date": "2026-06-16",
-  "window": "AM",
-  "request_id": "RQ-0418",
-  "asset_id": "HM-03",
-  "operator_id": "P-006",
-  "pilot_id": "P-012",
+  "date": "2026-06-15",
+  "window": "NIGHT",
+  "request_id": "RQ-0417",
+  "asset_id": "LV-01",
+  "operator_id": null,
+  "pilot_id": "P-017",
   "status": "done",
   "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
+  "run_id": "TR-2026-0255",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0409",
-  "date": "2026-06-16",
-  "window": "AM",
-  "request_id": "RQ-0423",
-  "asset_id": "HM-04",
-  "operator_id": "P-007",
-  "pilot_id": "P-011",
+  "date": "2026-06-15",
+  "window": "NIGHT",
+  "request_id": "RQ-0414",
+  "asset_id": "LV-02",
+  "operator_id": null,
+  "pilot_id": "P-015",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0410",
   "date": "2026-06-16",
   "window": "AM",
-  "request_id": "RQ-0416",
-  "asset_id": "LV-01",
-  "operator_id": "P-008",
-  "pilot_id": "P-016",
+  "request_id": "RQ-0431",
+  "asset_id": "HM-01",
+  "operator_id": "P-006",
+  "pilot_id": "P-002",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0411",
   "date": "2026-06-16",
   "window": "AM",
   "request_id": "RQ-0421",
+  "asset_id": "HM-03",
+  "operator_id": "P-007",
+  "pilot_id": "P-012",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0412",
+  "date": "2026-06-16",
+  "window": "AM",
+  "request_id": "RQ-0429",
+  "asset_id": "HM-04",
+  "operator_id": "P-008",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0413",
+  "date": "2026-06-16",
+  "window": "AM",
+  "request_id": "RQ-0427",
   "asset_id": "SR-02",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0412",
-  "date": "2026-06-16",
-  "window": "PM",
-  "request_id": "RQ-0422",
-  "asset_id": "LV-01",
-  "operator_id": "P-013",
-  "pilot_id": "P-017",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0413",
-  "date": "2026-06-16",
-  "window": "PM",
-  "request_id": "RQ-0415",
-  "asset_id": "LV-02",
-  "operator_id": null,
-  "pilot_id": "P-014",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0414",
   "date": "2026-06-16",
   "window": "PM",
   "request_id": "RQ-0420",
-  "asset_id": "LV-04",
-  "operator_id": "P-009",
-  "pilot_id": "P-005",
+  "asset_id": "LV-01",
+  "operator_id": "P-012",
+  "pilot_id": "P-014",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0415",
   "date": "2026-06-16",
-  "window": "NIGHT",
-  "request_id": "RQ-0414",
-  "asset_id": "LV-01",
-  "operator_id": null,
-  "pilot_id": "P-003",
+  "window": "PM",
+  "request_id": "RQ-0424",
+  "asset_id": "LV-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-005",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0416",
   "date": "2026-06-16",
+  "window": "PM",
+  "request_id": "RQ-0416",
+  "asset_id": "LV-04",
+  "operator_id": "P-009",
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0417",
+  "date": "2026-06-16",
   "window": "NIGHT",
-  "request_id": "RQ-0417",
-  "asset_id": "LV-02",
+  "request_id": "RQ-0423",
+  "asset_id": "LV-01",
   "operator_id": null,
   "pilot_id": "P-015",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0417",
-  "date": "2026-06-17",
-  "window": "AM",
-  "request_id": "RQ-0425",
-  "asset_id": "HM-01",
-  "operator_id": "P-006",
-  "pilot_id": "P-012",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0418",
-  "date": "2026-06-17",
-  "window": "AM",
-  "request_id": "RQ-0427",
-  "asset_id": "HM-02",
-  "operator_id": "P-008",
-  "pilot_id": "P-002",
+  "date": "2026-06-16",
+  "window": "NIGHT",
+  "request_id": "RQ-0422",
+  "asset_id": "LV-02",
+  "operator_id": null,
+  "pilot_id": "P-003",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0419",
   "date": "2026-06-17",
   "window": "AM",
-  "request_id": "RQ-0431",
-  "asset_id": "LV-02",
-  "operator_id": "P-013",
-  "pilot_id": "P-005",
+  "request_id": "RQ-0433",
+  "asset_id": "HM-02",
+  "operator_id": "P-008",
+  "pilot_id": "P-011",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0420",
   "date": "2026-06-17",
   "window": "AM",
-  "request_id": "RQ-0426",
-  "asset_id": "SR-01",
-  "operator_id": "P-011",
-  "pilot_id": null,
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0261",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0421",
-  "date": "2026-06-17",
-  "window": "PM",
-  "request_id": "RQ-0432",
+  "request_id": "RQ-0441",
   "asset_id": "HM-03",
-  "operator_id": "P-006",
-  "pilot_id": "P-012",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0422",
-  "date": "2026-06-17",
-  "window": "PM",
-  "request_id": "RQ-0424",
-  "asset_id": "LV-01",
-  "operator_id": "P-009",
-  "pilot_id": "P-005",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0423",
-  "date": "2026-06-17",
-  "window": "PM",
-  "request_id": "RQ-0429",
-  "asset_id": "LV-02",
-  "operator_id": "P-014",
-  "pilot_id": "P-016",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0424",
-  "date": "2026-06-17",
-  "window": "NIGHT",
-  "request_id": "RQ-0428",
-  "asset_id": "LV-01",
-  "operator_id": null,
-  "pilot_id": "P-014",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0260",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0425",
-  "date": "2026-06-17",
-  "window": "NIGHT",
-  "request_id": "RQ-0419",
-  "asset_id": "LV-02",
-  "operator_id": null,
-  "pilot_id": "P-003",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0262",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0426",
-  "date": "2026-06-18",
-  "window": "AM",
-  "request_id": "RQ-0435",
-  "asset_id": "HM-01",
-  "operator_id": "P-008",
-  "pilot_id": "P-012",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0427",
-  "date": "2026-06-18",
-  "window": "AM",
-  "request_id": "RQ-0439",
-  "asset_id": "HM-02",
   "operator_id": "P-006",
   "pilot_id": "P-001",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0421",
+  "date": "2026-06-17",
+  "window": "AM",
+  "request_id": "RQ-0419",
+  "asset_id": "LV-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0422",
+  "date": "2026-06-17",
+  "window": "AM",
+  "request_id": "RQ-0434",
+  "asset_id": "SR-01",
+  "operator_id": "P-012",
+  "pilot_id": null,
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0261",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0423",
+  "date": "2026-06-17",
+  "window": "PM",
+  "request_id": "RQ-0436",
+  "asset_id": "LV-01",
+  "operator_id": "P-006",
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0424",
+  "date": "2026-06-17",
+  "window": "PM",
+  "request_id": "RQ-0426",
+  "asset_id": "LV-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-017",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0425",
+  "date": "2026-06-17",
+  "window": "PM",
+  "request_id": "RQ-0425",
+  "asset_id": "LV-04",
+  "operator_id": "P-014",
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0426",
+  "date": "2026-06-17",
+  "window": "NIGHT",
+  "request_id": "RQ-0428",
+  "asset_id": "LV-01",
+  "operator_id": null,
+  "pilot_id": "P-003",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0260",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0427",
+  "date": "2026-06-17",
+  "window": "NIGHT",
+  "request_id": "RQ-0432",
+  "asset_id": "LV-02",
+  "operator_id": null,
+  "pilot_id": "P-015",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0262",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0428",
   "date": "2026-06-18",
   "window": "AM",
-  "request_id": "RQ-0433",
-  "asset_id": "HM-04",
-  "operator_id": "P-007",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0429",
-  "date": "2026-06-18",
-  "window": "AM",
-  "request_id": "RQ-0436",
-  "asset_id": "LV-06",
-  "operator_id": "P-013",
-  "pilot_id": "P-016",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0430",
-  "date": "2026-06-18",
-  "window": "PM",
-  "request_id": "RQ-0411",
-  "asset_id": "LV-02",
-  "operator_id": "P-014",
-  "pilot_id": "P-005",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": "currency check: A. Moreau"
- },
- {
-  "assignment_id": "AS-2026-0431",
-  "date": "2026-06-18",
-  "window": "PM",
-  "request_id": "RQ-0441",
-  "asset_id": "LV-04",
-  "operator_id": null,
-  "pilot_id": "P-004",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0432",
-  "date": "2026-06-18",
-  "window": "PM",
-  "request_id": "RQ-0434",
-  "asset_id": "LV-06",
-  "operator_id": "P-009",
-  "pilot_id": "P-017",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0433",
-  "date": "2026-06-18",
-  "window": "NIGHT",
-  "request_id": "RQ-0440",
-  "asset_id": "LV-01",
-  "operator_id": null,
-  "pilot_id": "P-017",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0434",
-  "date": "2026-06-18",
-  "window": "NIGHT",
-  "request_id": "RQ-0437",
-  "asset_id": "LV-04",
-  "operator_id": null,
-  "pilot_id": "P-015",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0435",
-  "date": "2026-06-18",
-  "window": "NIGHT",
-  "request_id": "RQ-0430",
-  "asset_id": "LV-06",
-  "operator_id": null,
-  "pilot_id": "P-003",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0436",
-  "date": "2026-06-19",
-  "window": "AM",
-  "request_id": "RQ-0458",
+  "request_id": "RQ-0447",
   "asset_id": "HM-01",
-  "operator_id": "P-006",
-  "pilot_id": "P-002",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0437",
-  "date": "2026-06-19",
-  "window": "AM",
-  "request_id": "RQ-0442",
-  "asset_id": "HM-03",
-  "operator_id": "P-007",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0438",
-  "date": "2026-06-19",
-  "window": "AM",
-  "request_id": "RQ-0456",
-  "asset_id": "HM-04",
   "operator_id": "P-008",
   "pilot_id": "P-012",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0439",
-  "date": "2026-06-19",
+  "assignment_id": "AS-2026-0429",
+  "date": "2026-06-18",
   "window": "AM",
-  "request_id": "RQ-0449",
-  "asset_id": "LV-05",
-  "operator_id": "P-013",
+  "request_id": "RQ-0443",
+  "asset_id": "HM-04",
+  "operator_id": "P-007",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0430",
+  "date": "2026-06-18",
+  "window": "AM",
+  "request_id": "RQ-0439",
+  "asset_id": "LV-04",
+  "operator_id": "P-006",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0440",
-  "date": "2026-06-19",
+  "assignment_id": "AS-2026-0431",
+  "date": "2026-06-18",
+  "window": "AM",
+  "request_id": "RQ-0430",
+  "asset_id": "LV-06",
+  "operator_id": "P-013",
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0432",
+  "date": "2026-06-18",
   "window": "PM",
-  "request_id": "RQ-0445",
-  "asset_id": "LV-03",
+  "request_id": "RQ-0418",
+  "asset_id": "LV-01",
+  "operator_id": null,
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0433",
+  "date": "2026-06-18",
+  "window": "PM",
+  "request_id": "RQ-0446",
+  "asset_id": "LV-02",
   "operator_id": null,
   "pilot_id": "P-016",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0441",
-  "date": "2026-06-19",
+  "assignment_id": "AS-2026-0434",
+  "date": "2026-06-18",
   "window": "PM",
-  "request_id": "RQ-0452",
-  "asset_id": "LV-05",
-  "operator_id": "P-009",
+  "request_id": "RQ-0438",
+  "asset_id": "LV-04",
+  "operator_id": "P-007",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0435",
+  "date": "2026-06-18",
+  "window": "PM",
+  "request_id": "RQ-0437",
+  "asset_id": "LV-06",
+  "operator_id": "P-014",
   "pilot_id": "P-017",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0442",
-  "date": "2026-06-19",
+  "assignment_id": "AS-2026-0436",
+  "date": "2026-06-18",
   "window": "NIGHT",
-  "request_id": "RQ-0443",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-003",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0443",
-  "date": "2026-06-19",
-  "window": "NIGHT",
-  "request_id": "RQ-0444",
-  "asset_id": "LV-05",
+  "request_id": "RQ-0440",
+  "asset_id": "LV-04",
   "operator_id": null,
   "pilot_id": "P-015",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0444",
-  "date": "2026-06-20",
+  "assignment_id": "AS-2026-0437",
+  "date": "2026-06-18",
+  "window": "NIGHT",
+  "request_id": "RQ-0435",
+  "asset_id": "LV-06",
+  "operator_id": null,
+  "pilot_id": "P-003",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0438",
+  "date": "2026-06-19",
   "window": "AM",
-  "request_id": "RQ-0453",
-  "asset_id": "SR-01",
-  "operator_id": "P-012",
+  "request_id": "RQ-0455",
+  "asset_id": "HM-02",
+  "operator_id": "P-007",
   "pilot_id": "P-011",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0445",
-  "date": "2026-06-20",
+  "assignment_id": "AS-2026-0439",
+  "date": "2026-06-19",
   "window": "AM",
-  "request_id": "RQ-0447",
-  "asset_id": "SR-02",
-  "operator_id": "P-013",
+  "request_id": "RQ-0445",
+  "asset_id": "LV-03",
+  "operator_id": "P-008",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0440",
+  "date": "2026-06-19",
+  "window": "AM",
+  "request_id": "RQ-0448",
+  "asset_id": "LV-05",
+  "operator_id": "P-012",
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0441",
+  "date": "2026-06-19",
+  "window": "PM",
+  "request_id": "RQ-0461",
+  "asset_id": "LV-01",
+  "operator_id": null,
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0442",
+  "date": "2026-06-19",
+  "window": "PM",
+  "request_id": "RQ-0442",
+  "asset_id": "LV-03",
+  "operator_id": "P-014",
+  "pilot_id": "P-017",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0443",
+  "date": "2026-06-19",
+  "window": "PM",
+  "request_id": "RQ-0459",
+  "asset_id": "LV-04",
+  "operator_id": null,
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0444",
+  "date": "2026-06-19",
+  "window": "PM",
+  "request_id": "RQ-0444",
+  "asset_id": "LV-05",
+  "operator_id": "P-013",
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0445",
+  "date": "2026-06-19",
+  "window": "PM",
+  "request_id": "RQ-0457",
+  "asset_id": "LV-06",
+  "operator_id": null,
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0446",
   "date": "2026-06-20",
-  "window": "PM",
-  "request_id": "RQ-0457",
+  "window": "AM",
+  "request_id": "RQ-0454",
   "asset_id": "SR-01",
-  "operator_id": "P-012",
-  "pilot_id": "P-011",
+  "operator_id": "P-011",
+  "pilot_id": "P-012",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0447",
   "date": "2026-06-20",
-  "window": "PM",
-  "request_id": "RQ-0455",
+  "window": "AM",
+  "request_id": "RQ-0450",
   "asset_id": "SR-02",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0448",
+  "date": "2026-06-20",
+  "window": "PM",
+  "request_id": "RQ-0460",
+  "asset_id": "SR-01",
+  "operator_id": "P-011",
+  "pilot_id": "P-012",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0449",
+  "date": "2026-06-20",
+  "window": "PM",
+  "request_id": "RQ-0458",
+  "asset_id": "SR-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0450",
   "date": "2026-06-21",
   "window": "AM",
-  "request_id": "RQ-0448",
+  "request_id": "RQ-0451",
   "asset_id": "SR-01",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "scrubbed",
   "scrub_reason": "weather",
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0449",
+  "assignment_id": "AS-2026-0451",
   "date": "2026-06-21",
   "window": "AM",
-  "request_id": "RQ-0446",
+  "request_id": "RQ-0449",
   "asset_id": "SR-02",
-  "operator_id": "P-011",
-  "pilot_id": null,
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0450",
-  "date": "2026-06-21",
-  "window": "PM",
-  "request_id": "RQ-0462",
-  "asset_id": "SR-01",
   "operator_id": "P-012",
   "pilot_id": null,
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0451",
+  "assignment_id": "AS-2026-0452",
   "date": "2026-06-21",
   "window": "PM",
-  "request_id": "RQ-0461",
+  "request_id": "RQ-0464",
+  "asset_id": "LV-03",
+  "operator_id": null,
+  "pilot_id": "P-012",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0453",
+  "date": "2026-06-21",
+  "window": "PM",
+  "request_id": "RQ-0468",
+  "asset_id": "SR-01",
+  "operator_id": "P-011",
+  "pilot_id": null,
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0454",
+  "date": "2026-06-21",
+  "window": "PM",
+  "request_id": "RQ-0467",
   "asset_id": "SR-02",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0452",
-  "date": "2026-06-22",
-  "window": "AM",
-  "request_id": "RQ-0473",
-  "asset_id": "HM-02",
-  "operator_id": "P-007",
-  "pilot_id": "P-001",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0453",
-  "date": "2026-06-22",
-  "window": "AM",
-  "request_id": "RQ-0476",
-  "asset_id": "HM-03",
-  "operator_id": "P-008",
-  "pilot_id": "P-002",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0454",
-  "date": "2026-06-22",
-  "window": "AM",
-  "request_id": "RQ-0450",
-  "asset_id": "SR-01",
-  "operator_id": "P-012",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0455",
   "date": "2026-06-22",
   "window": "AM",
-  "request_id": "RQ-0448",
+  "request_id": "RQ-0465",
+  "asset_id": "HM-03",
+  "operator_id": "P-007",
+  "pilot_id": "P-002",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0456",
+  "date": "2026-06-22",
+  "window": "AM",
+  "request_id": "RQ-0478",
+  "asset_id": "HM-04",
+  "operator_id": "P-008",
+  "pilot_id": "P-001",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0457",
+  "date": "2026-06-22",
+  "window": "AM",
+  "request_id": "RQ-0463",
+  "asset_id": "LV-05",
+  "operator_id": "P-006",
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0458",
+  "date": "2026-06-22",
+  "window": "AM",
+  "request_id": "RQ-0452",
+  "asset_id": "SR-01",
+  "operator_id": "P-012",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0459",
+  "date": "2026-06-22",
+  "window": "AM",
+  "request_id": "RQ-0451",
   "asset_id": "SR-02",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0456",
+  "assignment_id": "AS-2026-0460",
   "date": "2026-06-22",
   "window": "PM",
-  "request_id": "RQ-0464",
+  "request_id": "RQ-0479",
+  "asset_id": "LV-03",
+  "operator_id": null,
+  "pilot_id": "P-017",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0461",
+  "date": "2026-06-22",
+  "window": "PM",
+  "request_id": "RQ-0482",
+  "asset_id": "LV-04",
+  "operator_id": null,
+  "pilot_id": "P-012",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0462",
+  "date": "2026-06-22",
+  "window": "PM",
+  "request_id": "RQ-0480",
+  "asset_id": "LV-05",
+  "operator_id": null,
+  "pilot_id": "P-014",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0463",
+  "date": "2026-06-22",
+  "window": "PM",
+  "request_id": "RQ-0481",
+  "asset_id": "LV-06",
+  "operator_id": null,
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0464",
+  "date": "2026-06-22",
+  "window": "PM",
+  "request_id": "RQ-0470",
   "asset_id": "SR-01",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0457",
+  "assignment_id": "AS-2026-0465",
   "date": "2026-06-22",
   "window": "PM",
-  "request_id": "RQ-0459",
+  "request_id": "RQ-0462",
+  "asset_id": "SR-02",
+  "operator_id": "P-011",
+  "pilot_id": null,
+  "status": "scrubbed",
+  "scrub_reason": "build_not_ready",
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0466",
+  "date": "2026-06-23",
+  "window": "AM",
+  "request_id": "RQ-0484",
+  "asset_id": "HM-01",
+  "operator_id": "P-007",
+  "pilot_id": "P-002",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0467",
+  "date": "2026-06-23",
+  "window": "AM",
+  "request_id": "RQ-0487",
+  "asset_id": "HM-02",
+  "operator_id": "P-008",
+  "pilot_id": "P-001",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0468",
+  "date": "2026-06-23",
+  "window": "AM",
+  "request_id": "RQ-0456",
+  "asset_id": "SR-01",
+  "operator_id": "P-012",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0469",
+  "date": "2026-06-23",
+  "window": "AM",
+  "request_id": "RQ-0453",
+  "asset_id": "SR-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0470",
+  "date": "2026-06-23",
+  "window": "PM",
+  "request_id": "RQ-0489",
+  "asset_id": "LV-03",
+  "operator_id": null,
+  "pilot_id": "P-014",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0471",
+  "date": "2026-06-23",
+  "window": "PM",
+  "request_id": "RQ-0486",
+  "asset_id": "LV-05",
+  "operator_id": null,
+  "pilot_id": "P-017",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0472",
+  "date": "2026-06-23",
+  "window": "PM",
+  "request_id": "RQ-0471",
+  "asset_id": "SR-01",
+  "operator_id": "P-012",
+  "pilot_id": null,
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0473",
+  "date": "2026-06-23",
+  "window": "PM",
+  "request_id": "RQ-0462",
   "asset_id": "SR-02",
   "operator_id": "P-011",
   "pilot_id": null,
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0458",
-  "date": "2026-06-22",
-  "window": "NIGHT",
-  "request_id": "RQ-0472",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-003",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0459",
-  "date": "2026-06-22",
-  "window": "NIGHT",
-  "request_id": "RQ-0478",
-  "asset_id": "LV-04",
-  "operator_id": null,
-  "pilot_id": "P-017",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0460",
-  "date": "2026-06-22",
-  "window": "NIGHT",
-  "request_id": "RQ-0474",
-  "asset_id": "LV-05",
-  "operator_id": null,
-  "pilot_id": "P-015",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0461",
-  "date": "2026-06-22",
-  "window": "NIGHT",
-  "request_id": "RQ-0475",
-  "asset_id": "LV-06",
-  "operator_id": null,
-  "pilot_id": "P-014",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0462",
-  "date": "2026-06-23",
-  "window": "AM",
-  "request_id": "RQ-0481",
-  "asset_id": "HM-01",
-  "operator_id": "P-006",
-  "pilot_id": "P-002",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0463",
-  "date": "2026-06-23",
-  "window": "AM",
-  "request_id": "RQ-0477",
-  "asset_id": "HM-04",
-  "operator_id": "P-007",
-  "pilot_id": "P-001",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0464",
-  "date": "2026-06-23",
-  "window": "AM",
-  "request_id": "RQ-0454",
-  "asset_id": "SR-01",
-  "operator_id": "P-013",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0465",
-  "date": "2026-06-23",
-  "window": "AM",
-  "request_id": "RQ-0451",
-  "asset_id": "SR-02",
-  "operator_id": "P-012",
-  "pilot_id": "P-004",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0466",
-  "date": "2026-06-23",
-  "window": "PM",
-  "request_id": "RQ-0482",
-  "asset_id": "HM-02",
-  "operator_id": "P-007",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0467",
-  "date": "2026-06-23",
-  "window": "PM",
-  "request_id": "RQ-0466",
-  "asset_id": "SR-01",
-  "operator_id": "P-013",
-  "pilot_id": "P-004",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0468",
-  "date": "2026-06-23",
-  "window": "PM",
-  "request_id": "RQ-0465",
-  "asset_id": "SR-02",
-  "operator_id": "P-012",
-  "pilot_id": null,
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0469",
-  "date": "2026-06-23",
-  "window": "NIGHT",
-  "request_id": "RQ-0480",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-003",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0470",
-  "date": "2026-06-23",
-  "window": "NIGHT",
-  "request_id": "RQ-0483",
-  "asset_id": "LV-05",
-  "operator_id": null,
-  "pilot_id": "P-015",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0471",
-  "date": "2026-06-23",
-  "window": "NIGHT",
-  "request_id": "RQ-0485",
-  "asset_id": "LV-06",
-  "operator_id": null,
-  "pilot_id": "P-014",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0472",
-  "date": "2026-06-24",
-  "window": "AM",
-  "request_id": "RQ-0490",
-  "asset_id": "HM-03",
-  "operator_id": "P-008",
-  "pilot_id": "P-001",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0473",
-  "date": "2026-06-24",
-  "window": "AM",
-  "request_id": "RQ-0492",
-  "asset_id": "HM-04",
-  "operator_id": "P-006",
-  "pilot_id": "P-002",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0474",
-  "date": "2026-06-24",
-  "window": "AM",
-  "request_id": "RQ-0463",
-  "asset_id": "SR-01",
-  "operator_id": "P-013",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0475",
-  "date": "2026-06-24",
-  "window": "AM",
-  "request_id": "RQ-0460",
-  "asset_id": "SR-02",
-  "operator_id": "P-012",
-  "pilot_id": "P-004",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0476",
-  "date": "2026-06-24",
-  "window": "PM",
-  "request_id": "RQ-0487",
-  "asset_id": "LV-03",
-  "operator_id": "P-009",
-  "pilot_id": "P-017",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": "currency check: W. Adeyemi"
- },
- {
-  "assignment_id": "AS-2026-0477",
-  "date": "2026-06-24",
-  "window": "PM",
-  "request_id": "RQ-0470",
-  "asset_id": "SR-01",
-  "operator_id": "P-013",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0478",
-  "date": "2026-06-24",
-  "window": "PM",
-  "request_id": "RQ-0467",
-  "asset_id": "SR-02",
-  "operator_id": "P-012",
-  "pilot_id": "P-004",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0479",
-  "date": "2026-06-24",
+  "date": "2026-06-23",
   "window": "NIGHT",
-  "request_id": "RQ-0486",
+  "request_id": "RQ-0485",
   "asset_id": "LV-03",
   "operator_id": null,
   "pilot_id": "P-003",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0480",
-  "date": "2026-06-24",
-  "window": "NIGHT",
-  "request_id": "RQ-0491",
-  "asset_id": "LV-04",
-  "operator_id": null,
-  "pilot_id": "P-014",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0481",
-  "date": "2026-06-24",
+  "assignment_id": "AS-2026-0475",
+  "date": "2026-06-23",
   "window": "NIGHT",
   "request_id": "RQ-0488",
   "asset_id": "LV-05",
@@ -6250,578 +7120,758 @@
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0482",
-  "date": "2026-06-24",
+  "assignment_id": "AS-2026-0476",
+  "date": "2026-06-23",
   "window": "NIGHT",
-  "request_id": "RQ-0489",
+  "request_id": "RQ-0491",
   "asset_id": "LV-06",
   "operator_id": null,
   "pilot_id": "P-017",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0483",
-  "date": "2026-06-25",
+  "assignment_id": "AS-2026-0477",
+  "date": "2026-06-24",
   "window": "AM",
-  "request_id": "RQ-0494",
-  "asset_id": "HM-01",
-  "operator_id": "P-007",
-  "pilot_id": "P-001",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0285",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0484",
-  "date": "2026-06-25",
-  "window": "AM",
-  "request_id": "RQ-0496",
-  "asset_id": "HM-02",
-  "operator_id": "P-008",
+  "request_id": "RQ-0492",
+  "asset_id": "HM-03",
+  "operator_id": "P-006",
   "pilot_id": "P-002",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0485",
-  "date": "2026-06-25",
+  "assignment_id": "AS-2026-0478",
+  "date": "2026-06-24",
+  "window": "AM",
+  "request_id": "RQ-0494",
+  "asset_id": "HM-04",
+  "operator_id": "P-007",
+  "pilot_id": "P-001",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0479",
+  "date": "2026-06-24",
   "window": "AM",
   "request_id": "RQ-0469",
   "asset_id": "SR-01",
-  "operator_id": "P-013",
+  "operator_id": "P-012",
   "pilot_id": "P-011",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0486",
-  "date": "2026-06-25",
+  "assignment_id": "AS-2026-0480",
+  "date": "2026-06-24",
   "window": "AM",
-  "request_id": "RQ-0468",
+  "request_id": "RQ-0466",
   "asset_id": "SR-02",
-  "operator_id": "P-012",
+  "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0487",
-  "date": "2026-06-25",
-  "window": "PM",
-  "request_id": "RQ-0495",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-005",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0488",
-  "date": "2026-06-25",
+  "assignment_id": "AS-2026-0481",
+  "date": "2026-06-24",
   "window": "PM",
   "request_id": "RQ-0493",
-  "asset_id": "SR-01",
-  "operator_id": "P-013",
-  "pilot_id": "P-004",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0489",
-  "date": "2026-06-25",
-  "window": "PM",
-  "request_id": "RQ-0471",
-  "asset_id": "SR-02",
-  "operator_id": "P-012",
-  "pilot_id": null,
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0490",
-  "date": "2026-06-25",
-  "window": "NIGHT",
-  "request_id": "RQ-0497",
-  "asset_id": "LV-05",
-  "operator_id": null,
-  "pilot_id": "P-003",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0491",
-  "date": "2026-06-25",
-  "window": "NIGHT",
-  "request_id": "RQ-0498",
-  "asset_id": "LV-06",
-  "operator_id": null,
-  "pilot_id": "P-015",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0492",
-  "date": "2026-06-26",
-  "window": "AM",
-  "request_id": "RQ-0499",
-  "asset_id": "HM-03",
-  "operator_id": "P-006",
-  "pilot_id": "P-001",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0287",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0493",
-  "date": "2026-06-26",
-  "window": "AM",
-  "request_id": "RQ-0501",
-  "asset_id": "HM-04",
-  "operator_id": "P-007",
-  "pilot_id": "P-002",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0494",
-  "date": "2026-06-26",
-  "window": "AM",
-  "request_id": "RQ-0504",
   "asset_id": "LV-03",
-  "operator_id": "P-008",
-  "pilot_id": "P-016",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0495",
-  "date": "2026-06-26",
-  "window": "AM",
-  "request_id": "RQ-0484",
-  "asset_id": "SR-01",
-  "operator_id": "P-013",
-  "pilot_id": "P-012",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0496",
-  "date": "2026-06-26",
-  "window": "AM",
-  "request_id": "RQ-0479",
-  "asset_id": "SR-02",
-  "operator_id": "P-011",
-  "pilot_id": "P-004",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0497",
-  "date": "2026-06-26",
-  "window": "PM",
-  "request_id": "RQ-0506",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-016",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0286",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0498",
-  "date": "2026-06-26",
-  "window": "PM",
-  "request_id": "RQ-0500",
-  "asset_id": "LV-05",
-  "operator_id": null,
-  "pilot_id": "P-005",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": "TR-2026-0288",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0499",
-  "date": "2026-06-26",
-  "window": "PM",
-  "request_id": "RQ-0502",
-  "asset_id": "SR-02",
-  "operator_id": "P-011",
-  "pilot_id": null,
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0500",
-  "date": "2026-06-26",
-  "window": "NIGHT",
-  "request_id": "RQ-0508",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-015",
-  "status": "scrubbed",
-  "scrub_reason": "requester_withdrew",
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0501",
-  "date": "2026-06-26",
-  "window": "NIGHT",
-  "request_id": "RQ-0507",
-  "asset_id": "LV-05",
   "operator_id": null,
   "pilot_id": "P-014",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0502",
-  "date": "2026-06-26",
-  "window": "NIGHT",
-  "request_id": "RQ-0505",
+  "assignment_id": "AS-2026-0482",
+  "date": "2026-06-24",
+  "window": "PM",
+  "request_id": "RQ-0496",
+  "asset_id": "LV-05",
+  "operator_id": null,
+  "pilot_id": "P-017",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0483",
+  "date": "2026-06-24",
+  "window": "PM",
+  "request_id": "RQ-0497",
   "asset_id": "LV-06",
+  "operator_id": null,
+  "pilot_id": "P-016",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0484",
+  "date": "2026-06-24",
+  "window": "PM",
+  "request_id": "RQ-0473",
+  "asset_id": "SR-01",
+  "operator_id": "P-012",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0485",
+  "date": "2026-06-24",
+  "window": "PM",
+  "request_id": "RQ-0472",
+  "asset_id": "SR-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0486",
+  "date": "2026-06-24",
+  "window": "NIGHT",
+  "request_id": "RQ-0498",
+  "asset_id": "LV-03",
   "operator_id": null,
   "pilot_id": "P-003",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0503",
-  "date": "2026-06-29",
+  "assignment_id": "AS-2026-0487",
+  "date": "2026-06-25",
   "window": "AM",
-  "request_id": "RQ-0503",
+  "request_id": "RQ-0495",
   "asset_id": "HM-01",
-  "operator_id": "P-006",
-  "pilot_id": "P-012",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0504",
-  "date": "2026-06-29",
-  "window": "AM",
-  "request_id": "RQ-0510",
-  "asset_id": "HM-02",
-  "operator_id": "P-007",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0505",
-  "date": "2026-06-29",
-  "window": "AM",
-  "request_id": "RQ-0511",
-  "asset_id": "HM-03",
   "operator_id": "P-008",
+  "pilot_id": "P-002",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0285",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0488",
+  "date": "2026-06-25",
+  "window": "AM",
+  "request_id": "RQ-0500",
+  "asset_id": "HM-02",
+  "operator_id": "P-006",
   "pilot_id": "P-001",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0489",
+  "date": "2026-06-25",
+  "window": "AM",
+  "request_id": "RQ-0475",
+  "asset_id": "SR-01",
+  "operator_id": "P-012",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0490",
+  "date": "2026-06-25",
+  "window": "AM",
+  "request_id": "RQ-0474",
+  "asset_id": "SR-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0491",
+  "date": "2026-06-25",
+  "window": "PM",
+  "request_id": "RQ-0411",
+  "asset_id": "LV-05",
+  "operator_id": "P-014",
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "currency check: A. Moreau",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0492",
+  "date": "2026-06-25",
+  "window": "PM",
+  "request_id": "RQ-0477",
+  "asset_id": "SR-01",
+  "operator_id": "P-011",
+  "pilot_id": null,
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0493",
+  "date": "2026-06-25",
+  "window": "PM",
+  "request_id": "RQ-0476",
+  "asset_id": "SR-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0494",
+  "date": "2026-06-25",
+  "window": "NIGHT",
+  "request_id": "RQ-0503",
+  "asset_id": "LV-03",
+  "operator_id": null,
+  "pilot_id": "P-014",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0495",
+  "date": "2026-06-25",
+  "window": "NIGHT",
+  "request_id": "RQ-0501",
+  "asset_id": "LV-05",
+  "operator_id": null,
+  "pilot_id": "P-003",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0496",
+  "date": "2026-06-25",
+  "window": "NIGHT",
+  "request_id": "RQ-0502",
+  "asset_id": "LV-06",
+  "operator_id": null,
+  "pilot_id": "P-015",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0497",
+  "date": "2026-06-26",
+  "window": "AM",
+  "request_id": "RQ-0504",
+  "asset_id": "HM-03",
+  "operator_id": "P-007",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0287",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0498",
+  "date": "2026-06-26",
+  "window": "AM",
+  "request_id": "RQ-0505",
+  "asset_id": "HM-04",
+  "operator_id": "P-008",
+  "pilot_id": "P-012",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0499",
+  "date": "2026-06-26",
+  "window": "AM",
+  "request_id": "RQ-0508",
+  "asset_id": "LV-06",
+  "operator_id": "P-006",
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0500",
+  "date": "2026-06-26",
+  "window": "AM",
+  "request_id": "RQ-0483",
+  "asset_id": "SR-02",
+  "operator_id": "P-013",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0501",
+  "date": "2026-06-26",
+  "window": "PM",
+  "request_id": "RQ-0512",
+  "asset_id": "LV-03",
+  "operator_id": null,
+  "pilot_id": "P-017",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0286",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0502",
+  "date": "2026-06-26",
+  "window": "PM",
+  "request_id": "RQ-0511",
+  "asset_id": "LV-06",
+  "operator_id": null,
+  "pilot_id": "P-005",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": "TR-2026-0288",
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0503",
+  "date": "2026-06-26",
+  "window": "PM",
+  "request_id": "RQ-0499",
+  "asset_id": "SR-01",
+  "operator_id": "P-012",
+  "pilot_id": "P-004",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0504",
+  "date": "2026-06-26",
+  "window": "PM",
+  "request_id": "RQ-0507",
+  "asset_id": "SR-02",
+  "operator_id": "P-011",
+  "pilot_id": null,
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0505",
+  "date": "2026-06-26",
+  "window": "NIGHT",
+  "request_id": "RQ-0506",
+  "asset_id": "LV-03",
+  "operator_id": null,
+  "pilot_id": "P-003",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0506",
+  "date": "2026-06-26",
+  "window": "NIGHT",
+  "request_id": "RQ-0509",
+  "asset_id": "LV-05",
+  "operator_id": null,
+  "pilot_id": "P-015",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0507",
+  "date": "2026-06-29",
+  "window": "AM",
+  "request_id": "RQ-0510",
+  "asset_id": "HM-01",
+  "operator_id": "P-007",
+  "pilot_id": "P-012",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0508",
+  "date": "2026-06-29",
+  "window": "AM",
+  "request_id": "RQ-0515",
+  "asset_id": "HM-02",
+  "operator_id": "P-008",
+  "pilot_id": "P-002",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0509",
+  "date": "2026-06-29",
+  "window": "AM",
+  "request_id": "RQ-0517",
+  "asset_id": "HM-03",
+  "operator_id": "P-006",
+  "pilot_id": "P-011",
+  "status": "done",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
+ },
+ {
+  "assignment_id": "AS-2026-0510",
   "date": "2026-06-29",
   "window": "PM",
-  "request_id": "RQ-0515",
+  "request_id": "RQ-0514",
   "asset_id": "LV-06",
   "operator_id": null,
   "pilot_id": "P-005",
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0297",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0507",
+  "assignment_id": "AS-2026-0511",
   "date": "2026-06-29",
   "window": "PM",
-  "request_id": "RQ-0513",
+  "request_id": "RQ-0516",
   "asset_id": "SR-01",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0508",
+  "assignment_id": "AS-2026-0512",
   "date": "2026-06-29",
   "window": "NIGHT",
-  "request_id": "RQ-0512",
-  "asset_id": "LV-04",
-  "operator_id": null,
-  "pilot_id": "P-014",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0509",
-  "date": "2026-06-29",
-  "window": "NIGHT",
-  "request_id": "RQ-0514",
-  "asset_id": "LV-05",
+  "request_id": "RQ-0518",
+  "asset_id": "LV-03",
   "operator_id": null,
   "pilot_id": "P-015",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0510",
+  "assignment_id": "AS-2026-0513",
   "date": "2026-06-29",
   "window": "NIGHT",
-  "request_id": "RQ-0509",
-  "asset_id": "LV-06",
+  "request_id": "RQ-0513",
+  "asset_id": "LV-05",
   "operator_id": null,
   "pilot_id": "P-003",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0511",
+  "assignment_id": "AS-2026-0514",
   "date": "2026-06-30",
   "window": "AM",
-  "request_id": "RQ-0517",
+  "request_id": "RQ-0520",
   "asset_id": "HM-01",
-  "operator_id": "P-006",
+  "operator_id": "P-007",
   "pilot_id": "P-012",
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0305",
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0512",
+  "assignment_id": "AS-2026-0515",
   "date": "2026-06-30",
   "window": "AM",
-  "request_id": "RQ-0520",
+  "request_id": "RQ-0523",
   "asset_id": "HM-02",
-  "operator_id": "P-007",
-  "pilot_id": "P-011",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0513",
-  "date": "2026-06-30",
-  "window": "AM",
-  "request_id": "RQ-0521",
-  "asset_id": "HM-03",
   "operator_id": "P-008",
   "pilot_id": "P-002",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0514",
+  "assignment_id": "AS-2026-0516",
   "date": "2026-06-30",
   "window": "PM",
-  "request_id": "RQ-0519",
-  "asset_id": "LV-06",
-  "operator_id": "P-014",
-  "pilot_id": "P-005",
+  "request_id": "RQ-0521",
+  "asset_id": "LV-05",
+  "operator_id": null,
+  "pilot_id": "P-017",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": "currency check: A. Moreau"
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
-  "assignment_id": "AS-2026-0515",
+  "assignment_id": "AS-2026-0517",
   "date": "2026-06-30",
   "window": "PM",
-  "request_id": "RQ-0523",
+  "request_id": "RQ-0524",
   "asset_id": "SR-02",
   "operator_id": "P-013",
   "pilot_id": "P-004",
   "status": "done",
   "scrub_reason": null,
   "run_id": "TR-2026-0304",
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0516",
-  "date": "2026-06-30",
-  "window": "NIGHT",
-  "request_id": "RQ-0516",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-017",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0517",
-  "date": "2026-06-30",
-  "window": "NIGHT",
-  "request_id": "RQ-0518",
-  "asset_id": "LV-04",
-  "operator_id": null,
-  "pilot_id": "P-003",
-  "status": "done",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-03",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0518",
   "date": "2026-06-30",
   "window": "NIGHT",
-  "request_id": "RQ-0522",
-  "asset_id": "LV-05",
+  "request_id": "RQ-0525",
+  "asset_id": "LV-03",
   "operator_id": null,
-  "pilot_id": "P-014",
+  "pilot_id": "P-015",
   "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0519",
-  "date": "2026-07-01",
-  "window": "AM",
-  "request_id": "RQ-0525",
-  "asset_id": "HM-01",
-  "operator_id": "P-006",
-  "pilot_id": "P-012",
-  "status": "planned",
+  "date": "2026-06-30",
+  "window": "NIGHT",
+  "request_id": "RQ-0522",
+  "asset_id": "LV-06",
+  "operator_id": null,
+  "pilot_id": "P-003",
+  "status": "done",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": true
  },
  {
   "assignment_id": "AS-2026-0520",
   "date": "2026-07-01",
   "window": "AM",
-  "request_id": "RQ-0526",
-  "asset_id": "HM-02",
+  "request_id": "RQ-0528",
+  "asset_id": "HM-01",
   "operator_id": "P-007",
   "pilot_id": "P-011",
   "status": "planned",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": false
  },
  {
   "assignment_id": "AS-2026-0521",
   "date": "2026-07-01",
   "window": "AM",
   "request_id": "RQ-0532",
-  "asset_id": "HM-03",
+  "asset_id": "HM-02",
   "operator_id": "P-008",
-  "pilot_id": "P-001",
+  "pilot_id": "P-012",
   "status": "planned",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": false
  },
  {
   "assignment_id": "AS-2026-0522",
   "date": "2026-07-01",
+  "window": "AM",
+  "request_id": "RQ-0527",
+  "asset_id": "HM-03",
+  "operator_id": "P-006",
+  "pilot_id": "P-001",
+  "status": "planned",
+  "scrub_reason": null,
+  "run_id": null,
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": false
+ },
+ {
+  "assignment_id": "AS-2026-0523",
+  "date": "2026-07-01",
   "window": "PM",
-  "request_id": "RQ-0529",
-  "asset_id": "LV-05",
+  "request_id": "RQ-0526",
+  "asset_id": "LV-04",
   "operator_id": null,
   "pilot_id": "P-016",
   "status": "planned",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
- },
- {
-  "assignment_id": "AS-2026-0523",
-  "date": "2026-07-01",
-  "window": "NIGHT",
-  "request_id": "RQ-0524",
-  "asset_id": "LV-03",
-  "operator_id": null,
-  "pilot_id": "P-017",
-  "status": "planned",
-  "scrub_reason": null,
-  "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": false
  },
  {
   "assignment_id": "AS-2026-0524",
   "date": "2026-07-01",
-  "window": "NIGHT",
-  "request_id": "RQ-0527",
-  "asset_id": "LV-04",
+  "window": "PM",
+  "request_id": "RQ-0531",
+  "asset_id": "LV-06",
   "operator_id": null,
-  "pilot_id": "P-015",
+  "pilot_id": "P-005",
   "status": "planned",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": false
  },
  {
   "assignment_id": "AS-2026-0525",
   "date": "2026-07-01",
   "window": "NIGHT",
-  "request_id": "RQ-0531",
-  "asset_id": "LV-06",
+  "request_id": "RQ-0529",
+  "asset_id": "LV-05",
   "operator_id": null,
   "pilot_id": "P-003",
   "status": "planned",
   "scrub_reason": null,
   "run_id": null,
-  "notes": ""
+  "notes": "",
+  "assigned_by": "U-04",
+  "acked": false
  }
 ]

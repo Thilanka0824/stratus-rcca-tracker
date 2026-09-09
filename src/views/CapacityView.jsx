@@ -1,13 +1,15 @@
 import { useMemo, useState } from 'react';
 import {
   ComposedChart, BarChart, LineChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer,
+  ReferenceLine, ResponsiveContainer,
 } from 'recharts';
 import { chartTheme, fmtDate } from '../lib/helpers';
-import { addDays, REASON_LABELS } from '../lib/rules';
+import { addDays, REASON_LABELS, qualifiedOn } from '../lib/rules';
+import Modal, { ConfirmDialog } from './Modal';
 import {
   onWindowFulfillment, assetUtilization, crewUtilization, leadTimes, churnByDay, groundingDays,
   deferralPareto, misattribution, utilizationByWeek, ratingMatrix, demandVsSupply,
+  deskLoad, riderFulfillment, actionsByRole, ACTION_COLUMNS,
 } from '../lib/dispatch';
 
 const PERIODS = { 30: 'Last 30 days', 60: 'Last 60 days', 90: 'Whole window (90 days)' };
@@ -15,7 +17,10 @@ const MONO = "'IBM Plex Mono', monospace";
 
 // Demand vs supply, and which constraint is actually binding. Every number
 // here is derived from the same requests and assignments the board edits.
-export default function CapacityView({ db, meta, today, theme, failures }) {
+// `allowed`, `onGrant` and `onRevoke` make the rating matrix the trainer's
+// desk: grants are effective-dated and never to oneself (I2). For every other
+// persona the editing control is disabled with the reason, not hidden.
+export default function CapacityView({ db, meta, today, theme, failures, me = null, allowed = () => ({ ok: true }), onGrant, onRevoke, audit = [] }) {
   const { AXIS, GRID, TIP, INK, ACCENT, AMBER, GREEN, CURSOR } = chartTheme(theme);
   const AF_COLOR = { Levant: ACCENT, Harmattan: AMBER, Sirocco: GREEN };
   const airframes = Object.keys(meta.airframes);
@@ -25,6 +30,11 @@ export default function CapacityView({ db, meta, today, theme, failures }) {
   const [afFilter, setAfFilter] = useState('all');
   const [utilMetric, setUtilMetric] = useState('windows');
   const [asOf, setAsOf] = useState(today);
+  const [editing, setEditing] = useState(false);       // the trainer's mode
+  const [grant, setGrant] = useState(null);             // { person, kind } → GrantDialog
+  const [revoke, setRevoke] = useState(null);           // { person, kind } → confirm
+  const [refusal, setRefusal] = useState(null);
+  const trainOk = allowed('rating.grant', { person_id: null });
 
   const from = useMemo(() => {
     const f = addDays(today, -(Number(period) - 1));
@@ -44,6 +54,9 @@ export default function CapacityView({ db, meta, today, theme, failures }) {
   const tell = useMemo(() => misattribution(db, paretoOpts), [db, afFilter, from, to]);
   const weekly = useMemo(() => utilizationByWeek(db, from, to), [db, from, to]);
   const matrix = useMemo(() => ratingMatrix(db, airframes, asOf), [db, asOf]);
+  const desk = useMemo(() => deskLoad(db, from, to), [db, from, to]);
+  const riders = useMemo(() => riderFulfillment(db, today, from, to), [db, today, from, to]);
+  const actions = useMemo(() => actionsByRole(db, audit, { from, to }), [db, audit, from, to]);
 
   const peak = churn.reduce((m, r) => (r.total > (m?.total ?? 0) ? r : m), null);
   const churnTotal = churn.reduce((s, r) => s + r.total, 0);
@@ -133,6 +146,39 @@ export default function CapacityView({ db, meta, today, theme, failures }) {
       </div>
 
       <div className="panel">
+        <h3>The rider desk — load per coverer, against the ratio</h3>
+        <p className="caption">
+          Rider experience is the product. A rider operator holds at most {db.desk.ratio} rider-facing sorties at once, and a
+          rider-facing sortie with nobody on the line is not a flight (R10) — structural rules, not settings. Load is
+          rider-facing sorties per coverer, per window; the dashed line is the ceiling. The showcase week in June is where it
+          cost a P0, and the fix was cross-training, not a waiver.
+        </p>
+        <div className="kpis">
+          <Kpi k="Desk load" v={desk.load == null ? '—' : `${desk.load} / ${db.desk.ratio}`}
+            sub={desk.peak ? `peak ${desk.peak.day} (${desk.peak.peak.toFixed(1)} per coverer)` : 'rider-facing sorties per coverer'}
+            tone={desk.peak && desk.peak.peak >= db.desk.ratio ? 'warn' : ''} />
+          <Kpi k="Windows at ratio" v={desk.atRatio} sub={`of ${desk.windows} windows with riders or a desk`} tone={desk.atRatio ? 'warn' : ''} />
+          <Kpi k="Rider-facing fulfillment" v={pct(riders.riders)} sub={`everything else ${pct(riders.rest)} · n=${riders.riders.den}`}
+            tone={riders.riders.pct != null && riders.rest.pct != null && riders.riders.pct < riders.rest.pct ? 'warn' : ''} />
+        </div>
+        <ResponsiveContainer width="100%" height={240}>
+          <ComposedChart data={desk.days} margin={{ top: 8, right: 16, left: -12, bottom: 4 }}>
+            <CartesianGrid stroke={GRID} vertical={false} />
+            <XAxis dataKey="day" tick={AXIS} interval={Math.max(0, Math.floor(desk.days.length / 8))} />
+            <YAxis tick={AXIS} allowDecimals />
+            <Tooltip {...TIP} formatter={(v, name) => (v == null ? '—' : /load/.test(name) ? Number(v).toFixed(1) : v)} />
+            <Legend wrapperStyle={{ fontFamily: MONO, fontSize: 12 }} />
+            <ReferenceLine y={db.desk.ratio} stroke={AMBER} strokeDasharray="4 4"
+              label={{ value: `ratio ${db.desk.ratio}`, fill: AMBER, fontSize: 11, fontFamily: MONO, position: 'insideTopRight' }} />
+            <Bar dataKey="riders" name="Rider-facing sorties" fill={INK} fillOpacity={0.18} />
+            <Line dataKey="AM load" name="AM load" stroke={GREEN} strokeWidth={1.5} dot={false} connectNulls />
+            <Line dataKey="PM load" name="PM load" stroke={ACCENT} strokeWidth={2} dot={false} connectNulls />
+            <Line dataKey="NIGHT load" name="NIGHT load" stroke={AMBER} strokeWidth={1.5} dot={false} connectNulls />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="panel">
         <h3>Utilization trend by airframe</h3>
         <p className="caption">
           Weekly. Asset-window utilization is sorties over available asset-windows; tail-day saturation is the
@@ -200,49 +246,141 @@ export default function CapacityView({ db, meta, today, theme, failures }) {
       </div>
 
       <div className="panel">
-        <h3>Rating matrix — who can fly what</h3>
+        <h3>Rating matrix — who can fly what, and who covers the desk</h3>
         <p className="caption">
-          People × airframe. This is the tell that exposes a phantom shortage: count the rated pilots per
-          airframe, then look at which reason the deferral log used.
+          People × airframe, plus the rider desk. This is the tell that exposes a phantom shortage: count the rated pilots per
+          airframe, then look at which reason the deferral log used. The trainer grants here, effective-dated — the board
+          re-evaluates R1 and R10 from that day — and never to themself (I2).
         </p>
         <div className="filters">
           <select value={asOf} onChange={(e) => setAsOf(e.target.value)} aria-label="As of date">
             <option value="2026-05-15">As of May 15 · before the cross-rating flights</option>
+            <option value="2026-06-14">As of Jun 14 · before the desk qualification</option>
             <option value={today}>As of {fmtDate(today)} · today</option>
+            <option value={meta.tomorrow}>As of {fmtDate(meta.tomorrow)} · tomorrow</option>
           </select>
+          <button className={`btn ghost small ${editing ? 'on' : ''}`} disabled={!trainOk.ok} title={trainOk.ok ? 'Grant or revoke, effective-dated' : trainOk.message}
+            onClick={() => { setEditing((v) => !v); setRefusal(null); }}>
+            {editing ? 'Done editing' : 'Edit ratings…'}
+          </button>
         </div>
+        {refusal && <ul className="rule-list"><li className="block"><strong>R9</strong> {refusal.replace(/^R9 · /, '')}</li></ul>}
         <div className="tbl-wrap">
           <table className="matrix">
             <thead>
-              <tr><th>Person</th><th>Roles</th>{airframes.map((af) => <th key={af}>{af}</th>)}</tr>
+              <tr><th>Person</th><th>Roles</th>{airframes.map((af) => <th key={af}>{af}</th>)}<th>Rider desk</th></tr>
             </thead>
             <tbody>
-              {matrix.rows.map(({ person, cells }) => (
-                <tr key={person.person_id}>
-                  <td>{person.name}{person.self_pilot && <span className="flag" title="Can fly as lone operator">self-pilot</span>}</td>
-                  <td className="mono dim">{person.roles.join(' · ')}</td>
-                  {airframes.map((af) => (
-                    <td key={af} className={`mx ${cells[af].state}`}>
-                      {cells[af].state === 'rated' && (cells[af].since ? `since ${fmtDate(cells[af].since)}` : 'rated')}
-                      {cells[af].state === 'pending' && `from ${fmtDate(cells[af].since)}`}
-                      {cells[af].state === 'none' && '·'}
+              {matrix.rows.map(({ person, cells }) => {
+                const gOk = allowed('rating.grant', person);
+                const qOk = allowed('qualification.grant', person);
+                const eff = person.qualifications?.rider_ops;
+                const deskState = !eff ? 'none' : eff > asOf ? 'pending' : 'rated';
+                const label = (c) => (c.state === 'rated' ? (c.since ? `since ${fmtDate(c.since)}` : 'rated') : c.state === 'pending' ? `from ${fmtDate(c.since)}` : '·');
+                return (
+                  <tr key={person.person_id}>
+                    <td>{person.name}{person.self_pilot && <span className="flag" title="Can fly as lone operator">self-pilot</span>}</td>
+                    <td className="mono dim">{person.roles.join(' · ')}</td>
+                    {airframes.map((af) => (
+                      <td key={af} className={`mx ${cells[af].state}`}>
+                        {editing ? (
+                          cells[af].state === 'none'
+                            ? <button className="linkish small" disabled={!gOk.ok} title={gOk.ok ? `Grant ${af} to ${person.name}` : gOk.message} onClick={() => setGrant({ person, kind: af })}>grant…</button>
+                            : <button className="linkish small" disabled={!gOk.ok} title={gOk.ok ? `Revoke ${af} from ${person.name}` : gOk.message} onClick={() => setRevoke({ person, kind: af })}>{label(cells[af])} · revoke</button>
+                        ) : label(cells[af])}
+                      </td>
+                    ))}
+                    <td className={`mx ${deskState}`}>
+                      {editing && deskState === 'none'
+                        ? <button className="linkish small" disabled={!qOk.ok} title={qOk.ok ? `Qualify ${person.name} on the rider desk` : qOk.message} onClick={() => setGrant({ person, kind: 'rider_ops' })}>qualify…</button>
+                        : deskState === 'rated' ? `since ${fmtDate(eff)}` : deskState === 'pending' ? `from ${fmtDate(eff)}` : '·'}
                     </td>
-                  ))}
-                </tr>
-              ))}
+                  </tr>
+                );
+              })}
               <tr className="mx-total">
                 <td className="mono">rated pilots</td><td />
                 {airframes.map((af) => <td key={af} className={`mono ${matrix.totals[af].pilots <= 2 ? 'age-hot' : ''}`}>{matrix.totals[af].pilots}</td>)}
+                <td className="mono">{db.persons.filter((p) => qualifiedOn(p, asOf)).length} qualified</td>
               </tr>
               <tr className="mx-total">
                 <td className="mono">rated operators</td><td />
                 {airframes.map((af) => <td key={af} className="mono">{matrix.totals[af].operators}</td>)}
+                <td />
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+
+      <div className="panel">
+        <h3>Actions by role — who did what</h3>
+        <p className="caption">
+          Every timeline event carries its actor (R9), the desk roster its builder, and the session's edits their persona.
+          Coordinators plan and cover; authority sets priority and targets; the trainer grants. Nobody assigns their own
+          request (I1) and nobody grants their own rating (I2). "Filed" counts intake, late flag included; "assigned" counts
+          scheduling, reassignment and execution; "set" is priority, targets and the desk's settings.
+        </p>
+        <div className="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Persona</th><th>Role</th>{ACTION_COLUMNS.map((c) => <th key={c}>{c}</th>)}<th>Total</th></tr>
+            </thead>
+            <tbody>
+              {actions.map((row) => (
+                <tr key={row.user.user_id}>
+                  <td>{row.user.name} <span className="dim">· {row.user.title}</span></td>
+                  <td className="mono dim">{row.user.role}</td>
+                  {ACTION_COLUMNS.map((c) => <td key={c} className="mono">{row[c] || '·'}</td>)}
+                  <td className="mono">{row.total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {grant && (
+        <GrantDialog
+          person={grant.person} kind={grant.kind} defaultDate={meta.tomorrow}
+          onCancel={() => setGrant(null)}
+          onConfirm={(effective) => { const msg = onGrant?.(grant.person.person_id, grant.kind, effective); if (msg) return msg; setGrant(null); return null; }}
+        />
+      )}
+      {revoke && (
+        <ConfirmDialog
+          title={`Revoke ${revoke.kind} from ${revoke.person.name}?`}
+          body="The rating leaves the matrix now; sorties already planned on it will show an R1 block on the board."
+          confirmLabel="Revoke" cancelLabel="Keep it" danger
+          onConfirm={() => { const msg = onRevoke?.(revoke.person.person_id, revoke.kind); setRevoke(null); setRefusal(msg); }}
+          onCancel={() => setRevoke(null)}
+        />
+      )}
     </section>
+  );
+}
+
+// An effective-dated grant: the day it takes effect is the only field.
+function GrantDialog({ person, kind, defaultDate, onCancel, onConfirm }) {
+  const [effective, setEffective] = useState(defaultDate);
+  const [error, setError] = useState(null);
+  const what = kind === 'rider_ops' ? 'the rider desk qualification' : `the ${kind} rating`;
+  return (
+    <Modal label="Grant" onClose={onCancel}>
+        <div className="sect-label">{kind === 'rider_ops' ? 'Qualification · trainer' : 'Rating · trainer'}</div>
+        <h2>Grant {what} to {person.name}</h2>
+        <p className="caption">Effective from the date below — tomorrow at the earliest; history is not rewritten. The board re-evaluates {kind === 'rider_ops' ? 'R10 (the desk)' : 'R1 (type rating)'} from that day.</p>
+        <label className="seat"><span className="k">Effective from</span>
+          <input type="date" autoFocus aria-label="Effective from" min={defaultDate} value={effective} onChange={(e) => setEffective(e.target.value)} />
+        </label>
+        <ul className="rule-list" aria-live="polite">
+          {error && <li className="block"><strong>R9</strong> {error.replace(/^R9 · /, '')}</li>}
+        </ul>
+        <div className="stepper">
+          <button className="btn" disabled={!effective} onClick={() => { const msg = onConfirm(effective); if (msg) setError(msg); }}>Grant</button>
+          <button className="btn ghost" onClick={onCancel}>Cancel</button>
+        </div>
+    </Modal>
   );
 }
 

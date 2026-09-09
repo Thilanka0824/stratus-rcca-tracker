@@ -1,7 +1,8 @@
 // Dispatch-side derivations shared by the Plan views (Requests, Dispatch,
 // Capacity) and by the loop back into the Execute views. Rules live in
 // rules.js; this file is arithmetic over the same data and mutates nothing.
-import { addDays, assetStatusOn, availableOn, ratedOn, isOperatingDay, queuedFor } from './rules';
+import { WINDOWS, addDays, assetStatusOn, availableOn, ratedOn, isOperatingDay, queuedFor, deskCoverers, riderLoad } from './rules';
+import { eventAction } from './auth';
 import { daysBetween, fmtDate } from './helpers';
 
 export const STATUS_ORDER = { submitted: 0, deferred: 1, scheduled: 2, executed: 3, withdrawn: 4 };
@@ -77,9 +78,11 @@ function busyPeople(db, date) {
   return s;
 }
 
-// Rated, rostered in one of the windows, and on no sortie in that window.
+// Rated, rostered in one of the windows, on no sortie in that window — and
+// not on the rider desk in it: someone on comms is not idle.
 export function idleRated(db, airframe, date, windows, role) {
   const busy = busyPeople(db, date);
+  for (const c of db.coverage || []) if (c.date === date) busy.add(`${c.person_id}:${c.window}`);
   return db.persons.filter((p) =>
     p.roles.includes(role) && ratedOn(p, airframe, date)
       && windows.some((w) => availableOn(p, date, w) && !busy.has(`${p.person_id}:${w}`)));
@@ -204,10 +207,13 @@ export function assetUtilization(db, from, to) {
 // Seats filled over person-windows rostered, per role and overall.
 export function crewUtilization(db, from, to) {
   const roles = { operator: { used: 0, avail: 0 }, pilot: { used: 0, avail: 0 } };
+  const covered = new Set((db.coverage || []).map((c) => `${c.person_id}:${c.date}:${c.window}`));
   for (const p of db.persons) {
     for (const [d, ws] of Object.entries(p.availability)) {
       if (d < from || d > to) continue;
-      for (const role of p.roles) roles[role].avail += ws.length;
+      // A window spent on the rider desk is desk capacity, not a seat; desk-only roles are never seats.
+      const seats = ws.filter((w) => !covered.has(`${p.person_id}:${d}:${w}`)).length;
+      for (const role of p.roles) if (roles[role]) roles[role].avail += seats;
     }
   }
   for (const a of db.assignments) {
@@ -305,6 +311,115 @@ export function demandVsSupply(db, from, to) {
     if (r.windows.length > 1) cell.flexible += 1;
   }
   return Object.fromEntries(Object.entries(per).map(([af, ws]) => [af, Object.values(ws)]));
+}
+
+// ---------------------------------------------------------------- the rider desk
+
+// Per operating day: coverers rostered and rider-facing sorties flown in each
+// window, and the load per coverer — the rider-experience proxy, the KPI the
+// principle protects. Target: at or under the ratio. A window with riders and
+// nobody on the desk is a violation the seed never contains; it can only be
+// made on the board, and R10 refuses it.
+export function deskByDay(db, from, to) {
+  const out = [];
+  for (let d = from; d <= to; d = addDays(d, 1)) {
+    if (!isOperatingDay(d, db)) continue;
+    const row = { date: d, day: fmtDate(d), coverers: 0, riders: 0, peak: 0 };
+    for (const w of WINDOWS) {
+      const cov = deskCoverers(db, d, w).length;
+      const riders = riderLoad(db, d, w);
+      const load = cov ? riders / cov : riders ? null : 0;
+      row[`${w} coverers`] = cov;
+      row[`${w} riders`] = riders;
+      row[`${w} load`] = load;
+      row.coverers += cov;
+      row.riders += riders;
+      if (load != null && load > row.peak) row.peak = load;
+    }
+    out.push(row);
+  }
+  return out;
+}
+
+// Desk load over a period: rider-facing sortie-windows per coverer-window,
+// the peak day, and how many windows sat at or over the ratio.
+export function deskLoad(db, from, to) {
+  const days = deskByDay(db, from, to);
+  let windows = 0;
+  let atRatio = 0;
+  let riders = 0;
+  let coverers = 0;
+  for (const row of days) {
+    for (const w of WINDOWS) {
+      const n = row[`${w} riders`];
+      const c = row[`${w} coverers`];
+      if (n === 0 && c === 0) continue;
+      windows += 1;
+      riders += n;
+      coverers += c;
+      if (c > 0 && n >= db.desk.ratio * c) atRatio += 1;
+    }
+  }
+  const peak = days.reduce((m, r) => (r.peak > (m?.peak ?? -1) ? r : m), null);
+  return { days, windows, atRatio, riders, coverers, load: coverers ? Math.round((riders / coverers) * 100) / 100 : null, peak };
+}
+
+// On-window fulfillment for rider-facing requests only, split out from the
+// north star — the number the desk's ratio is supposed to protect.
+export function riderFulfillment(db, today, from = null, to = null) {
+  const riders = onWindowFulfillment({ ...db, requests: db.requests.filter((r) => r.rider_facing) }, today, from, to);
+  const rest = onWindowFulfillment({ ...db, requests: db.requests.filter((r) => !r.rider_facing) }, today, from, to);
+  return { riders: riders.all ?? { num: 0, den: 0, pct: null }, rest: rest.all ?? { num: 0, den: 0, pct: null } };
+}
+
+// ---------------------------------------------------------------- actions by role
+
+export const ACTION_COLUMNS = ['filed', 'withdrawn', 'assigned', 'deferred', 'scrubbed', 'covered', 'granted', 'set'];
+
+// Who did what: every timeline event by its actor, the desk roster by who
+// built it (session covers land there too), the seed's grants by their
+// grantor, and the session's audit (grants, priority and target changes, desk
+// settings). Occurrence-weighted by event, in the date range. An intake
+// deferral is part of filing, not a plan decision, so it counts as 'filed'.
+export function actionsByRole(db, audit = [], { from = null, to = null } = {}) {
+  const rows = new Map();
+  const inRange = (day) => (!from || day >= from) && (!to || day <= to);
+  const bump = (uid, col) => {
+    const u = db.user.get(uid);
+    if (!u) return;
+    const row = rows.get(uid) || { user: u, total: 0, ...Object.fromEntries(ACTION_COLUMNS.map((c) => [c, 0])) };
+    row[col] += 1;
+    row.total += 1;
+    rows.set(uid, row);
+  };
+  const column = (e) => {
+    if (eventAction(e) === 'request.create') return 'filed';
+    if (e.event === 'withdrawn') return 'withdrawn';
+    if (e.event === 'scheduled' || e.event === 'reassigned' || e.event === 'executed') return 'assigned';
+    if (e.event === 'deferred' || e.event === 'rescheduled') return 'deferred';
+    if (e.event === 'scrubbed') return 'scrubbed';
+    return null;
+  };
+  for (const r of db.requests) {
+    for (const e of r.timeline) {
+      if (!inRange(e.at.slice(0, 10))) continue;
+      const col = column(e);
+      if (col) bump(e.by, col);
+    }
+  }
+  for (const c of db.coverage || []) if (inRange(c.date)) bump(c.assigned_by, 'covered');
+  for (const p of db.persons) {
+    for (const [key, by] of Object.entries(p.granted_by || {})) {
+      const day = key === 'rider_ops' ? p.qualifications?.rider_ops : p.ratings_effective?.[key];
+      if (day && inRange(day)) bump(by, 'granted');
+    }
+  }
+  for (const a of audit) {
+    if (!inRange(a.at.slice(0, 10))) continue;
+    if (a.action === 'rating.grant' || a.action === 'qualification.grant' || a.action === 'rating.revoke') bump(a.by, 'granted');
+    else if (a.action === 'program.priority' || a.action === 'program.targets' || a.action === 'desk.settings') bump(a.by, 'set');
+  }
+  return [...rows.values()].sort((a, b) => b.total - a.total || a.user.user_id.localeCompare(b.user.user_id));
 }
 
 // ---------------------------------------------------------------- the loop

@@ -1,4 +1,4 @@
-// Dispatch rules R1–R8 as pure functions over plain data. The board calls
+// Dispatch rules R1–R10 as pure functions over plain data. The board calls
 // these before it saves anything; the same functions are run over the seed
 // in rules.test.js, so the data and the app can never disagree about what is
 // allowed. Probabilistic judgment stays in the coordinator's head; this file
@@ -6,6 +6,12 @@
 //
 // Severity: 'block' rejects the edit; 'warn' renders inline and in the day
 // summary; R8 is structural (a deferral without a reason cannot be built).
+// R9 is authorization: every mutating transition takes the actor first and
+// calls authorize() before it touches anything — the matrix is data in
+// src/lib/auth.js. R10 is the rider desk: a rider-facing sortie needs a
+// qualified rider operator covering its window, at or under the desk ratio.
+import { authorize } from './auth';
+import { fmtDate } from './helpers';
 
 export const WINDOWS = ['AM', 'PM', 'NIGHT'];
 export const PRIORITY_RANK = { P0: 0, P1: 1, P2: 2, P3: 3 };
@@ -13,6 +19,7 @@ export const PRIORITY_RANK = { P0: 0, P1: 1, P2: 2, P3: 3 };
 export const DEFERRAL_REASONS = [
   'no_rated_operator', 'no_rated_pilot', 'no_asset', 'asset_grounded',
   'program_over_max', 'build_not_ready', 'late_intake', 'requester_withdrew',
+  'no_rider_ops',
 ];
 export const SCRUB_REASONS = [...DEFERRAL_REASONS, 'weather'];
 
@@ -25,6 +32,7 @@ export const REASON_LABELS = {
   build_not_ready: 'Build not ready',
   late_intake: 'Late intake',
   requester_withdrew: 'Requester withdrew',
+  no_rider_ops: 'No rider operator',
   weather: 'Weather',
 };
 
@@ -37,14 +45,18 @@ export const CREW_LABELS = {
 
 // ---------------------------------------------------------------- lookups
 
+// The desk's settings when the seed does not say (meta.rider_desk does).
+export const DEFAULT_DESK = { ratio: 2, min_per_window: 1 };
+
 // Index the seed once; views pass the result around instead of re-finding.
-export function makeDb({ programs, assets, persons, requests, assignments }) {
+export function makeDb({ programs, assets, persons, requests, assignments, users = [], coverage = [], desk = DEFAULT_DESK }) {
   return {
-    programs, assets, persons, requests, assignments,
+    programs, assets, persons, requests, assignments, users, coverage, desk,
     program: new Map(programs.map((p) => [p.program_id, p])),
     asset: new Map(assets.map((a) => [a.asset_id, a])),
     person: new Map(persons.map((p) => [p.person_id, p])),
     request: new Map(requests.map((r) => [r.request_id, r])),
+    user: new Map(users.map((u) => [u.user_id, u])),
   };
 }
 
@@ -69,6 +81,100 @@ export function ratedOn(person, airframe, date) {
 
 export function availableOn(person, date, window) {
   return Boolean(person?.availability?.[date]?.includes(window));
+}
+
+// A desk qualification is effective-dated exactly like a rating.
+export function qualifiedOn(person, date) {
+  const eff = person?.qualifications?.rider_ops;
+  return Boolean(eff) && eff <= date;
+}
+
+// ---------------------------------------------------------------- the rider desk
+
+// Who is on the desk for a window: the roster rows whose person is qualified
+// that day. The roster is the coordinator's; the date check is belt and
+// braces for a grant that was later moved.
+export function deskCoverers(db, date, window) {
+  return (db.coverage || [])
+    .filter((c) => c.date === date && c.window === window)
+    .map((c) => db.person.get(c.person_id))
+    .filter((p) => p && qualifiedOn(p, date));
+}
+
+// Rider-facing sorties live in a window; a scrubbed one has no riders aboard.
+export function riderLoad(db, date, window, excludeAssignmentId = null) {
+  let n = 0;
+  for (const a of db.assignments) {
+    if (a.date !== date || a.window !== window || a.status === 'scrubbed') continue;
+    if (excludeAssignmentId && a.assignment_id === excludeAssignmentId) continue;
+    if (db.request.get(a.request_id)?.rider_facing) n += 1;
+  }
+  return n;
+}
+
+// The desk row on the board. red = the next rider-facing sortie would be
+// refused (R10); amber = at ratio; green = room; quiet = nobody rostered on
+// a day with no operations. The message is what the row says.
+export function checkCoverage(date, window, db) {
+  const desk = db.desk || DEFAULT_DESK;
+  const coverers = deskCoverers(db, date, window);
+  const demand = riderLoad(db, date, window);
+  const capacity = desk.ratio * coverers.length;
+  let level = 'green';
+  if (coverers.length < desk.min_per_window) level = demand > 0 || isOperatingDay(date, db) ? 'red' : 'quiet';
+  else if (demand > capacity) level = 'red';
+  else if (demand === capacity) level = 'amber';
+  const message = coverers.length < desk.min_per_window
+    ? `no rider operator covering ${window} on ${fmtDate(date)}`
+    : `${coverers.length} covering · ${demand} rider-facing · ratio ${desk.ratio}`;
+  return { rule: 'R10', date, window, coverers, demand, capacity, ratio: desk.ratio, min: desk.min_per_window, level, message };
+}
+
+// Releasing a coverer from a window: R10 holds on the way out too — not while
+// the rider-facing sorties already in that window would be left without cover
+// or over the ratio.
+export function checkUncover(cand, db) {
+  const desk = db.desk || DEFAULT_DESK;
+  const coverers = deskCoverers(db, cand.date, cand.window);
+  const name = db.person.get(cand.person_id)?.name ?? cand.person_id;
+  if (!coverers.some((p) => p.person_id === cand.person_id)) {
+    return [{ rule: 'R2', severity: 'block', message: `${name} is not covering ${cand.window} on ${fmtDate(cand.date)}.` }];
+  }
+  const left = coverers.length - 1;
+  const riders = riderLoad(db, cand.date, cand.window);
+  if (riders > 0 && left < desk.min_per_window) {
+    const who = left === 0 ? 'no rider operator covering' : `only ${left} covering, below the minimum of ${desk.min_per_window}`;
+    return [{ rule: 'R10', severity: 'block', message: `${riders} rider-facing sortie${riders > 1 ? 's' : ''} in ${cand.window} on ${fmtDate(cand.date)} would be left with ${who}` }];
+  }
+  if (riders > desk.ratio * left) {
+    return [{ rule: 'R10', severity: 'block', message: `desk would be at ${riders}:${left}, ratio is ${desk.ratio}` }];
+  }
+  return [];
+}
+
+// Rostering a person onto the desk for a window: {date, window, person_id}.
+// R10 wants a qualified rider operator; R2, extended, says nobody covers a
+// window twice or covers one they are flying in.
+export function checkCover(cand, db) {
+  const p = db.person.get(cand.person_id);
+  if (!p) return [{ rule: 'R10', severity: 'block', message: 'Unknown person.' }];
+  const out = [];
+  if (!p.roles.includes('rider_ops') || !qualifiedOn(p, cand.date)) {
+    const eff = p.qualifications?.rider_ops;
+    out.push({ rule: 'R10', severity: 'block', message: `${p.name} is not qualified on the rider desk${eff ? ` until ${fmtDate(eff)}` : ''}.` });
+  }
+  if ((db.coverage || []).some((c) => c.date === cand.date && c.window === cand.window && c.person_id === cand.person_id)) {
+    out.push({ rule: 'R2', severity: 'block', message: `${p.name} is already covering ${cand.window} on ${fmtDate(cand.date)}.` });
+  }
+  const flying = db.assignments.find((a) => a.date === cand.date && a.window === cand.window && a.status !== 'scrubbed'
+    && (a.operator_id === cand.person_id || a.pilot_id === cand.person_id));
+  if (flying) {
+    out.push({ rule: 'R2', severity: 'block', message: `${p.name} is flying ${flying.request_id} (${flying.asset_id}) in ${cand.window} on ${fmtDate(cand.date)}.` });
+  }
+  if (!availableOn(p, cand.date, cand.window)) {
+    out.push({ rule: 'AV', severity: 'warn', message: `${p.name} is not rostered for ${cand.window} on ${fmtDate(cand.date)}.` });
+  }
+  return out;
 }
 
 // Status of a tail on a given day, from its history; the snapshot fields on
@@ -185,6 +291,28 @@ export function checkAssignment(cand, db) {
     }
     if (p && !availableOn(p, cand.date, cand.window)) {
       out.push({ rule: 'AV', severity: 'warn', message: `${p.name} is not rostered for ${cand.window} on ${cand.date}.` });
+    }
+  }
+
+  // R2, extended to the desk — a person covering a window can't fly in it
+  for (const pid of crew) {
+    if (deskCoverers(db, cand.date, cand.window).some((p) => p.person_id === pid)) {
+      out.push({ rule: 'R2', severity: 'block', message: `${personName(db, pid)} is covering the rider desk in ${cand.window} on ${fmtDate(cand.date)}.` });
+    }
+  }
+
+  // R10 — riders aboard need a rider operator on the line, at or under ratio.
+  // A structural rule, not a setting: there is no waiver, only coverage.
+  if (request.rider_facing) {
+    const desk = db.desk || DEFAULT_DESK;
+    const coverers = deskCoverers(db, cand.date, cand.window);
+    if (coverers.length < desk.min_per_window) {
+      out.push({ rule: 'R10', severity: 'block', message: `no rider operator covering ${cand.window} on ${fmtDate(cand.date)}` });
+    } else {
+      const load = riderLoad(db, cand.date, cand.window, cand.assignment_id) + 1;
+      if (load > desk.ratio * coverers.length) {
+        out.push({ rule: 'R10', severity: 'block', message: `desk at ${load}:${coverers.length}, ratio is ${desk.ratio}` });
+      }
     }
   }
 
@@ -317,6 +445,8 @@ export function validateRequest(f, db, { tomorrow }) {
   }
   if (!f.needed_by || f.needed_by < tomorrow) out.push({ field: 'needed_by', message: `Needed-by must be ${tomorrow} or later — today's plan is set.` });
   if (!f.requester || !f.requester.trim()) out.push({ field: 'requester', message: 'Who is asking?' });
+  // A showcase always carries guests: riders aboard is not optional there (R10 follows).
+  if (program && program.code === 'SF' && !f.rider_facing) out.push({ field: 'rider_facing', message: 'A showcase always carries guests — riders aboard is not optional (R10).' });
   return out;
 }
 
@@ -335,15 +465,17 @@ export function pruneWindows(windows, db, airframe) {
 }
 
 // Build a request the way intake would. The late flag and the plan day are
-// derived from the submission time (R7), never typed in.
-export function newRequest(f, { id, submittedAt, cutoff = '15:00', isOpen = () => true }) {
+// derived from the submission time (R7), never typed in; the filer is the
+// actor (R9), never typed in either.
+export function newRequest(actor, f, { id, submittedAt, cutoff = '15:00', isOpen = () => true }) {
+  authorize(actor, 'request.create', { program_id: f.program_id });
   const late = isLate(submittedAt, f.needed_by, cutoff);
   const plan_date = defaultPlanDate({ submitted_at: submittedAt, needed_by: f.needed_by }, { cutoff, isOpen });
   const timeline = [{ at: submittedAt, day: null, event: 'submitted', reason: null,
-    note: late ? `submitted after the ${cutoff} cutoff` : '' }];
+    note: late ? `submitted after the ${cutoff} cutoff` : '', by: actor.user_id }];
   if (late) {
     timeline.push({ at: submittedAt, day: f.needed_by, event: 'deferred', reason: 'late_intake',
-      note: `flagged at intake: after the ${cutoff} cutoff — moved to ${plan_date}` });
+      note: `flagged at intake: after the ${cutoff} cutoff — moved to ${plan_date}`, by: actor.user_id });
   }
   return {
     request_id: id, program_id: f.program_id, requester: f.requester.trim(), title: f.title.trim(),
@@ -351,10 +483,14 @@ export function newRequest(f, { id, submittedAt, cutoff = '15:00', isOpen = () =
     priority: f.priority, supporting_team: f.supporting_team || null,
     submitted_at: submittedAt, needed_by: f.needed_by, plan_date,
     status: late ? 'deferred' : 'submitted', late, deferral_reason: late ? 'late_intake' : null, timeline,
+    rider_facing: Boolean(f.rider_facing), requester_id: actor.user_id,
   };
 }
 
 // ---------------------------------------------------------------- transitions (immutable)
+// Every one takes the actor first and calls authorize() before anything
+// else (R9). The rule checks themselves (checkAssignment, checkCover) are
+// the caller's job, because a block is shown on the board, not thrown.
 
 let localSeq = 0;
 export function nextAssignmentId() {
@@ -362,37 +498,177 @@ export function nextAssignmentId() {
   return `AS-2026-L${String(localSeq).padStart(3, '0')}`;
 }
 
-export function scheduleRequest(request, assignment, at) {
+// A sortie built on the board. plan.assign refuses the actor's own request
+// (I1) even for a coordinator.
+export function newAssignment(actor, request, cand, id = nextAssignmentId()) {
+  authorize(actor, 'plan.assign', request);
+  return {
+    assignment_id: id, ...cand, status: 'planned', scrub_reason: null, run_id: null,
+    notes: 'assigned on the board', assigned_by: actor.user_id, acked: false,
+  };
+}
+
+export function scheduleRequest(actor, request, assignment, at) {
+  authorize(actor, 'plan.assign', request);
   return {
     ...request, status: 'scheduled', plan_date: assignment.date, deferral_reason: null,
     timeline: [...request.timeline, { at, day: assignment.date, event: 'scheduled', reason: null,
-      note: `${assignment.asset_id} ${assignment.window} (board)` }],
+      note: `${assignment.asset_id} ${assignment.window} (board)`, by: actor.user_id }],
   };
 }
 
 // R8: no reason, no deferral — this throws rather than returning a request.
-export function deferRequest(request, { reason, day, at, note = '' }) {
+export function deferRequest(actor, request, { reason, day, at, note = '' }) {
+  authorize(actor, 'plan.defer', request);
   assertReason(reason, DEFERRAL_REASONS);
   const withdrawn = reason === 'requester_withdrew';
   return {
     ...request, status: withdrawn ? 'withdrawn' : 'deferred', deferral_reason: reason,
     plan_date: withdrawn ? request.plan_date : addDays(day, 1),
-    timeline: [...request.timeline, { at, day, event: withdrawn ? 'withdrawn' : 'deferred', reason, note }],
+    timeline: [...request.timeline, { at, day, event: withdrawn ? 'withdrawn' : 'deferred', reason, note, by: actor.user_id }],
   };
 }
 
-export function scrubAssignment(assignment, { reason }) {
+export function scrubAssignment(actor, assignment, { reason }) {
+  authorize(actor, 'plan.scrub', assignment);
   assertReason(reason, SCRUB_REASONS);
   return { ...assignment, status: 'scrubbed', scrub_reason: reason };
 }
 
 // A scrubbed sortie puts its request back on the same day's rail, so the
 // coordinator can reassign it before deciding to defer.
-export function scrubRequest(request, assignment, { reason, at }) {
+export function scrubRequest(actor, request, assignment, { reason, at, note = '' }) {
+  authorize(actor, 'plan.scrub', request);
   assertReason(reason, SCRUB_REASONS);
   return {
     ...request, status: 'deferred', plan_date: assignment.date,
     timeline: [...request.timeline, { at, day: assignment.date, event: 'scrubbed', reason,
-      note: `${assignment.asset_id} ${assignment.window} scrubbed (board)` }],
+      note: `${assignment.asset_id} ${assignment.window} scrubbed (board)${note ? ` — ${note}` : ''}`, by: actor.user_id }],
   };
+}
+
+// ---------------------------------------------------------------- triage (the requester's)
+// The status ladder. Verified stamps resolved = today and anything else
+// clears it; an undo passes the previous resolved date back explicitly.
+export const TRIAGE_STEPS = ['Open', 'Investigating', 'Corrective Action', 'Verified'];
+
+export function triageFailure(actor, failure, status, { today, resolved } = {}) {
+  authorize(actor, 'triage.edit', failure);
+  if (!TRIAGE_STEPS.includes(status)) throw new Error(`Triage status must be one of ${TRIAGE_STEPS.join(' → ')}.`);
+  return { ...failure, triage_status: status, resolved: resolved !== undefined ? resolved : status === 'Verified' ? today : null };
+}
+
+// A requester takes back their own request; a coordinator or the program's
+// lead can too. Only before it is on the board — after that it is a scrub.
+export function withdrawRequest(actor, request, { at, note = '' }) {
+  authorize(actor, 'request.withdraw', request);
+  if (request.status !== 'submitted' && request.status !== 'deferred') {
+    throw new Error(`${request.request_id} is ${request.status}; a request can only be withdrawn before it is scheduled.`);
+  }
+  return {
+    ...request, status: 'withdrawn', deferral_reason: 'requester_withdrew',
+    timeline: [...request.timeline, { at, day: request.plan_date, event: 'withdrawn', reason: 'requester_withdrew', note, by: actor.user_id }],
+  };
+}
+
+// ---------------------------------------------------------------- the desk · acknowledgements
+
+export function coverWindow(actor, coverage, cand, { at }) {
+  authorize(actor, 'desk.cover');
+  return [...coverage, { date: cand.date, window: cand.window, person_id: cand.person_id, assigned_by: actor.user_id, acked: false, at }];
+}
+
+export function uncoverWindow(actor, coverage, cand) {
+  authorize(actor, 'desk.cover');
+  return coverage.filter((c) => !(c.date === cand.date && c.window === cand.window && c.person_id === cand.person_id));
+}
+
+// Crew acknowledge their own seat: a sortie (either seat) or a coverage row.
+export function acknowledge(actor, target) {
+  authorize(actor, 'sortie.ack', target);
+  return { ...target, acked: true };
+}
+
+// ---------------------------------------------------------------- ratings · qualifications (the trainer)
+// Effective-dated: the board re-evaluates R1 and R10 from that day. Never
+// to oneself (I2).
+
+function assertGrantDate(effective, notBefore) {
+  if (!effective) throw new Error('A grant needs the day it takes effect.');
+  if (notBefore && effective < notBefore) throw new Error(`A grant takes effect from ${fmtDate(notBefore)} at the earliest — history is not rewritten.`);
+}
+
+export function grantRating(actor, person, airframe, { effective, notBefore = null }) {
+  authorize(actor, 'rating.grant', person);
+  assertGrantDate(effective, notBefore);
+  return {
+    ...person,
+    ratings: person.ratings.includes(airframe) ? person.ratings : [...person.ratings, airframe],
+    ratings_effective: { ...person.ratings_effective, [airframe]: effective },
+    granted_by: { ...person.granted_by, [airframe]: actor.user_id },
+  };
+}
+
+export function revokeRating(actor, person, airframe) {
+  authorize(actor, 'rating.revoke', person);
+  const { [airframe]: _eff, ...ratings_effective } = person.ratings_effective || {};
+  const { [airframe]: _by, ...granted_by } = person.granted_by || {};
+  return { ...person, ratings: person.ratings.filter((a) => a !== airframe), ratings_effective, granted_by };
+}
+
+export function grantQualification(actor, person, { effective, notBefore = null }) {
+  authorize(actor, 'qualification.grant', person);
+  assertGrantDate(effective, notBefore);
+  return {
+    ...person,
+    roles: person.roles.includes('rider_ops') ? person.roles : [...person.roles, 'rider_ops'],
+    qualifications: { ...person.qualifications, rider_ops: effective },
+    granted_by: { ...person.granted_by, rider_ops: actor.user_id },
+  };
+}
+
+// ---------------------------------------------------------------- programs · the desk's settings (authority)
+
+export function setProgramPriority(actor, program, priority) {
+  authorize(actor, 'program.priority', program);
+  if (!Object.hasOwn(PRIORITY_RANK, priority)) throw new Error(`Priority must be one of ${Object.keys(PRIORITY_RANK).join(' · ')}.`);
+  return { ...program, priority_default: priority };
+}
+
+export function setProgramTargets(actor, program, { asset_min, asset_max }) {
+  authorize(actor, 'program.targets', program);
+  if (!(Number.isInteger(asset_min) && Number.isInteger(asset_max) && asset_min >= 0 && asset_max >= asset_min)) {
+    throw new Error('Tail targets must be whole numbers with min ≤ max.');
+  }
+  return { ...program, asset_min, asset_max };
+}
+
+// Both of a program's dials in one transition, each behind its own
+// permission, so a dialog that changes priority and targets together cannot
+// lose one to a stale base.
+export function editProgram(actor, program, patch) {
+  let next = program;
+  if ('priority_default' in patch && patch.priority_default !== program.priority_default) {
+    next = setProgramPriority(actor, next, patch.priority_default);
+  }
+  const min = patch.asset_min ?? program.asset_min;
+  const max = patch.asset_max ?? program.asset_max;
+  if (min !== program.asset_min || max !== program.asset_max) next = setProgramTargets(actor, next, { asset_min: min, asset_max: max });
+  return next;
+}
+
+// Never below one coverer, never above ratio 4: the principle has a floor
+// and the desk has a ceiling. A waiver is not among the settings — only
+// these two keys exist, whatever a patch carries.
+export const DESK_BOUNDS = { min_per_window: [1, 4], ratio: [1, 4] };
+
+export function setDeskSettings(actor, desk, patch) {
+  authorize(actor, 'desk.settings');
+  const next = { ratio: patch.ratio ?? desk.ratio, min_per_window: patch.min_per_window ?? desk.min_per_window };
+  for (const [k, [lo, hi]] of Object.entries(DESK_BOUNDS)) {
+    if (!(Number.isInteger(next[k]) && next[k] >= lo && next[k] <= hi)) {
+      throw new Error(`${k === 'ratio' ? 'The ratio' : 'Coverers per window'} must be a whole number between ${lo} and ${hi}.`);
+    }
+  }
+  return next;
 }

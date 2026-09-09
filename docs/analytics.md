@@ -8,10 +8,10 @@ On-window fulfillment (north star). Requests executed within a requested window 
 
 | priority | requests | on_window | pct |
 |---|---|---|---|
-| P0 | 182 | 133 | 73.1 |
-| P1 | 270 | 266 | 98.5 |
-| P2 | 17 | 13 | 76.5 |
-| all | 469 | 412 | 87.8 |
+| P0 | 184 | 129 | 70.1 |
+| P1 | 269 | 260 | 96.7 |
+| P2 | 16 | 11 | 68.8 |
+| all | 469 | 400 | 85.3 |
 
 <details><summary>query</summary>
 
@@ -51,15 +51,19 @@ Deferral share by cause, per airframe. Occurrence-weighted: every deferral event
 
 | airframe | reason | n | share_pct | cumulative_pct |
 |---|---|---|---|---|
-| Harmattan | no_rated_pilot | 28 | 45.2 | 45.2 |
-| Harmattan | no_rated_operator | 22 | 35.5 | 80.6 |
-| Harmattan | late_intake | 11 | 17.7 | 98.4 |
-| Harmattan | program_over_max | 1 | 1.6 | 100.0 |
-| Levant | late_intake | 17 | 81.0 | 81.0 |
-| Levant | asset_grounded | 4 | 19.0 | 100.0 |
-| Sirocco | no_asset | 44 | 81.5 | 81.5 |
-| Sirocco | late_intake | 8 | 14.8 | 96.3 |
-| Sirocco | build_not_ready | 2 | 3.7 | 100.0 |
+| Harmattan | no_rated_pilot | 29 | 43.9 | 43.9 |
+| Harmattan | no_rated_operator | 24 | 36.4 | 80.3 |
+| Harmattan | late_intake | 11 | 16.7 | 97.0 |
+| Harmattan | program_over_max | 2 | 3.0 | 100.0 |
+| Levant | late_intake | 20 | 44.4 | 44.4 |
+| Levant | asset_grounded | 9 | 20.0 | 64.4 |
+| Levant | no_rated_operator | 5 | 11.1 | 75.6 |
+| Levant | no_rider_ops | 5 | 11.1 | 86.7 |
+| Levant | program_over_max | 4 | 8.9 | 95.6 |
+| Levant | no_rated_pilot | 2 | 4.4 | 100.0 |
+| Sirocco | no_asset | 47 | 82.5 | 82.5 |
+| Sirocco | late_intake | 8 | 14.0 | 96.5 |
+| Sirocco | build_not_ready | 2 | 3.5 | 100.0 |
 
 <details><summary>query</summary>
 
@@ -89,10 +93,10 @@ Asset utilization: assigned asset-windows over available asset-windows, on opera
 
 | airframe | available_windows | used_windows | pct |
 |---|---|---|---|
-| Harmattan | 524 | 143 | 27.3 |
-| Levant | 1131 | 306 | 27.1 |
-| Sirocco | 264 | 55 | 20.8 |
-| all | 1919 | 504 | 26.3 |
+| Harmattan | 524 | 138 | 26.3 |
+| Levant | 1131 | 313 | 27.7 |
+| Sirocco | 264 | 54 | 20.5 |
+| all | 1919 | 505 | 26.3 |
 
 <details><summary>query</summary>
 
@@ -139,8 +143,8 @@ Crew utilization: seats filled over person-windows rostered, per role, up to dat
 | role | used | person_windows | pct |
 |---|---|---|---|
 | operator | 274 | 1028 | 26.7 |
-| pilot | 489 | 1220 | 40.1 |
-| all | 763 | 2248 | 33.9 |
+| pilot | 490 | 1220 | 40.2 |
+| all | 764 | 2248 | 34.0 |
 
 <details><summary>query</summary>
 
@@ -175,13 +179,13 @@ Lead time: submitted → executed, in days, p50 and p90 per program. The percent
 
 | program | n | p50_days | p90_days |
 |---|---|---|---|
-| CQ | 18 | 1 | 23 |
-| PLC | 141 | 1 | 3 |
-| PN | 230 | 1 | 1 |
-| SBU | 55 | 1 | 5 |
-| SF | 5 | 1 | 1 |
-| URC | 55 | 1 | 1 |
-| all | 504 | 1 | 2 |
+| CQ | 16 | 1 | 23 |
+| PLC | 136 | 1 | 3 |
+| PN | 231 | 1 | 1 |
+| SBU | 54 | 1 | 5 |
+| SF | 13 | 1 | 2 |
+| URC | 55 | 1 | 2 |
+| all | 505 | 1 | 2 |
 
 <details><summary>query</summary>
 
@@ -291,7 +295,8 @@ The tell. Of the deferrals logged as "no rated operator", how many fell on a day
 
 | airframe | logged_no_rated_operator | with_rated_operator_idle | pct_refuted |
 |---|---|---|---|
-| Harmattan | 22 | 15 | 68.2 |
+| Harmattan | 24 | 16 | 66.7 |
+| Levant | 5 | 5 | 100.0 |
 
 <details><summary>query</summary>
 
@@ -317,6 +322,9 @@ idle AS (
     SELECT 1 FROM assignments a
     WHERE a.date = l.day AND a.window = w.window AND a.status <> 'scrubbed'
       AND (a.operator_id = pa.person_id OR a.pilot_id = pa.person_id))
+    AND NOT EXISTS (                      -- on the rider desk is on comms, not idle
+    SELECT 1 FROM coverage c
+    WHERE c.date = l.day AND c.window = w.window AND c.person_id = pa.person_id)
 )
 SELECT l.airframe,
        count(*)                                    AS logged_no_rated_operator,
@@ -325,6 +333,112 @@ SELECT l.airframe,
 FROM logged l LEFT JOIN idle i ON i.id = l.id
 GROUP BY l.airframe
 ORDER BY logged_no_rated_operator DESC;
+```
+
+</details>
+
+## actions by role
+
+Actions by role. Every request event carries its actor (R9) and the desk roster carries who built it. Deferrals and scrubs are the coordinators'; filings are the requesters' and the leads' — a coordinator files on behalf of people without a persona. The late-intake deferral is stamped at intake by the filer, so it counts as filing, not as a plan decision.
+
+| user_id | name | role | filed | withdrawn | assigned | deferred | scrubbed | covered | granted | total |
+|---|---|---|---|---|---|---|---|---|---|---|
+| U-04 | T. Ibarra | coordinator | 34 | 0 | 973 | 145 | 0 | 321 | 0 | 1473 |
+| U-03 | P. Nwosu | coordinator | 86 | 6 | 57 | 4 | 14 | 0 | 0 | 167 |
+| U-13 | M. Sato | requester | 148 | 4 | 0 | 0 | 0 | 0 | 0 | 152 |
+| U-07 | A. Okafor | authority | 138 | 5 | 0 | 0 | 0 | 0 | 0 | 143 |
+| U-05 | S. Tanaka | authority | 85 | 2 | 0 | 0 | 0 | 0 | 0 | 87 |
+| U-12 | L. Alvarez | requester | 69 | 2 | 0 | 0 | 0 | 0 | 0 | 71 |
+| U-08 | K. Osei | authority | 14 | 0 | 0 | 0 | 0 | 0 | 0 | 14 |
+| U-15 | E. Lindqvist | trainer | 0 | 0 | 0 | 0 | 0 | 0 | 6 | 6 |
+
+<details><summary>query</summary>
+
+```sql
+-- Actions by role. Every request event carries its actor (R9) and the desk
+-- roster carries who built it. Deferrals and scrubs are the coordinators';
+-- filings are the requesters' and the leads' — a coordinator files on behalf
+-- of people without a persona. The late-intake deferral is stamped at intake
+-- by the filer, so it counts as filing, not as a plan decision.
+WITH ev AS (
+  SELECT e.actor_id AS user_id,
+         CASE WHEN e.event = 'submitted' OR (e.event = 'deferred' AND e.reason = 'late_intake') THEN 'filed'
+              WHEN e.event = 'withdrawn' THEN 'withdrawn'
+              WHEN e.event IN ('scheduled', 'reassigned', 'executed') THEN 'assigned'
+              WHEN e.event IN ('deferred', 'rescheduled') THEN 'deferred'
+              WHEN e.event = 'scrubbed' THEN 'scrubbed'
+              ELSE 'other' END AS action
+  FROM request_events e
+  UNION ALL
+  SELECT c.assigned_by, 'covered' FROM coverage c
+  UNION ALL
+  SELECT q.granted_by, 'granted' FROM qualifications q WHERE q.granted_by IS NOT NULL
+  UNION ALL
+  SELECT r.granted_by, 'granted' FROM person_ratings r WHERE r.granted_by IS NOT NULL
+)
+SELECT u.user_id, u.name, u.role,
+       sum(action = 'filed')     AS filed,
+       sum(action = 'withdrawn') AS withdrawn,
+       sum(action = 'assigned')  AS assigned,
+       sum(action = 'deferred') AS deferred,
+       sum(action = 'scrubbed') AS scrubbed,
+       sum(action = 'covered')  AS covered,
+       sum(action = 'granted')  AS granted,
+       count(*)                 AS total
+FROM ev JOIN users u ON u.user_id = ev.user_id
+GROUP BY u.user_id, u.name, u.role
+ORDER BY total DESC, u.user_id;
+```
+
+</details>
+
+## desk coverage and load
+
+The rider desk: coverers on comms vs rider-facing sorties flown, per window, and the load per coverer against the ratio of 2 (R10). Only the windows worth reading are listed — at or over the ratio, or in the showcase week (Jun 15–19, arc D4), which is where the ratio cost a P0.
+
+| date | window | coverers | rider_facing | load_per_coverer | arc |
+|---|---|---|---|---|---|
+| 2026-06-15 | AM | 1 | 1 | 1.0 | D4 |
+| 2026-06-15 | PM | 1 | 2 | 2.0 | D4 |
+| 2026-06-15 | NIGHT | 1 | 1 | 1.0 | D4 |
+| 2026-06-16 | PM | 1 | 2 | 2.0 | D4 |
+| 2026-06-17 | AM | 1 | 1 | 1.0 | D4 |
+| 2026-06-17 | PM | 2 | 3 | 1.5 | D4 |
+| 2026-06-18 | PM | 2 | 3 | 1.5 | D4 |
+| 2026-06-18 | NIGHT | 2 | 1 | 0.5 | D4 |
+| 2026-06-19 | PM | 2 | 3 | 1.5 | D4 |
+
+<details><summary>query</summary>
+
+```sql
+-- The rider desk: coverers on comms vs rider-facing sorties flown, per
+-- window, and the load per coverer against the ratio of 2 (R10). Only the
+-- windows worth reading are listed — at or over the ratio, or in the
+-- showcase week (Jun 15–19, arc D4), which is where the ratio cost a P0.
+WITH cov AS (
+  SELECT date, window, count(*) AS coverers FROM coverage GROUP BY date, window
+),
+riders AS (
+  SELECT a.date, a.window, count(*) AS rider_facing
+  FROM assignments a JOIN requests r ON r.request_id = a.request_id
+  WHERE a.status <> 'scrubbed' AND r.rider_facing = 1
+  GROUP BY a.date, a.window
+),
+slots AS (
+  SELECT date, window FROM cov UNION SELECT date, window FROM riders
+)
+SELECT s.date, s.window,
+       coalesce(c.coverers, 0)     AS coverers,
+       coalesce(r.rider_facing, 0) AS rider_facing,
+       CASE WHEN coalesce(c.coverers, 0) = 0 THEN NULL
+            ELSE round(1.0 * coalesce(r.rider_facing, 0) / c.coverers, 2) END AS load_per_coverer,
+       CASE WHEN s.date BETWEEN '2026-06-15' AND '2026-06-19' THEN 'D4' ELSE '' END AS arc
+FROM slots s
+LEFT JOIN cov c    ON c.date = s.date AND c.window = s.window
+LEFT JOIN riders r ON r.date = s.date AND r.window = s.window
+WHERE coalesce(r.rider_facing, 0) > 0
+  AND (coalesce(r.rider_facing, 0) >= 2 * coalesce(c.coverers, 0) OR s.date BETWEEN '2026-06-15' AND '2026-06-19')
+ORDER BY s.date, CASE s.window WHEN 'AM' THEN 0 WHEN 'PM' THEN 1 ELSE 2 END;
 ```
 
 </details>

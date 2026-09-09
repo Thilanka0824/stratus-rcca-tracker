@@ -499,6 +499,34 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
 .seat [aria-invalid='true'] { border-color: var(--fail); }
 .checks input:disabled + span { color: var(--ink-faint); text-decoration: line-through; }
 
+/* ---------- personas ---------- */
+/* Authorization without authentication: the header says who you are, the
+   badge says what that lets you do. Refused controls stay in place,
+   disabled, with the R9 message as the tooltip — every persona can see
+   what they can't do, and why. */
+.whoami { display: flex; flex-direction: column; gap: 4px; align-self: center; flex: none; }
+.whoami .k { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+.whoami-row { display: flex; align-items: center; gap: 8px; }
+.whoami select {
+  background: var(--bg1); border: 1px solid var(--line); color: var(--ink); border-radius: var(--r);
+  padding: 7px 10px; font-family: var(--mono); font-size: 12px; min-height: 36px; max-width: 300px;
+}
+.role-badge {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); white-space: nowrap;
+}
+.role-badge.coordinator { border-color: var(--pass); color: var(--pass); }
+.role-badge.authority { border-color: var(--blocked); color: var(--blocked); }
+.role-badge.trainer { border-color: var(--ink); color: var(--ink); }
+.role-badge.crew { border-color: var(--ink-dim); color: var(--ink-dim); }
+.role-badge.observer { border-color: var(--ink-faint); color: var(--ink-faint); }
+
+.btn:disabled, .step:disabled, .tab:disabled, .linkish:disabled, .cell-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+.linkish:disabled { text-decoration: none; }
+.tab:disabled:hover { color: var(--ink-dim); }
+.step:disabled:hover { border-color: var(--line); color: var(--ink-dim); }
+.dim-note-inline { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: none; color: var(--ink-faint); }
+
 /* ---------- footer ---------- */
 .foot {
   margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line);
@@ -531,3 +559,38 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
   .fl-card.aging { animation: none; border-left-color: var(--fail); }
   .stat:active { transform: none; }
 }
+
+/* ---------- the rider desk · my day · the trainer's matrix ---------- */
+.prog.desk { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+table.desk-grid td { height: auto; vertical-align: middle; }
+table.desk-grid th.col-act, table.desk-grid td.col-act { width: 96px; text-align: right; }
+.desk-people { display: flex; flex-wrap: wrap; gap: 6px; }
+.desk-people .runchip { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); }
+.desk-people .release { color: var(--fail); text-decoration: none; font-size: 12px; }
+.pill.desk-green { color: var(--pass); border-color: color-mix(in srgb, var(--pass) 40%, transparent); background: color-mix(in srgb, var(--pass) 8%, transparent); }
+.pill.desk-amber { color: var(--blocked); border-color: color-mix(in srgb, var(--blocked) 40%, transparent); background: color-mix(in srgb, var(--blocked) 8%, transparent); }
+.pill.desk-red { color: var(--fail); border-color: color-mix(in srgb, var(--fail) 40%, transparent); background: color-mix(in srgb, var(--fail) 8%, transparent); }
+.pill.desk-quiet { color: var(--ink-faint); border-color: var(--line); }
+.pill.desk-green, .pill.desk-amber, .pill.desk-red, .pill.desk-quiet { text-transform: none; letter-spacing: 0; font-size: 11px; }
+.chip.desk-red { border-left-color: var(--fail); }
+.chip.desk-amber { border-left-color: var(--blocked); }
+.chip.desk-green { border-left-color: var(--pass); }
+.flag.riders { color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.btn.small { font-size: 12px; padding: 5px 10px; min-height: 32px; }
+.btn.ghost.on { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.seat input[type='number'] { width: 100%; }
+.myday .chip { margin-bottom: 8px; }
+.myday .chip-actions .btn { margin-top: 4px; }
+.prog-hd .meter-k + .meter-k { margin-left: 0; }
+
+.tl .tl-by { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+
+/* review follow-ups: the header fits a phone, low-emphasis text clears AA, the rail shows the desk's note */
+.whoami { max-width: 100%; }
+.whoami-row { flex-wrap: wrap; }
+.whoami select { width: min(300px, 100%); }
+.role-badge.observer { border-color: var(--ink-faint); color: var(--ink-dim); border-style: dashed; }
+.dim-note-inline { color: var(--ink-dim); }
+.pill.desk-quiet { color: var(--ink-dim); }
+.rail-note { font-family: var(--mono); font-size: 10.5px; color: var(--ink-dim); margin-top: 3px; line-height: 1.4; white-space: normal; }
+.desk-note { margin: 10px 14px 0; }

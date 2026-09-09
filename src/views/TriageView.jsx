@@ -4,7 +4,10 @@ import { tailsAgainst } from '../lib/dispatch';
 
 const STEPS = ['Open', 'Investigating', 'Corrective Action', 'Verified'];
 
-export default function TriageView({ failures, setFailures, runs, today, db, focusId = null, onOpenBoard }) {
+// canEdit is the matrix's answer to triage.edit: the stepper is disabled, not
+// hidden, with the R9 message as its tooltip, so every persona can see what
+// triage is and who owns it.
+export default function TriageView({ failures, onTriage, runs, today, db, focusId = null, onOpenBoard, canEdit = { ok: true } }) {
   const [selId, setSelId] = useState(focusId);   // arriving from a grounded tail on the board
 
   // Unresolved first, then severity, then age (oldest first) — triage order,
@@ -52,17 +55,18 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
     }
   }
 
+  // Every change goes through the rules with the persona as the actor (R9);
+  // a refusal comes back as a message and lands in the toast, with no undo.
   function applyStatus(id, status, resolved) {
-    setFailures((prev) =>
-      prev.map((f) => (f.failure_id === id ? { ...f, triage_status: status, resolved } : f)),
-    );
+    return onTriage(id, status, resolved);
   }
 
   function setStatus(id, status) {
     const before = failures.find((f) => f.failure_id === id);
     if (!before || before.triage_status === status) return;
     setSelId(id); // keep the changed card selected even as the queue re-sorts
-    applyStatus(id, status, status === 'Verified' ? today : null);
+    const refusal = applyStatus(id, status, undefined);
+    if (refusal) { setToast({ text: refusal, undo: null }); return; }
     const verb =
       status === 'Verified'
         ? `verified · closed in ${failureAge({ ...before, resolved: today }, today)}d`
@@ -104,7 +108,7 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
         })}
       </div>
 
-      {sel ? <Detail f={sel} today={today} setStatus={setStatus} runs={runs} db={db} onOpenBoard={onOpenBoard} stepperRef={stepperRef} /> : (
+      {sel ? <Detail f={sel} today={today} setStatus={setStatus} runs={runs} db={db} onOpenBoard={onOpenBoard} stepperRef={stepperRef} canEdit={canEdit} /> : (
         <div className="detail empty-hint">Select a failure to triage.</div>
       )}
 
@@ -122,9 +126,11 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
           onBlur={() => setFocused(false)}
         >
           <span className="mono">{toast.text}</span>
-          <button ref={undoRef} className="btn ghost" onClick={() => { toast.undo(); dismissToast(true); }}>
-            Undo
-          </button>
+          {toast.undo && (
+            <button ref={undoRef} className="btn ghost" onClick={() => { toast.undo(); dismissToast(true); }}>
+              Undo
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -132,7 +138,7 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
   );
 }
 
-function Detail({ f, today, setStatus, runs, db, onOpenBoard, stepperRef }) {
+function Detail({ f, today, setStatus, runs, db, onOpenBoard, stepperRef, canEdit }) {
   const stepIdx = STEPS.indexOf(f.triage_status);
   // The loop, both directions: which programs this failure hit (through the
   // sorties its runs came from) and which tails are grounded against it.
@@ -175,7 +181,7 @@ function Detail({ f, today, setStatus, runs, db, onOpenBoard, stepperRef }) {
         </div>
       </div>
 
-      <div className="sect-label">Triage status</div>
+      <div className="sect-label">Triage status{!canEdit.ok && <span className="dim-note-inline"> · read-only</span>}</div>
       <div className="stepper" role="group" aria-label="Advance triage status" ref={stepperRef}>
         {STEPS.map((s, i) => (
           <button
@@ -183,7 +189,8 @@ function Detail({ f, today, setStatus, runs, db, onOpenBoard, stepperRef }) {
             className={`step ${i < stepIdx ? 'done' : ''} ${i === stepIdx ? 'now' : ''}`}
             onClick={() => setStatus(f.failure_id, s)}
             aria-current={i === stepIdx ? 'step' : undefined}
-            title={`Set status: ${s}`}
+            disabled={!canEdit.ok}
+            title={canEdit.ok ? `Set status: ${s}` : canEdit.message}
           >
             {s}
           </button>

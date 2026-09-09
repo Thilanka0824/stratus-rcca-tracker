@@ -67,9 +67,9 @@ export default function Modal({ label, onClose, className = '', as: Tag = 'div',
 // A yes/no question in the app's own dress, for the few destructive
 // moments outside triage. The safe answer is focused first; the dangerous
 // one is coloured like a failure.
-export function ConfirmDialog({ title, body, confirmLabel = 'Confirm', cancelLabel = 'Cancel', danger = false, onConfirm, onCancel }) {
+export function ConfirmDialog({ title, body, confirmLabel = 'Confirm', cancelLabel = 'Cancel', danger = false, fallbackFocus = null, onConfirm, onCancel }) {
   return (
-    <Modal label={title} className="confirm" onClose={onCancel} role="alertdialog">
+    <Modal label={title} className="confirm" onClose={onCancel} role="alertdialog" fallbackFocus={fallbackFocus}>
       <h2>{title}</h2>
       {body && <p className="caption">{body}</p>}
       <div className="stepper">
