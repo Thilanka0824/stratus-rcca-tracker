@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   makeDb, checkAssignment, hasBlock, dayWarnings, queuedFor, isLate, defaultPlanDate,
   lateWarning, validateReason, deferRequest, scrubAssignment, ratedOn, assetStatusOn,
-  validateRequest, newRequest, DEFERRAL_REASONS, SCRUB_REASONS,
+  validateRequest, newRequest, pruneWindows, operatingWindows, DEFERRAL_REASONS, SCRUB_REASONS,
 } from './rules';
 import programs from '../data/programs.json';
 import assets from '../data/assets.json';
@@ -290,6 +290,13 @@ describe('intake · validateRequest and newRequest', () => {
     const onTime = newRequest(fields, { id: 'RQ-L002', submittedAt: '2026-06-30T18:05' });
     expect(onTime).toMatchObject({ late: false, status: 'submitted', plan_date: '2026-07-02', deferral_reason: null });
     expect(onTime.timeline).toHaveLength(1);
+  });
+  it('prunes picked windows to what the new airframe flies, never to nothing', () => {
+    const db = fx();
+    expect(operatingWindows(db, 'Sirocco')).toEqual(['AM', 'PM']);
+    expect(pruneWindows(['PM', 'NIGHT'], db, 'Sirocco')).toEqual(['PM']);
+    expect(pruneWindows(['NIGHT'], db, 'Harmattan')).toEqual(['AM']);
+    expect(pruneWindows(['NIGHT', 'AM'], db, 'Levant')).toEqual(['NIGHT', 'AM']);
   });
   it('skips closed days when defaulting a late request', () => {
     const r = newRequest({ ...fields, needed_by: '2026-07-01' }, { id: 'RQ-L003', submittedAt: '2026-06-30T18:05', isOpen: (d) => d !== '2026-07-02' });

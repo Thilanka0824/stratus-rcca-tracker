@@ -136,12 +136,13 @@ html, body {
 .stat .v.bad { color: var(--fail); }
 
 /* ---------- tabs ---------- */
-/* A scroll container clips at its padding box, so the hairline is an inset
-   shadow (the active underline covers it) and the padding leaves room for
-   focus rings — the two things overflow-x:auto used to eat. */
+/* A scroll container clips at its padding box, so the padding leaves 4px of
+   room on every side for focus rings, and the hairline is painted 4px up
+   from the bottom edge — exactly where the active tab's 2px underline sits,
+   so the underline still covers it. */
 .tabs {
-  display: flex; gap: 2px; margin-bottom: 18px; padding: 4px 4px 0;
-  box-shadow: inset 0 -1px 0 var(--line);
+  display: flex; gap: 2px; margin-bottom: 18px; padding: 4px;
+  background: linear-gradient(var(--line), var(--line)) left bottom 4px / 100% 1px no-repeat;
   overflow-x: auto; scrollbar-width: none;   /* never clip a tab on a phone */
 }
 .tabs::-webkit-scrollbar { display: none; }
@@ -303,7 +304,6 @@ td.scenario { white-space: normal; min-width: 220px; }
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); z-index: 20;
 }
 .toast .btn { min-height: 36px; }
-.toast-region:empty { display: none; }
 .panel:focus { outline: none; }               /* programmatic focus after a deep-link; keyboard focus keeps :focus-visible */
 .panel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -488,8 +488,12 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
 .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 14px; }
 .form-grid .seat { margin-bottom: 4px; }
 .seat select:disabled { opacity: .6; }
-.checks { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; min-height: 36px; font-family: var(--mono); font-size: 12px; }
-.checks label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.checks { display: flex; gap: 6px 10px; flex-wrap: wrap; align-items: center; font-family: var(--mono); font-size: 12px; }
+.checks label { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; min-height: 36px; padding: 0 8px 0 4px; border-radius: 4px; }
+.checks label:hover { background: var(--bg2); }
+.checks input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+.checks[aria-invalid='true'] label { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fail) 50%, transparent); }
+.seat [aria-invalid='true'] { border-color: var(--fail); }
 .checks input:disabled + span { color: var(--ink-faint); text-decoration: line-through; }
 
 /* ---------- footer ---------- */
@@ -515,7 +519,7 @@ table.matrix tr.mx-total td { border-top: 1px solid var(--line); background: var
 
 /* Touch: every control clears 44px (Fitts / WCAG 2.5.8). */
 @media (pointer: coarse) {
-  .step, .theme-toggle, .btn, .toast .btn, .filters select, .filters input, .cell-btn, .datepick input, .seat select { min-height: 44px; }
+  .step, .theme-toggle, .btn, .toast .btn, .banner .btn, .filters select, .filters input, .cell-btn, .datepick input, .seat select, .seat input, .checks label { min-height: 44px; }
   .fl-card { padding: 12px 14px; }
 }
 

@@ -11,7 +11,7 @@ Flat — the app lives at the project root: `package.json`, `vite.config.js`, `i
 ```bash
 npm install
 npm run dev        # Vite dev server
-npm run build      # production build (the recharts chunk-size warning is expected)
+npm run build      # production build (one chunk-size warning is expected: the index chunk carries the seed JSON; recharts is split out)
 npm run preview    # serve the built bundle
 npm test           # vitest run — src/lib/rules.test.js only
 npm run data       # python3 generate_data.py && render docs/analytics.md — regenerates src/data/*.json and data/stratus.sqlite

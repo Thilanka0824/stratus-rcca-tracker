@@ -30,7 +30,9 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
   // The timer pauses while the toast is hovered or focused, and closing it
   // hands keyboard focus back to the stepper instead of dropping it on body.
   const [toast, setToast] = useState(null);
-  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);     // hover and focus pause independently:
+  const [focused, setFocused] = useState(false);     // leaving one must not restart the clock under the other
+  const paused = hovered || focused;
   const undoRef = useRef(null);
   const stepperRef = useRef(null);
   useEffect(() => {
@@ -42,7 +44,8 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
   function dismissToast(returnFocus = false) {
     const hadFocus = document.activeElement === undoRef.current;
     setToast(null);
-    setPaused(false);
+    setHovered(false);
+    setFocused(false);
     if (returnFocus || hadFocus) {
       // after React has removed the toast (a timeout, not rAF: rAF stalls in a background tab)
       setTimeout(() => stepperRef.current?.querySelector('[aria-current="step"]')?.focus(), 0);
@@ -71,6 +74,7 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
   }
 
   return (
+    <>
     <section className="triage">
       <div className="fl-list">
         {sorted.map((f) => {
@@ -104,25 +108,27 @@ export default function TriageView({ failures, setFailures, runs, today, db, foc
         <div className="detail empty-hint">Select a failure to triage.</div>
       )}
 
-      {/* The live region is always mounted so screen readers announce the
-          toast when its text arrives, not just when the node does. */}
-      <div className="toast-region" role="status" aria-live="polite">
-        {toast && (
-          <div
-            className="toast"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onFocus={() => setPaused(true)}
-            onBlur={() => setPaused(false)}
-          >
-            <span className="mono">{toast.text}</span>
-            <button ref={undoRef} className="btn ghost" onClick={() => { toast.undo(); dismissToast(true); }}>
-              Undo
-            </button>
-          </div>
-        )}
-      </div>
     </section>
+    {/* The live region is always mounted (and never display:none) so screen
+        readers announce the toast when its text arrives, not just when the
+        node does. It sits outside the grid so an empty region takes no row. */}
+    <div className="toast-region" role="status" aria-live="polite">
+      {toast && (
+        <div
+          className="toast"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+        >
+          <span className="mono">{toast.text}</span>
+          <button ref={undoRef} className="btn ghost" onClick={() => { toast.undo(); dismissToast(true); }}>
+            Undo
+          </button>
+        </div>
+      )}
+    </div>
+    </>
   );
 }
 

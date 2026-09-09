@@ -6,6 +6,8 @@ import {
   dayWarnings, queuedFor, programTails, isOperatingDay,
 } from '../lib/rules';
 import { isQueued, personName, dailyCapacity } from '../lib/dispatch';
+import Modal from './Modal';
+import { fmtDate as fd } from '../lib/helpers';
 
 // The board: one day, every program's plan against its target, and the
 // queue of what is still waiting. Click a rail request, then a free cell.
@@ -42,7 +44,7 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
   }, [cap, db, date, sorties]);
 
   return (
-    <section className="board">
+    <section className="board" tabIndex={-1}>
       <div className="board-top">
         <div className="datepick" role="group" aria-label="Board date">
           <button className="step" onClick={() => pick(addDays(date, -1))} disabled={date <= meta.window_start} aria-label="Previous day">‹</button>
@@ -84,7 +86,8 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
           {r6.map((w) => <div key={w.request_id} className="rail-warn">R6 · {w.message}</div>)}
           {rail.length === 0 && <div className="empty-hint">Nothing waiting on this day.</div>}
           {rail.map((r) => {
-            const queued = isQueued(r) && r.plan_date <= date;
+            const queued = isQueued(r) && r.plan_date <= date;          // live for this day
+            const later = isQueued(r) && r.plan_date > date;            // pushed to a later day — can be pulled forward
             const deferredHere = r.timeline.filter((e) => e.event === 'deferred' && e.day === date);
             const reason = deferredHere.at(-1)?.reason;
             const isSel = selReq === r.request_id;
@@ -102,12 +105,13 @@ export default function DispatchView({ db, meta, today, date, setDate, onAssign,
                   <span>{r.windows.join('/')}</span>
                   <span>{CREW_LABELS[r.crew]}</span>
                 </div>
-                {reason && !queued && <div className="rail-reason">deferred · {REASON_LABELS[reason]}</div>}
+                {reason && !queued && !later && <div className="rail-reason">deferred · {REASON_LABELS[reason]}</div>}
+                {reason && later && <div className="rail-reason">deferred · {REASON_LABELS[reason]} · now planned for {fd(r.plan_date)}</div>}
                 {reason && queued && <div className="rail-reason">deferred once already · {REASON_LABELS[reason]}</div>}
-                {queued && editable && (
+                {(queued || later) && editable && (
                   <div className="rail-actions">
                     <button className={`btn ${isSel ? '' : 'ghost'}`} onClick={() => { setSelReq(isSel ? null : r.request_id); setPicker(null); }}>
-                      {isSel ? 'Pick a cell ↑' : 'Assign'}
+                      {isSel ? 'Pick a cell ↑' : later ? 'Assign here (pull forward)' : 'Assign'}
                     </button>
                     <button className="btn ghost" onClick={() => setReasonFor({ kind: 'defer', id: r.request_id, label: `Defer ${r.request_id}` })}>Defer…</button>
                   </div>
@@ -278,8 +282,7 @@ function CrewPicker({ db, date, request, asset, window, onCancel, onConfirm }) {
     .sort((x, y) => (y.rated - x.rated) || (y.rostered - x.rostered) || x.p.name.localeCompare(y.p.name));
 
   return (
-    <div className="modal-bg" onClick={onCancel} onKeyDown={(e) => e.key === 'Escape' && onCancel()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-label="Assign crew" onClick={(e) => e.stopPropagation()}>
+    <Modal label="Assign crew" onClose={onCancel} fallbackFocus=".board">
         <div className="sect-label">Assign</div>
         <h2>{request.request_id} → {asset.asset_id} · {window}</h2>
         <p className="caption">{request.title} · {CREW_LABELS[request.crew]}{request.windows.includes(window) ? '' : ` · ${window} is not a requested window`}</p>
@@ -305,8 +308,7 @@ function CrewPicker({ db, date, request, asset, window, onCancel, onConfirm }) {
           <button className="btn" disabled={blocks.length > 0} onClick={() => onConfirm(cand)}>Confirm assignment</button>
           <button className="btn ghost" onClick={onCancel}>Cancel</button>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -315,8 +317,7 @@ function ReasonPicker({ label, reasons, onCancel, onConfirm }) {
   const [reason, setReason] = useState('');
   const [note, setNote] = useState('');
   return (
-    <div className="modal-bg" onClick={onCancel} onKeyDown={(e) => e.key === 'Escape' && onCancel()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
+    <Modal label={label} onClose={onCancel} fallbackFocus=".board">
         <div className="sect-label">Reason required · R8</div>
         <h2>{label}</h2>
         <label className="seat">
@@ -334,7 +335,6 @@ function ReasonPicker({ label, reasons, onCancel, onConfirm }) {
           <button className="btn" disabled={!reason} onClick={() => onConfirm(reason, note)}>Confirm</button>
           <button className="btn ghost" onClick={onCancel}>Cancel</button>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }

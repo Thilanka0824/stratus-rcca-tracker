@@ -320,6 +320,20 @@ export function validateRequest(f, db, { tomorrow }) {
   return out;
 }
 
+// Windows an airframe operates, in board order — and a picked set pruned to
+// them, so a program switch never leaves a checked box that cannot be
+// un-checked. Falls back to the airframe's first window when nothing survives.
+export function operatingWindows(db, airframe) {
+  const set = new Set(db.assets.filter((a) => a.airframe === airframe).flatMap((a) => a.windows));
+  return WINDOWS.filter((w) => set.has(w));
+}
+
+export function pruneWindows(windows, db, airframe) {
+  const ok = operatingWindows(db, airframe);
+  const kept = windows.filter((w) => ok.includes(w));
+  return kept.length ? kept : ok.slice(0, 1);
+}
+
 // Build a request the way intake would. The late flag and the plan day are
 // derived from the submission time (R7), never typed in.
 export function newRequest(f, { id, submittedAt, cutoff = '15:00', isOpen = () => true }) {
