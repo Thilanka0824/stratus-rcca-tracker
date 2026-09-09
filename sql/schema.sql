@@ -90,13 +90,13 @@ CREATE TABLE users (                             -- personas: authorization with
   user_id   TEXT PRIMARY KEY,
   name      TEXT NOT NULL,
   title     TEXT NOT NULL,                       -- display
-  role      TEXT NOT NULL CHECK (role IN ('requester','coordinator','authority','trainer','crew','observer')),  -- behaviour
-  person_id TEXT REFERENCES persons(person_id)   -- crew personas are also people on the roster
+  role      TEXT NOT NULL CHECK (role IN ('requester','coordinator','authority','trainer','crew','observer')),  -- behavior
+  person_id TEXT UNIQUE REFERENCES persons(person_id)   -- crew personas (and the trainer, a check pilot) are people on the roster
 );
 
 CREATE TABLE user_scopes (                       -- authority scope: a program_id, 'desk', or 'all'
   user_id TEXT NOT NULL REFERENCES users(user_id),
-  scope   TEXT NOT NULL,
+  scope   TEXT NOT NULL CHECK (scope IN ('all','desk') OR scope LIKE 'PRG-%'),
   PRIMARY KEY (user_id, scope)
 );
 
@@ -171,8 +171,10 @@ CREATE TABLE request_events (                    -- the request timeline; deferr
     ('submitted','scheduled','deferred','rescheduled','reassigned','scrubbed','executed','withdrawn')),
   reason     TEXT,
   note       TEXT,
-  actor_id   TEXT NOT NULL REFERENCES users(user_id),   -- every event carries who did it (R9)
-  CHECK (event <> 'deferred' OR reason IS NOT NULL)
+  actor_id   TEXT NOT NULL REFERENCES users(user_id),   -- every event carries who did it (R9); a late_intake deferral is stamped by the filer, as part of intake
+  CHECK (event <> 'deferred' OR reason IN
+    ('no_rated_operator','no_rated_pilot','no_asset','asset_grounded',
+     'program_over_max','build_not_ready','late_intake','requester_withdrew','no_rider_ops'))
 );
 
 CREATE TABLE test_runs (

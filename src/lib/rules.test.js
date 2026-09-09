@@ -641,18 +641,16 @@ describe('seed data', () => {
       for (const pid of [a.operator_id, a.pilot_id]) if (pid) expect([a.assignment_id, ids.includes(pid)]).toEqual([a.assignment_id, false]);
     }
   });
-  it('the desk shortage is in the seed: showcases deferred for the desk while LV-04 sat free, then flown once it was covered', () => {
+  it('the desk shortage is in the seed: a showcase refused by the ratio, no waiver, then flown once a second coverer arrived', () => {
     const sf = requests.filter((r) => db.program.get(r.program_id).code === 'SF' && r.needed_by >= '2026-06-15' && r.needed_by <= '2026-06-17');
-    expect(sf).toHaveLength(3);
+    expect(sf).toHaveLength(9);
     const deskDeferrals = sf.flatMap((r) => r.timeline.filter((e) => e.event === 'deferred' && e.reason === 'no_rider_ops'));
     expect(deskDeferrals.length).toBeGreaterThanOrEqual(2);
-    for (const e of deskDeferrals) {
-      expect(e.note).toMatch(/no such action/);
-      expect(deskCoverers(db, e.day, 'PM')).toEqual([]);
-      expect(assignments.some((a) => a.date === e.day && a.window === 'PM' && a.asset_id === 'LV-04' && a.status !== 'scrubbed')).toBe(false);
-    }
+    expect(deskDeferrals.some((e) => e.day === '2026-06-15' && /desk at 3:1, ratio is 2 · .+ were free — asked .+ \(PM\) to waive the ratio; there is no such action/.test(e.note))).toBe(true);
+    for (const e of deskDeferrals) expect(deskCoverers(db, e.day, 'PM').length).toBeGreaterThanOrEqual(1);
     expect(sf.every((r) => r.status === 'executed')).toBe(true);
-    expect(deskCoverers(db, '2026-06-17', 'PM').map((p) => p.person_id)).toEqual(['P-009']);
+    expect(deskCoverers(db, '2026-06-16', 'PM').map((p) => p.person_id)).toEqual(['P-018']);
+    expect(deskCoverers(db, '2026-06-17', 'PM').map((p) => p.person_id)).toEqual(['P-018', 'P-009']);
     expect(db.person.get('P-009').qualifications.rider_ops).toBe('2026-06-17');
   });
 });

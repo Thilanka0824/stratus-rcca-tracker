@@ -15,7 +15,7 @@ drone-robotaxi company, with three deliberately seeded narrative arcs:
          fixed in v2.15.2 -> visible dip + recovery in the trend chart.
 
 The dispatch layer (upstream of the runs) adds programs, tails, crew,
-requests and assignments over the same window, with three more arcs:
+requests and assignments over the same window, with four more arcs:
 
   ARC D1 "The misattributed shortage" (April–May): through April the PLC
          Harmattan deferrals are logged as no_rated_operator ("per thread
@@ -31,14 +31,17 @@ requests and assignments over the same window, with three more arcs:
          against ARC 3's regression until v2.15.2 ships; asset_grounded
          deferrals rise, the remaining Levants saturate, PN misses its asset
          minimum, churn spikes, then recovers. Same event, both halves.
-  ARC D4 "The desk shortage" (Jun 15–19): the showcase run lands while the
-         PM rider operator is on leave. Rider experience is the product, so a
-         rider-facing sortie without a rider operator on the line is not a
-         flight (R10): two P0 showcases defer with no_rider_ops while a rated
-         crew and LV-04 sit free, the PM is asked to waive a rule that has no
-         waiver, and on Jun 17 the trainer's desk qualification for an
-         operator takes effect and the backlog flies. Cross-training fixes
-         the shortage for the second time in the dataset.
+  ARC D4 "The desk shortage" (Jun 15–19): the showcase run — three guest
+         flights a day, all in PM — lands while the swing-shift rider operator
+         is on leave, so one person covers the PM desk. Rider experience is
+         the product: one rider operator can hold two rider-facing sorties,
+         not three (R10, the ratio), so the third P0 showcase of the day
+         defers with no_rider_ops while a Levant and a rated crew sit free,
+         the note asks the PM to waive a rule that has no waiver, and on
+         Jun 17 the trainer's desk qualification for an operator adds a
+         second coverer and the backlog flies. Cross-training fixes the
+         shortage for the second time in the dataset: D1 was ratings, D4 is
+         the desk.
 
 Dataset "today" is the last run date; tomorrow (today + 1) exists as a
 planned day with an unscheduled queue — the dispatch board's default view.
@@ -394,9 +397,11 @@ DEFERRAL_REASONS = ["no_rated_operator", "no_rated_pilot", "no_asset", "asset_gr
                     "no_rider_ops"]
 BUILD_START = {b: s for b, s, _ in BUILD_WINDOWS}
 
-# Arc D4 — the rider desk. Its randomness (rider-facing flags, the desk
-# roster's odd day off) lives on a third stream so the crew roster and the
-# planner's draws stay byte-identical; only R10 itself changes outcomes.
+# Arc D4 — the rider desk. Its randomness (the rider-facing flags) lives on a
+# third stream, and the showcase run is registered with its intake fields
+# spelled out, so the crew roster and every planner draw before Jun 15 stay
+# byte-identical to the seed without the desk. From Jun 15 on, R10 itself is
+# what changes outcomes — the sanity report asserts D1 and D3 still hold.
 rrng = random.Random(4243)
 RIDER_DESK = {"ratio": 2, "min_per_window": 1}        # rider-facing sorties per coverer · coverers per window
 D4_DAYS = (date(2026, 6, 15), date(2026, 6, 17))      # the showcase run
@@ -422,7 +427,7 @@ PROGRAMS = [
     dict(program_id="PRG-05", code="CQ",  name="Crew Qualification",     lead="D. Whitfield",
          priority_default="P2", standing=True,  airframes=["Levant", "Harmattan"], asset_min=0, asset_max=1),
     dict(program_id="PRG-06", code="SF",  name="Showcase Flights",       lead="K. Osei",
-         priority_default="P0", standing=False, airframes=["Levant"],             asset_min=0, asset_max=1),
+         priority_default="P0", standing=False, airframes=["Levant"],             asset_min=0, asset_max=3),
 ]
 for p in PROGRAMS:
     p["cutoff_local"] = CUTOFF
@@ -538,7 +543,6 @@ def pattern_windows(pattern, d):
     wd = d.weekday() < 5
     surge = SURGE_WEEKEND[0] <= d <= SURGE_WEEKEND[1]
     return {"day": ["AM", "PM"] if wd else [],
-            "am": ["AM"] if wd else [],
             "night": ["NIGHT"] if wd else [],
             "swing": ["PM", "NIGHT"] if wd else [],
             "day+wkend": ["AM", "PM"] if (wd or surge) else []}[pattern]
@@ -579,23 +583,23 @@ def available(p, d, w):
 
 # ---------------------------------------------------------------- the rider desk (arc D4)
 # Rider operations is a desk, not a seat: qualified rider operators cover
-# windows on comms with the riders aboard. Three on the roster, windows split
-# so PM is the thin one; the qualification is effective-dated like a rating.
+# windows on comms with the riders aboard. Three on the roster: PM is the busy
+# window and normally has two coverers; the swing-shift operator's leave is
+# what makes it thin. The qualification is effective-dated like a rating.
 RIDER_OPS_ROWS = [
-    ("P-018", "M. Lindgren", "am"),         # AM only
-    ("P-019", "G. Abara",    "swing"),      # PM / NIGHT — the only PM coverer; on leave Jun 15–19
+    ("P-018", "M. Lindgren", "day"),        # AM / PM
+    ("P-019", "G. Abara",    "swing"),      # PM / NIGHT — on leave Jun 15–19 (arc D4)
     ("P-020", "Z. Halim",    "night"),
 ]
 DESK_QUAL_EFFECTIVE = "2026-04-01"           # before the window: always qualified
+DESK_ROSTER_TARGET = 2                       # the coordinator staffs a window to two coverers when they can
 
-for pid, name, pattern in RIDER_OPS_ROWS:
+for pid, name, pattern in RIDER_OPS_ROWS:   # no random days off: the leave is the story
     avail = {}
     d = START
     while d <= TOMORROW:
         w = pattern_windows(pattern, d)
         if pid == "P-019" and D4_OUT[0] <= d <= D4_OUT[1]:
-            w = []
-        elif w and d != TOMORROW and rrng.random() < 0.03:   # the odd day off
             w = []
         if w:
             avail[iso(d)] = w
@@ -620,9 +624,10 @@ def qualified_on(p, d):
 
 # ---------------------------------------------------------------- personas (app roles)
 # Authorization without authentication: a persona is a user record the header
-# switches between. The title is display; the role is behaviour, and the
+# switches between. The title is display; the role is behavior, and the
 # matrix that decides it is data in src/lib/auth.js (mirrored below for I4).
-# Crew personas are also people on the roster; nobody else is.
+# Crew personas are people on the roster; so is the trainer, a check pilot
+# who also flies — which is what makes the no-self-grant rule (I2) real.
 COORD_AM, COORD_PM, PM_USER, TRAINER = "U-03", "U-04", "U-06", "U-15"
 USERS = [
     dict(user_id="U-01", name="G. Petrakis",   title="Manager",               role="observer",    scope=None,       person_id=None),
@@ -644,9 +649,9 @@ USERS = [
 USER = {u["user_id"]: u for u in USERS}
 USER_BY_NAME = {u["name"]: u["user_id"] for u in USERS}
 
-# Every effective-dated rating and every desk qualification was granted by
-# the trainer — never to themself (I2); ratings held since before the window
-# have no grant record.
+# Every effective-dated rating and every desk qualification carries its
+# grantor, the trainer — never themself (I2). Ratings held since before the
+# window carry no date and no grant record.
 for p in persons:
     p["granted_by"] = {k: TRAINER for k in list(p["ratings_effective"]) + list(p["qualifications"])}
 
@@ -694,8 +699,9 @@ def requester_user(name, submitted_at):
 # One coverage row per (date, window, person). People who are only rider
 # operators cover every window they are rostered for; an operator who is also
 # desk-qualified is pulled onto the desk only when a window would otherwise
-# sit below the minimum — the coordinator would rather fly them. A person
-# covering a window can't fly in it, and can't cover it twice (R2, extended).
+# sit below the coordinator's target of two — they would rather fly them.
+# A person covering a window can't fly in it, and can't cover it twice (R2,
+# extended). The PM-shift coordinator builds tomorrow's desk at the cutoff.
 coverage = []
 covering = defaultdict(set)          # (date iso, window) -> {person_id}
 
@@ -705,7 +711,7 @@ def desk_roster(D):
         base = [p for p in persons if p["roles"] == ["rider_ops"] and qualified_on(p, D) and available(p, D, w)]
         dual = [p for p in persons if "rider_ops" in p["roles"] and p["roles"] != ["rider_ops"]
                 and qualified_on(p, D) and available(p, D, w)]
-        for p in base + dual[:max(0, RIDER_DESK["min_per_window"] - len(base))]:
+        for p in base + dual[:max(0, DESK_ROSTER_TARGET - len(base))]:
             coverage.append({"date": iso(D), "window": w, "person_id": p["person_id"],
                              "assigned_by": COORD_PM, "acked": D != TOMORROW})
             covering[(iso(D), w)].add(p["person_id"])
@@ -746,8 +752,7 @@ TITLES = {
             "Urban route — leg 3 (vertiport approach)", "Urban route — leg 4 (canyon return)"],
     "CQ":  ["Currency check — Levant", "Type rating — Harmattan"],
     "SF":  ["Showcase flight — municipal partners", "Showcase flight — investor visit", "Showcase flight — press day",
-            "Showcase flight — transit authority", "Showcase flight — board visit", "Showcase flight — partner airline",
-            "Showcase flight — university partners"],
+            "Showcase flight — board visit", "Showcase flight — university partners"],
 }
 REQUESTERS = {
     "PLC": ["S. Tanaka", "L. Alvarez"], "PN": ["A. Okafor", "M. Sato"], "SBU": ["R. Okafor", "M. Sato", "P. Nguyen"],
@@ -769,8 +774,18 @@ SCENARIO_POOL = {
 URC_CAMPAIGNS = [(date(2026, 4, 13), date(2026, 4, 24)), (date(2026, 5, 11), date(2026, 5, 22)),
                  (date(2026, 6, 8), date(2026, 6, 19))]
 SHOWCASES = [(date(2026, 4, 16), "PM"), (date(2026, 5, 8), "AM"), (date(2026, 5, 29), "PM"),
-             (date(2026, 6, 15), "PM"), (date(2026, 6, 16), "PM"), (date(2026, 6, 17), "PM"),   # arc D4: the run
-             (date(2026, 6, 26), "AM")]
+             (date(2026, 6, 16), "PM"), (date(2026, 6, 26), "AM")]
+# Arc D4: the showcase run — three guest flights a day for three days, all
+# PM, on top of the Jun 16 showcase above. Registered with every intake field
+# spelled out so the run draws nothing from the planner's RNG stream.
+SHOWCASE_RUN = [(date(2026, 6, 15), "Showcase flight — transit authority"),
+                (date(2026, 6, 15), "Showcase flight — hospital network"),
+                (date(2026, 6, 15), "Showcase flight — airport operator"),
+                (date(2026, 6, 16), "Showcase flight — insurance partners"),
+                (date(2026, 6, 16), "Showcase flight — state regulator"),
+                (date(2026, 6, 17), "Showcase flight — partner airline"),
+                (date(2026, 6, 17), "Showcase flight — logistics partner"),
+                (date(2026, 6, 17), "Showcase flight — tourism board")]
 
 requests = []
 REQ = {}
@@ -810,7 +825,7 @@ def event(r, at, ev, reason=None, note="", day=None, by=None):
 
 def add_request(code, needed_by, windows, crew, title=None, submitted_at=None, late=None,
                 build=None, stage=None, priority=None, requester=None, plan_date=None, note="",
-                may_withdraw=True, rider_facing=None):
+                may_withdraw=True, rider_facing=None, team=None):
     global rseq
     rseq += 1
     prog = PROG_BY_CODE[code]
@@ -833,7 +848,7 @@ def add_request(code, needed_by, windows, crew, title=None, submitted_at=None, l
                                  else "engineering" if drng.random() < 0.8 else "release_candidate"),
         "crew": crew, "windows": list(windows), "airframe": airframe,
         "priority": priority or prog["priority_default"],
-        "supporting_team": TEAM_OF[code] if drng.random() < 0.75 else drng.choice(REQUEST_TEAMS),
+        "supporting_team": team or (TEAM_OF[code] if drng.random() < 0.75 else drng.choice(REQUEST_TEAMS)),
         "submitted_at": submitted_at, "needed_by": iso(needed_by),
         "plan_date": None, "status": "submitted", "late": late, "deferral_reason": None,
         "timeline": [{"at": submitted_at, "day": None, "event": "submitted", "reason": None,
@@ -928,9 +943,13 @@ while d <= END:
                         "lone_operator" if drng.random() < 0.35 else "operator_pilot")
     d += timedelta(days=1)
 
-for sd, w in SHOWCASES:                                                    # SF — fixed guest dates
-    add_request("SF", sd, [w], "operator_pilot", late=False, title=TITLES["SF"][SHOWCASES.index((sd, w))],
+for k, (sd, w) in enumerate(SHOWCASES):                                    # SF — fixed guest dates
+    add_request("SF", sd, [w], "operator_pilot", late=False, title=TITLES["SF"][k],
                 stage="release_candidate", may_withdraw=False)
+for k, (sd, title) in enumerate(SHOWCASE_RUN):                              # arc D4 — draws nothing from drng
+    add_request("SF", sd, ["PM"], "operator_pilot", late=False, title=title, stage="release_candidate",
+                submitted_at=stamp(sd - timedelta(days=1), 10, 20 + 3 * k), requester="K. Osei",
+                team=TEAM_OF["SF"], may_withdraw=False)
 
 # Arc D1 twist: the two Harmattan cross-rating flights are requested in early
 # May for the morning slot, deferred twice during the PLC push (training is
@@ -1122,13 +1141,14 @@ def place(r, D, known, busy_assets, busy_people, prog_tails, note="", by=None):
         if isinstance(crew, str):
             shortage = shortage or crew
             continue
-        if r["rider_facing"]:                         # R10 — tail and crew were free; is the desk?
-            desk = desk_check(D, w)
-            if desk:
-                shortage = shortage or desk
-                continue
         op, pi = crew
         asset = sorted(usable, key=lambda a: (usage[a["asset_id"]], a["asset_id"]))[0]
+        if r["rider_facing"]:                         # R10 — tail and crew were free; is the desk?
+            desk = desk_check(D, w)
+            if desk:                                  # the note keeps what was free: that is the tell
+                desk["note"] += f" · {asset['asset_id']} and {' / '.join(p['name'] for p in (op, pi) if p)} were free"
+                shortage = shortage or desk
+                continue
         new_assignment(D, w, r, asset, op, pi, note, by)
         busy_assets.add((asset["asset_id"], w))
         for p in (op, pi):
@@ -1176,7 +1196,8 @@ def plan_day(D, standing_only=False):
         elif isinstance(out, (str, dict)):
             reason, why = (out, "") if isinstance(out, str) else (out["reason"], out["note"])
             if reason == "no_rider_ops" and PROG[r["program_id"]]["code"] == "SF":
-                why += " — asked the PM to waive the desk minimum; there is no such action"
+                rule = "the ratio" if "ratio" in why else "the desk minimum"
+                why += f" — asked {USER[PM_USER]['name']} (PM) to waive {rule}; there is no such action"
             defer(r, D, reason, why)
         else:
             asset, w, op, pi = out
@@ -1369,6 +1390,8 @@ def check_rules():
 
 
 check_rules()
+print(f"invariants: I1 ok · I2 ok · I4 ok ({sum(len(r['timeline']) for r in requests)} events, {len(assignments)} sorties, "
+      f"{len(coverage)} coverage rows) · I5 ok · R2 desk ok")
 
 # ---------------------------------------------------------------- write
 meta = {
@@ -1490,6 +1513,7 @@ for r in requests:
         if e["event"] in ("scrubbed", "reassigned"):
             churn[e["at"][:10]] += 1
 print(f"churn (scrubs + reassignments): total {sum(churn.values())} · busiest days {churn.most_common(4)}")
+assert churn[iso(GROUNDING[0])] == max(churn.values()), "arc D3: plan churn must peak on the grounding day"
 
 
 def weekdays(d0, d1):
@@ -1530,6 +1554,10 @@ print(f"D1 the tell: {mis}/{harm['no_rated_operator']} 'no_rated_operator' defer
 print("D1 cross-rating flights: " + "; ".join(
     f"{r['request_id']} {r['status']} {r['plan_date']} after {sum(e['event'] == 'deferred' for e in r['timeline'])} deferrals"
     for r in requests if r["request_id"] in cq_cross_ids))
+for r in requests:                        # the rating that follows a flight that never flew would be a lie
+    if r["request_id"] in cq_cross_ids:
+        assert r["status"] == "executed" and date.fromisoformat(r["plan_date"]) < CROSS_RATING_DATE, \
+            ("arc D1: each cross-rating flight must fly before the rating takes effect", r["request_id"], r["status"])
 
 s_req = [r for r in requests if r["request_id"] in surge_ids]
 s_flown_weekend = sum(1 for a in assignments if a["request_id"] in surge_ids and a["status"] == "done"
@@ -1602,26 +1630,26 @@ print("rider-facing share: " + " · ".join(f"{c} {rf[c]}/{tot[c]}" for c in ("PL
 d4 = [(r, e) for r, e in def_events if e["reason"] == "no_rider_ops"]
 sf_d4 = [(r, e) for r, e in d4 if PROG[r["program_id"]]["code"] == "SF"
          and D4_DAYS[0] <= date.fromisoformat(e["day"]) <= D4_DAYS[1]]
-# The tell, desk edition: on those days LV-04 and a rated Levant crew sat free
-# in the requested window — the only thing missing was a rider operator.
-tell4 = 0
-for r, e in sf_d4:
-    D = date.fromisoformat(e["day"])
-    busy_a, busy_p = busy_sets(D)
-    if any(("LV-04", w) not in busy_a and not isinstance(crew_for(r, D, w, busy_p), str) for w in r["windows"]):
-        tell4 += 1
+# The tell, desk edition: when the desk refused a showcase, the planner had a
+# Levant and a rated crew in hand — the note names them. A route leg may take
+# that tail later in the day; at the moment of refusal it was free.
+tell4 = sum("were free" in e["note"] for _, e in sf_d4)
 print(f"D4 no_rider_ops deferrals: {len(d4)} total · showcases on Jun 15–17: {len(sf_d4)} · "
-      f"with LV-04 and a rated crew free: {tell4} · by reason text: {dict(Counter(e['note'].split(' — ')[0] for _, e in d4))}")
+      f"with a Levant and a rated crew free: {tell4} · by message: {dict(Counter(' · '.join(e['note'].split(' · ')[:2]) for _, e in d4))}")
+assert tell4 == len(sf_d4), "arc D4: every desk refusal of a showcase must have had a tail and crew free"
 print(f"D4 PM coverers Jun 15–19: "
-      f"{[(f'{D4_OUT[0] + timedelta(days=k):%b} {(D4_OUT[0] + timedelta(days=k)).day}', len(covering[(iso(D4_OUT[0] + timedelta(days=k)), 'PM')])) for k in range(5)]}"
+      f"{[(f'{D4_OUT[0] + timedelta(days=k):%b} {(D4_OUT[0] + timedelta(days=k)).day}', sorted(covering[(iso(D4_OUT[0] + timedelta(days=k)), 'PM')])) for k in range(5)]}"
       f" · P-009 rider_ops effective {PERSON['P-009']['qualifications']['rider_ops']} "
       f"(granted by {USER[PERSON['P-009']['granted_by']['rider_ops']]['name']})")
+run_sf = [r for r in requests if PROG[r["program_id"]]["code"] == "SF"
+          and D4_DAYS[0] <= date.fromisoformat(r["needed_by"]) <= D4_DAYS[1]]
 print("D4 showcases: " + "; ".join(
-    f"{r['request_id']} {r['title'].split('— ')[1]} {r['status']} {r['plan_date']} after "
-    f"{sum(e['event'] == 'deferred' for e in r['timeline'])} deferrals"
-    for r in requests if PROG[r["program_id"]]["code"] == "SF"
-    and D4_DAYS[0] <= date.fromisoformat(r["needed_by"]) <= D4_DAYS[1]))
+    f"{r['request_id']} {r['title'].split('— ')[1]} {r['status']} {r['plan_date']} "
+    f"({', '.join(e['reason'] for e in r['timeline'] if e['event'] == 'deferred') or 'flew as asked'})" for r in run_sf))
+assert any(date.fromisoformat(e["day"]) == D4_DAYS[0] and "ratio" in e["note"] for _, e in sf_d4), \
+    "arc D4: a showcase must be refused by the ratio on the first day of the run"
 assert len(sf_d4) >= 2, "arc D4 needs at least two showcase deferrals for the desk"
+assert all(r["status"] == "executed" for r in run_sf), "arc D4: the showcase backlog must fly once the desk is covered"
 
 tom = [a for a in assignments if a["date"] == iso(TOMORROW)]
 queue = [r for r in requests if r["status"] in ("submitted", "deferred") and r["plan_date"]

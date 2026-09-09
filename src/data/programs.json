@@ -81,7 +81,7 @@
    "Levant"
   ],
   "asset_min": 0,
-  "asset_max": 1,
+  "asset_max": 3,
   "cutoff_local": "15:00"
  }
 ]
