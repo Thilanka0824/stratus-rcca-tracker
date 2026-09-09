@@ -130,6 +130,27 @@ export function checkCoverage(date, window, db) {
   return { rule: 'R10', date, window, coverers, demand, capacity, ratio: desk.ratio, min: desk.min_per_window, level, message };
 }
 
+// Releasing a coverer from a window: R10 holds on the way out too — not while
+// the rider-facing sorties already in that window would be left without cover
+// or over the ratio.
+export function checkUncover(cand, db) {
+  const desk = db.desk || DEFAULT_DESK;
+  const coverers = deskCoverers(db, cand.date, cand.window);
+  const name = db.person.get(cand.person_id)?.name ?? cand.person_id;
+  if (!coverers.some((p) => p.person_id === cand.person_id)) {
+    return [{ rule: 'R2', severity: 'block', message: `${name} is not covering ${cand.window} on ${fmtDate(cand.date)}.` }];
+  }
+  const left = coverers.length - 1;
+  const riders = riderLoad(db, cand.date, cand.window);
+  if (riders > 0 && left < desk.min_per_window) {
+    return [{ rule: 'R10', severity: 'block', message: `${riders} rider-facing sortie${riders > 1 ? 's' : ''} in ${cand.window} on ${fmtDate(cand.date)} would be left with no rider operator covering` }];
+  }
+  if (riders > desk.ratio * left) {
+    return [{ rule: 'R10', severity: 'block', message: `desk would be at ${riders}:${left}, ratio is ${desk.ratio}` }];
+  }
+  return [];
+}
+
 // Rostering a person onto the desk for a window: {date, window, person_id}.
 // R10 wants a qualified rider operator; R2, extended, says nobody covers a
 // window twice or covers one they are flying in.

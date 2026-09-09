@@ -3,7 +3,7 @@ import {
   makeDb, checkAssignment, hasBlock, dayWarnings, queuedFor, isLate, defaultPlanDate,
   lateWarning, validateReason, deferRequest, scrubAssignment, scrubRequest, scheduleRequest, newAssignment,
   withdrawRequest, ratedOn, qualifiedOn, assetStatusOn, validateRequest, newRequest, pruneWindows, operatingWindows,
-  deskCoverers, riderLoad, checkCoverage, checkCover, coverWindow, uncoverWindow, acknowledge,
+  deskCoverers, riderLoad, checkCoverage, checkCover, checkUncover, coverWindow, uncoverWindow, acknowledge,
   grantRating, revokeRating, grantQualification, setProgramPriority, setProgramTargets, setDeskSettings,
   DEFERRAL_REASONS, SCRUB_REASONS, DEFAULT_DESK,
 } from './rules';
@@ -459,6 +459,19 @@ describe('R10 · the rider desk', () => {
     expect(() => setDeskSettings(U.pm, DEFAULT_DESK, { min_per_window: 0 })).toThrow(/between 1 and 4/);
     expect(() => setDeskSettings(U.lead, DEFAULT_DESK, { ratio: 3 })).toThrow(/PM or rider ops lead only/);
     expect(Object.keys(setDeskSettings(U.pm, DEFAULT_DESK, {}))).toEqual(['ratio', 'min_per_window']);
+  });
+  it('a coverer cannot be released while riders in the window depend on them', () => {
+    const db = fx();                                                          // PM: P-RO alone, ratio 2
+    expect(checkUncover({ date: D, window: 'PM', person_id: 'P-RO' }, db)).toEqual([]);
+    db.assignments.push({ assignment_id: 'AS-r1', ...rider('RQ-R1', 'LV-02'), status: 'planned' });
+    expect(checkUncover({ date: D, window: 'PM', person_id: 'P-RO' }, db).find((v) => v.rule === 'R10').message)
+      .toBe('1 rider-facing sortie in PM on Jul 1 would be left with no rider operator covering');
+    db.coverage.push({ date: D, window: 'PM', person_id: 'P-DUAL', assigned_by: 'U-C', acked: true });
+    expect(checkUncover({ date: D, window: 'PM', person_id: 'P-RO' }, db)).toEqual([]);            // P-DUAL still covers, 1:1
+    db.assignments.push({ assignment_id: 'AS-r2', ...rider('RQ-R2', 'LV-04', { pilot_id: 'P-SOLO' }), status: 'planned' });
+    db.assignments.push({ assignment_id: 'AS-r3', ...rider('RQ-R3', 'LV-06', { pilot_id: 'P-HP' }), status: 'planned' });
+    expect(checkUncover({ date: D, window: 'PM', person_id: 'P-RO' }, db).find((v) => v.rule === 'R10').message).toBe('desk would be at 3:1, ratio is 2');
+    expect(checkUncover({ date: D, window: 'PM', person_id: 'P-LP' }, db).find((v) => v.rule === 'R2').message).toMatch(/is not covering PM/);
   });
   it('rostering the desk carries the actor; the roster is immutable', () => {
     const roster = coverWindow(U.coordinator, [], { date: D, window: 'PM', person_id: 'P-RO' }, { at: AT });

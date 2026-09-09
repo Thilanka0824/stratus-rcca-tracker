@@ -13,7 +13,7 @@ import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers'
 import { daySummary } from './lib/dispatch';
 import {
   makeDb, checkAssignment, hasBlock, newAssignment, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, withdrawRequest,
-  validateRequest, newRequest, isOperatingDay, checkCover, coverWindow, uncoverWindow, acknowledge,
+  validateRequest, newRequest, isOperatingDay, checkCover, checkUncover, coverWindow, uncoverWindow, acknowledge,
   grantRating, revokeRating, grantQualification, setProgramPriority, setProgramTargets, setDeskSettings,
 } from './lib/rules';
 import { can, ROLE_LABELS } from './lib/auth';
@@ -237,6 +237,8 @@ export default function App() {
     return vs;
   }
   function uncover(cand) {
+    const vs = checkUncover(cand, db);
+    if (hasBlock(vs)) return vs[0].message;
     let next;
     try { next = uncoverWindow(currentUser, coverage, cand); } catch (e) { return e.message; }
     setCoverage(next);

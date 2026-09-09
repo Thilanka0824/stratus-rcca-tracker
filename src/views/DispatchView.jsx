@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { fmtDate } from '../lib/helpers';
 import {
   WINDOWS, DEFERRAL_REASONS, SCRUB_REASONS, REASON_LABELS, CREW_LABELS, PRIORITY_RANK, DESK_BOUNDS,
-  addDays, assetStatusOn, ratedOn, availableOn, qualifiedOn, checkAssignment, checkCover, checkCoverage, hasBlock,
+  addDays, assetStatusOn, ratedOn, availableOn, qualifiedOn, checkAssignment, checkCover, checkUncover, checkCoverage, hasBlock,
   dayWarnings, queuedFor, programTails, isOperatingDay,
 } from '../lib/rules';
 import { isQueued, personName, dailyCapacity } from '../lib/dispatch';
@@ -95,7 +95,7 @@ export default function DispatchView({
       <div className="board-grid">
         <div className="board-main">
           <DeskPanel
-            rows={deskRows} date={date} editable={editable} coverOk={coverOk} settingsOk={settingsOk}
+            rows={deskRows} db={db} date={date} editable={editable} coverOk={coverOk} settingsOk={settingsOk}
             onCover={(w) => setDeskAction({ kind: 'cover', window: w })}
             onUncover={(cand) => onUncover?.(cand)}
             onSettings={() => setDeskAction({ kind: 'settings' })}
@@ -219,7 +219,7 @@ export default function DispatchView({
 // The rider desk, per window: who is on comms, how many rider-facing sorties
 // they hold, and the colour R10 would give the next one. Coordinators roster
 // it (desk.cover); the PM or the rider ops lead sets its ratio (desk.settings).
-function DeskPanel({ rows, date, editable, coverOk, settingsOk, onCover, onUncover, onSettings }) {
+function DeskPanel({ rows, db, date, editable, coverOk, settingsOk, onCover, onUncover, onSettings }) {
   return (
     <div className="prog desk">
       <div className="prog-hd">
@@ -245,15 +245,20 @@ function DeskPanel({ rows, date, editable, coverOk, settingsOk, onCover, onUncov
               </td>
               <td className="desk-people">
                 {c.coverers.length === 0 && <span className="dim-note">nobody</span>}
-                {c.coverers.map((p) => (
-                  <span key={p.person_id} className="runchip">
-                    {p.name}
-                    {editable && (
-                      <button className="linkish small release" disabled={!coverOk.ok} title={coverOk.ok ? `Release ${p.name} from ${c.window}` : coverOk.message}
-                        aria-label={`Release ${p.name} from ${c.window}`} onClick={() => onUncover({ date, window: c.window, person_id: p.person_id })}>×</button>
-                    )}
-                  </span>
-                ))}
+                {c.coverers.map((p) => {
+                  const cand = { date, window: c.window, person_id: p.person_id };
+                  const block = coverOk.ok ? checkUncover(cand, db).find((v) => v.severity === 'block') : null;
+                  const why = !coverOk.ok ? coverOk.message : block ? `${block.rule} · ${block.message}` : `Release ${p.name} from ${c.window}`;
+                  return (
+                    <span key={p.person_id} className="runchip">
+                      {p.name}
+                      {editable && (
+                        <button className="linkish small release" disabled={!coverOk.ok || Boolean(block)} title={why}
+                          aria-label={`Release ${p.name} from ${c.window}`} onClick={() => onUncover(cand)}>×</button>
+                      )}
+                    </span>
+                  );
+                })}
               </td>
               <td className="col-act">
                 {editable && <button className="btn ghost small" disabled={!coverOk.ok} title={coverOk.ok ? undefined : coverOk.message} onClick={() => onCover(c.window)}>Cover…</button>}
