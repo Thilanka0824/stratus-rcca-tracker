@@ -6,10 +6,12 @@ import assetsData from './data/assets.json';
 import personsData from './data/persons.json';
 import requestsData from './data/requests.json';
 import assignmentsData from './data/assignments.json';
+import usersData from './data/users.json';
+import coverageData from './data/coverage.json';
 import meta from './data/meta.json';
 import { maxDate, isUnresolved, missingArtifacts, fmtDate } from './lib/helpers';
 import { daySummary } from './lib/dispatch';
-import { makeDb, checkAssignment, hasBlock, nextAssignmentId, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, validateRequest, newRequest, isOperatingDay } from './lib/rules';
+import { makeDb, checkAssignment, hasBlock, newAssignment, scheduleRequest, deferRequest, scrubAssignment, scrubRequest, validateRequest, newRequest, isOperatingDay } from './lib/rules';
 import RequestsView from './views/RequestsView';
 import DispatchView from './views/DispatchView';
 import RunsView from './views/RunsView';
@@ -122,9 +124,13 @@ export default function App() {
   const [failures, setFailures] = useState(failuresData);
   const [requests, setRequests] = useState(requestsData);
   const [assignments, setAssignments] = useState(assignmentsData);
+  const [coverage, setCoverage] = useState(coverageData);
+  // The persona: state, not identity. Every mutation below carries it as
+  // the actor and is refused by the rules when the role does not permit it.
+  const [currentUser, setCurrentUser] = useState(() => usersData.find((u) => u.role === 'coordinator'));
   const db = useMemo(
-    () => makeDb({ programs: programsData, assets: assetsData, persons: personsData, requests, assignments }),
-    [requests, assignments],
+    () => makeDb({ programs: programsData, assets: assetsData, persons: personsData, requests, assignments, users: usersData, coverage, desk: meta.rider_desk }),
+    [requests, assignments, coverage],
   );
 
   const today = useMemo(() => maxDate(runsData), []);
@@ -135,18 +141,23 @@ export default function App() {
   const editStamp = useRef(0);
   const stampNow = () => `${today}T18:${String(editStamp.current++ % 60).padStart(2, '0')}`;
 
+  // An R9 refusal from a transition is shown like any other block, never thrown at the UI.
+  const refused = (e) => [{ rule: 'R9', severity: 'block', message: e.message }];
+
   function assign(cand) {
     const violations = checkAssignment(cand, db);
     if (hasBlock(violations)) return violations;
-    const a = { assignment_id: nextAssignmentId(), ...cand, status: 'planned', scrub_reason: null, run_id: null, notes: 'assigned on the board' };
+    const request = db.request.get(cand.request_id);
+    let a;
+    try { a = newAssignment(currentUser, request, cand); } catch (e) { return refused(e); }
     const at = stampNow();
     setAssignments((prev) => [...prev, a]);
-    setRequests((prev) => prev.map((r) => (r.request_id === cand.request_id ? scheduleRequest(r, a, at) : r)));
+    setRequests((prev) => prev.map((r) => (r.request_id === cand.request_id ? scheduleRequest(currentUser, r, a, at) : r)));
     return violations;
   }
   function defer(requestId, reason, note) {
     const at = stampNow();
-    setRequests((prev) => prev.map((r) => (r.request_id === requestId ? deferRequest(r, { reason, day: boardDate, at, note }) : r)));
+    setRequests((prev) => prev.map((r) => (r.request_id === requestId ? deferRequest(currentUser, r, { reason, day: boardDate, at, note }) : r)));
   }
   // Intake: the form's fields become a request only through the rules — the
   // late flag and plan day are derived from the submission time (R7).
@@ -155,11 +166,16 @@ export default function App() {
   function submitRequest(fields) {
     const errors = validateRequest(fields, db, { tomorrow: meta.tomorrow });
     if (errors.length) return { errors };
+    let request;
+    try {
+      request = newRequest(currentUser, fields, {
+        id: `RQ-L${String(intakeSeq.current + 1).padStart(3, '0')}`, submittedAt: stampNow(), cutoff: meta.cutoff_local,
+        isOpen: (d) => d > meta.tomorrow || isOperatingDay(d, db),
+      });
+    } catch (e) {
+      return { errors: [{ field: 'program_id', message: e.message }] };
+    }
     intakeSeq.current += 1;
-    const request = newRequest(fields, {
-      id: `RQ-L${String(intakeSeq.current).padStart(3, '0')}`, submittedAt: stampNow(), cutoff: meta.cutoff_local,
-      isOpen: (d) => d > meta.tomorrow || isOperatingDay(d, db),
-    });
     setRequests((prev) => [...prev, request]);
     return { request };
   }
@@ -167,8 +183,8 @@ export default function App() {
     const a = assignments.find((x) => x.assignment_id === assignmentId);
     if (!a) return;
     const at = stampNow();
-    setAssignments((prev) => prev.map((x) => (x.assignment_id === assignmentId ? scrubAssignment(x, { reason }) : x)));
-    setRequests((prev) => prev.map((r) => (r.request_id === a.request_id ? scrubRequest(r, a, { reason, at }) : r)));
+    setAssignments((prev) => prev.map((x) => (x.assignment_id === assignmentId ? scrubAssignment(currentUser, x, { reason }) : x)));
+    setRequests((prev) => prev.map((r) => (r.request_id === a.request_id ? scrubRequest(currentUser, r, a, { reason, at }) : r)));
   }
 
   const stats = useMemo(() => {
