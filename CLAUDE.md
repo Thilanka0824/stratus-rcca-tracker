@@ -16,6 +16,8 @@ npm run preview    # serve the built bundle
 npm test           # vitest run — src/lib/rules.test.js only
 npm run data       # python3 generate_data.py && render docs/analytics.md — regenerates src/data/*.json and data/stratus.sqlite
 npm run analytics  # re-render docs/analytics.md from the sqlite file
+npm run docs       # render docs/permissions.md and the reference blocks of docs/rules.md and docs/data-model.md from auth.js, rules.js and schema.sql
+npm run docs:check # exit 1 if those rendered parts drift from the code — run it before every commit that touches them
 ```
 
 The only test suite is `rules.test.js` (vitest), deliberately scoped to the rules engine and the seed's compliance with it; the R9 matrix tests are generated from `PERMISSIONS`, so a change to the matrix is a change to the tests. There is no linter or formatter; verify UI changes by running the dev server. Do not run `npm audit fix` — the vite major bump is deferred on purpose. Planning docs and patch archives sometimes sit untracked at the repo root; stage by explicit path, never `git add -A`.

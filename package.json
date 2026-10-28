@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "data": "python3 generate_data.py && python3 scripts/render_analytics.py",
     "test": "vitest run",
-    "analytics": "python3 scripts/render_analytics.py"
+    "analytics": "python3 scripts/render_analytics.py",
+    "docs": "python3 scripts/render_docs.py",
+    "docs:check": "python3 scripts/render_docs.py --check"
   },
   "dependencies": {
     "react": "^18.3.1",
