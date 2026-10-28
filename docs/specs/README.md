@@ -1,22 +1,24 @@
 # Specs
 
-Design specifications for Stratus, one file per layer, kept next to the code
+Design specifications for Stratus, one per layer, to be kept next to the code
 they describe so a reader can hold the spec and the implementation side by
-side. A spec says what was decided and why; the code and `rules.test.js` say
-what is true today. When they disagree, the code wins and the spec gets a
-dated note, not a silent edit.
+side. A spec says what was decided and why; the code and `src/lib/rules.test.js`
+say what is true today. When they disagree, the code wins and the spec gets a
+dated note, not a silent edit. None is committed yet; the table says where each
+stands.
 
 ## What belongs here
 
 | spec | layer | status |
 |---|---|---|
-| `stratus-field-ops-spec-v2.md` | Field Ops: the real-drone loop (two deployments of one codebase, flight and static tickets, R11–R13 and V1, the Field page, the narrow backend) | ratified Oct 28, 2026 · **to be added at step A0 of PR A `feat/live-data`**, from the project's knowledge base; it supersedes v1, which is not kept |
-| dispatch layer spec (v2) | requests → prioritize → dispatch, R1–R8, the planner, the seed arcs D1–D3 | shipped (PR #2) · lives outside git for now, see below |
-| roles layer spec (v1) | personas, R9, R10, I1–I5, the rider desk, arc D4 | shipped (PR #4) · lives outside git for now, see below |
+| Field Ops spec, v2 | the real-drone loop: two deployments of one codebase, flight and static tickets, R11–R13 and V1, the Field page, the narrow backend | ratified Oct 28, 2026; kept with the project's planning notes outside git. **Lands at step A0 of PR A `feat/live-data`**, superseding v1, which is not kept. The root `README.md` and `CLAUDE.md` describe the app as it is and do not mention it yet |
+| Dispatch layer spec, v2 | requests → prioritize → dispatch: R1–R8, the planner, arcs D1–D3 | shipped (PR #2); kept outside git until stripped, see below |
+| Roles layer spec, v1 | personas, R9, R10, I1–I5, the rider desk, arc D4 | shipped (PR #4); kept outside git until stripped, see below |
 
 Numbering is per spec, not global: a new layer starts at v1, and a revision
 that changes a decision bumps the number. A revision opens with a change table
 against the version it replaces, so nothing is lost when the old file goes.
+Name a file `stratus-<layer>-spec-v<N>.md`.
 
 ## Before committing a spec
 
@@ -38,6 +40,6 @@ would, and commit it by explicit path.
 
 ## Where specs are referenced
 
-`docs/README.md` indexes this directory. The build order for the Field Ops
-work (PR A `feat/live-data`, then PR B `feat/field-ops`) is defined in the v2
-spec and summarized in the runbook once PR A opens.
+[`docs/README.md`](../README.md) indexes this directory. The build order for
+the Field Ops work (PR A `feat/live-data`, then PR B `feat/field-ops`) is
+defined in the v2 spec.

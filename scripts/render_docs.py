@@ -27,6 +27,7 @@ Run from the project root; paths are relative.
 """
 
 import difflib
+import glob
 import json
 import os
 import re
@@ -37,6 +38,8 @@ import sys
 DUMP = ["node", "scripts/dump_rules.mjs"]
 RULES_SRC = "src/lib/rules.js"
 SCHEMA_SRC = "sql/schema.sql"
+
+UI_SRC = sorted(glob.glob("src/App.jsx") + glob.glob("src/views/*.jsx"))   # where a control asks allowed()/can()
 
 PERMISSIONS_MD = "docs/permissions.md"
 RULES_MD = "docs/rules.md"
@@ -75,6 +78,19 @@ def code(s):
     return f"`{s}`"
 
 
+def link(text, target, from_dir="docs"):
+    """A relative markdown link that must resolve on disk, so a dangling link fails the render."""
+    path = os.path.normpath(os.path.join(from_dir, target.split("#", 1)[0]))
+    if not os.path.exists(path):
+        raise SystemExit(f"render_docs: link target {target} ({path}) does not exist")
+    return f"[{text}]({target})"
+
+
+def files_quoting(action, paths):
+    """The source files that write the action as a string literal."""
+    return [p for p in paths if f"'{action}'" in open(p).read()]
+
+
 def dump():
     try:
         res = subprocess.run(DUMP, capture_output=True, text=True, check=True)
@@ -92,6 +108,40 @@ def rendered_notice(source):
 
 # ---------------------------------------------------------------- permissions.md
 
+def i3_sentence(a):
+    """I3 is the shape of the matrix: coordinators hold plan.* and none of program.*,
+    authority holds program.* and none of plan.*. Asserted, so a change to the shape
+    fails the render and forces the doc to be rewritten with it."""
+    plan = [m["action"] for m in a["matrix"] if m["action"].startswith("plan.")]
+    prog = [m["action"] for m in a["matrix"] if m["action"].startswith("program.")]
+    grant = {m["action"]: m["roles"] for m in a["matrix"]}
+    bad = [x for x in plan if grant[x]["authority"]["grant"]] + [x for x in prog if grant[x]["coordinator"]["grant"]]
+    if bad or not all(grant[x]["coordinator"]["grant"] for x in plan) or not all(grant[x]["authority"]["grant"] for x in prog):
+        raise SystemExit(f"PERMISSIONS no longer has the I3 shape (coordinator: plan.*, authority: program.*): {bad}")
+    return ("The shape of the matrix is I3: `coordinator` holds " + ", ".join(code(x) for x in plan)
+            + " and none of the `program.*` actions; `authority` holds " + ", ".join(code(x) for x in prog)
+            + " and none of the `plan.*` actions — coordinators consume priority and cannot set it, "
+            "authority sets priority and cannot assign. The render fails if that shape changes.")
+
+
+def ahead_of_controls(a):
+    """Matrix actions no transition in rules.js authorizes, and whether any view or
+    App.jsx asks for them: the matrix carries some actions ahead of their controls."""
+    authorized = {act for f in scan_functions(open(RULES_SRC).read()) for act in f["authorizes"]}
+    rows = []
+    for m in a["matrix"]:
+        act = m["action"]
+        if act in authorized:
+            continue
+        asked = files_quoting(act, UI_SRC)
+        rows.append((code(act), ", ".join(code(p) for p in asked) if asked else "no control asks for it yet"))
+    if not rows:
+        return "Every action in the matrix is authorized by a transition in `src/lib/rules.js`."
+    return ("Actions no transition in `src/lib/rules.js` passes to `authorize()` — a read gate asked by "
+            "the UI, or an action the matrix carries ahead of its control:\n\n"
+            + table(["action", "asked by"], rows))
+
+
 def render_permissions(d):
     a = d["auth"]
     roles = a["ROLES"]
@@ -106,14 +156,17 @@ def render_permissions(d):
         rendered_notice("src/lib/auth.js"),
         "",
         "Authorization without authentication (R9). The matrix `PERMISSIONS` in "
-        "`src/lib/auth.js` is data: for every mutating action it names, per app role, "
-        "whether the action is allowed outright or only under a named predicate; a role "
-        "absent from an action's row is refused with the role and the action named. The "
-        "UI asks `can()` and renders a refused control disabled with the message as its "
-        "tooltip; every transition in `src/lib/rules.js` calls `authorize()`, which throws "
-        "the same message. The messages below are the ones `can()` returns, produced by "
-        "executing the module, so this page and the app cannot disagree. How the matrix is "
-        "used is in [rules.md](rules.md) and [architecture.md](architecture.md).",
+        "`src/lib/auth.js` is data: for every action it names, per app role, whether the action "
+        "is allowed outright or only under a named predicate. A role absent from an action's row "
+        "is refused with a message that names the roles that may do it and the role signed in, for "
+        "example `R9 · coordinator only (signed in as Requester)`; the action itself is named only "
+        "in the unknown-action refusal. The UI asks `can()` and renders a refused control disabled "
+        "with the message as its tooltip; every transition in `src/lib/rules.js` calls "
+        "`authorize()`, which throws the same message. The messages below are the ones `can()` "
+        "returns, produced by executing the module. `npm run docs:check` fails when this page and "
+        "the module disagree; nothing runs it automatically, so run it before committing a change "
+        "to `src/lib/auth.js`. How the matrix is used is in " + link("rules.md", "rules.md") + " and "
+        + link("architecture.md", "architecture.md") + ".",
         "",
         "## Roles",
         "",
@@ -130,6 +183,10 @@ def render_permissions(d):
         table(["action"] + roles,
               [[code(m["action"])] + [m["roles"][r]["grant"] for r in roles] for m in a["matrix"]]),
         "",
+        i3_sentence(a),
+        "",
+        ahead_of_controls(a),
+        "",
         "## By role",
         "",
     ]
@@ -144,17 +201,21 @@ def render_permissions(d):
         "",
         "## Refusals, as the UI shows them",
         "",
-        "Per action: the message when nobody is signed in, and per role the grant with the "
+        "Per action: the answer `can()` gives with no actor, and per role the grant with the "
         "message `can()` returns when the role is refused or its predicate does not hold "
         "(an `own` grant with someone else's request, a `not-own` grant with the actor's own "
-        "request, a `scope` grant outside the scope, a `desk` grant without `desk` in scope, "
-        "a `not-self` grant on the actor's own person).",
+        "request, a `scope` grant on a program outside the scope, a `desk` grant without `desk` in "
+        "scope, a `not-self` grant on the actor's own person). A `scope` refusal labels the program "
+        "by the target's `code`, else its `program_id`, else `that program`; the views pass the "
+        "program object, so the tooltip shows the code, while `newRequest()` passes only the id. "
+        "The no-actor line is `can(null, …)`: the header always holds a persona, so the app never "
+        "shows it, but a transition or a test called without an actor gets this answer.",
         "",
     ]
     for m in a["matrix"]:
         parts.append(f"### `{m['action']}`")
         parts.append("")
-        parts.append(f"Nobody signed in: `{m['nobody']}`")
+        parts.append(f"No actor (`can(null, …)`): `{m['nobody']}`")
         parts.append("")
         rows = []
         for r in roles:
@@ -265,7 +326,13 @@ def render_rules_block(d):
         "Every function in `src/lib/rules.js`, in file order, with the literals written inside it: "
         "the R9 action it passes to `authorize()`, the `rule`/`severity` pairs it can return "
         "(`(no severity)` marks a result object without a severity field — the desk row's level in `checkCoverage()`, the ok/message pair of `validateReason()`), the reason list it asserts (R8), "
-        "and whether it throws. Exported names are what views, `App.jsx` and the tests may import.",
+        "and whether it throws. Exported names are what views, `App.jsx` and the tests may import. "
+        "This table is a scan of the source text, not an execution: one row per `function name(` or "
+        "`export function name(` declaration (an arrow-function export would not be a row), the "
+        "`rule: '…', severity: '…'`, `authorize(actor, '…')` and `assertReason(reason, …)` literals "
+        "written inside it, and whether the text `throw new Error` appears — so a rule, action, reason "
+        "list or throw written any other way drops out of this table while `docs:check` still passes. "
+        "Keep writing them literally.",
         "",
         table(["function", "exported", "authorizes (R9)", "raises", "asserts reason (R8)", "throws"],
               [(code(f["name"]), "yes" if f["exported"] else "no",

@@ -2,7 +2,7 @@
 
 <!-- Rendered by scripts/render_docs.py from src/lib/auth.js. Do not edit by hand: run `npm run docs`; `npm run docs:check` fails on drift. -->
 
-Authorization without authentication (R9). The matrix `PERMISSIONS` in `src/lib/auth.js` is data: for every mutating action it names, per app role, whether the action is allowed outright or only under a named predicate; a role absent from an action's row is refused with the role and the action named. The UI asks `can()` and renders a refused control disabled with the message as its tooltip; every transition in `src/lib/rules.js` calls `authorize()`, which throws the same message. The messages below are the ones `can()` returns, produced by executing the module, so this page and the app cannot disagree. How the matrix is used is in [rules.md](rules.md) and [architecture.md](architecture.md).
+Authorization without authentication (R9). The matrix `PERMISSIONS` in `src/lib/auth.js` is data: for every action it names, per app role, whether the action is allowed outright or only under a named predicate. A role absent from an action's row is refused with a message that names the roles that may do it and the role signed in, for example `R9 · coordinator only (signed in as Requester)`; the action itself is named only in the unknown-action refusal. The UI asks `can()` and renders a refused control disabled with the message as its tooltip; every transition in `src/lib/rules.js` calls `authorize()`, which throws the same message. The messages below are the ones `can()` returns, produced by executing the module. `npm run docs:check` fails when this page and the module disagree; nothing runs it automatically, so run it before committing a change to `src/lib/auth.js`. How the matrix is used is in [rules.md](rules.md) and [architecture.md](architecture.md).
 
 ## Roles
 
@@ -50,6 +50,16 @@ A cell in the matrix holds one of these; `·` means the role is refused.
 | `triage.edit` | yes | · | · | · | · | · |
 | `view.analytics` | yes | yes | yes | yes | · | yes |
 
+The shape of the matrix is I3: `coordinator` holds `plan.assign`, `plan.reassign`, `plan.defer`, `plan.scrub` and none of the `program.*` actions; `authority` holds `program.priority`, `program.targets` and none of the `plan.*` actions — coordinators consume priority and cannot set it, authority sets priority and cannot assign. The render fails if that shape changes.
+
+Actions no transition in `src/lib/rules.js` passes to `authorize()` — a read gate asked by the UI, or an action the matrix carries ahead of its control:
+
+| action | asked by |
+|---|---|
+| `request.edit` | no control asks for it yet |
+| `plan.reassign` | no control asks for it yet |
+| `view.analytics` | `src/App.jsx` |
+
 ## By role
 
 - **Requester** (`requester`): `request.create`, `request.edit` (own), `request.withdraw` (own), `triage.edit`, `view.analytics`
@@ -61,50 +71,50 @@ A cell in the matrix holds one of these; `·` means the role is refused.
 
 ## Refusals, as the UI shows them
 
-Per action: the message when nobody is signed in, and per role the grant with the message `can()` returns when the role is refused or its predicate does not hold (an `own` grant with someone else's request, a `not-own` grant with the actor's own request, a `scope` grant outside the scope, a `desk` grant without `desk` in scope, a `not-self` grant on the actor's own person).
+Per action: the answer `can()` gives with no actor, and per role the grant with the message `can()` returns when the role is refused or its predicate does not hold (an `own` grant with someone else's request, a `not-own` grant with the actor's own request, a `scope` grant on a program outside the scope, a `desk` grant without `desk` in scope, a `not-self` grant on the actor's own person). A `scope` refusal labels the program by the target's `code`, else its `program_id`, else `that program`; the views pass the program object, so the tooltip shows the code, while `newRequest()` passes only the id. The no-actor line is `can(null, …)`: the header always holds a persona, so the app never shows it, but a transition or a test called without an actor gets this answer.
 
 ### `request.create`
 
-Nobody signed in: `R9 · requester, coordinator or authority only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · requester, coordinator or authority only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
 | requester | yes | allowed |
 | coordinator | yes | allowed |
-| authority | scope | allowed when the predicate holds; otherwise `R9 · that program is outside your scope (signed in as Authority)` |
+| authority | scope | allowed when the predicate holds; otherwise `R9 · PN is outside your scope (signed in as Authority)` |
 | trainer | · | `R9 · requester, coordinator or authority only (signed in as Trainer)` |
 | crew | · | `R9 · requester, coordinator or authority only (signed in as Crew)` |
 | observer | · | `R9 · requester, coordinator or authority only (signed in as Observer)` |
 
 ### `request.edit`
 
-Nobody signed in: `R9 · requester, coordinator or authority only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · requester, coordinator or authority only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
 | requester | own | allowed when the predicate holds; otherwise `R9 · not your request (signed in as Requester)` |
 | coordinator | yes | allowed |
-| authority | scope | allowed when the predicate holds; otherwise `R9 · that program is outside your scope (signed in as Authority)` |
+| authority | scope | allowed when the predicate holds; otherwise `R9 · PN is outside your scope (signed in as Authority)` |
 | trainer | · | `R9 · requester, coordinator or authority only (signed in as Trainer)` |
 | crew | · | `R9 · requester, coordinator or authority only (signed in as Crew)` |
 | observer | · | `R9 · requester, coordinator or authority only (signed in as Observer)` |
 
 ### `request.withdraw`
 
-Nobody signed in: `R9 · requester, coordinator or authority only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · requester, coordinator or authority only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
 | requester | own | allowed when the predicate holds; otherwise `R9 · not your request (signed in as Requester)` |
 | coordinator | yes | allowed |
-| authority | scope | allowed when the predicate holds; otherwise `R9 · that program is outside your scope (signed in as Authority)` |
+| authority | scope | allowed when the predicate holds; otherwise `R9 · PN is outside your scope (signed in as Authority)` |
 | trainer | · | `R9 · requester, coordinator or authority only (signed in as Trainer)` |
 | crew | · | `R9 · requester, coordinator or authority only (signed in as Crew)` |
 | observer | · | `R9 · requester, coordinator or authority only (signed in as Observer)` |
 
 ### `plan.assign`
 
-Nobody signed in: `R9 · coordinator only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · coordinator only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -117,7 +127,7 @@ Nobody signed in: `R9 · coordinator only (nobody signed in)`
 
 ### `plan.reassign`
 
-Nobody signed in: `R9 · coordinator only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · coordinator only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -130,7 +140,7 @@ Nobody signed in: `R9 · coordinator only (nobody signed in)`
 
 ### `plan.defer`
 
-Nobody signed in: `R9 · coordinator only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · coordinator only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -143,7 +153,7 @@ Nobody signed in: `R9 · coordinator only (nobody signed in)`
 
 ### `plan.scrub`
 
-Nobody signed in: `R9 · coordinator only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · coordinator only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -156,7 +166,7 @@ Nobody signed in: `R9 · coordinator only (nobody signed in)`
 
 ### `desk.cover`
 
-Nobody signed in: `R9 · coordinator only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · coordinator only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -169,33 +179,33 @@ Nobody signed in: `R9 · coordinator only (nobody signed in)`
 
 ### `program.priority`
 
-Nobody signed in: `R9 · authority only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · authority only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
 | requester | · | `R9 · authority only (signed in as Requester)` |
 | coordinator | · | `R9 · authority only (signed in as Coordinator)` |
-| authority | scope | allowed when the predicate holds; otherwise `R9 · that program is outside your scope (signed in as Authority)` |
+| authority | scope | allowed when the predicate holds; otherwise `R9 · PN is outside your scope (signed in as Authority)` |
 | trainer | · | `R9 · authority only (signed in as Trainer)` |
 | crew | · | `R9 · authority only (signed in as Crew)` |
 | observer | · | `R9 · authority only (signed in as Observer)` |
 
 ### `program.targets`
 
-Nobody signed in: `R9 · authority only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · authority only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
 | requester | · | `R9 · authority only (signed in as Requester)` |
 | coordinator | · | `R9 · authority only (signed in as Coordinator)` |
-| authority | scope | allowed when the predicate holds; otherwise `R9 · that program is outside your scope (signed in as Authority)` |
+| authority | scope | allowed when the predicate holds; otherwise `R9 · PN is outside your scope (signed in as Authority)` |
 | trainer | · | `R9 · authority only (signed in as Trainer)` |
 | crew | · | `R9 · authority only (signed in as Crew)` |
 | observer | · | `R9 · authority only (signed in as Observer)` |
 
 ### `desk.settings`
 
-Nobody signed in: `R9 · authority only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · authority only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -208,7 +218,7 @@ Nobody signed in: `R9 · authority only (nobody signed in)`
 
 ### `rating.grant`
 
-Nobody signed in: `R9 · trainer only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · trainer only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -221,7 +231,7 @@ Nobody signed in: `R9 · trainer only (nobody signed in)`
 
 ### `rating.revoke`
 
-Nobody signed in: `R9 · trainer only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · trainer only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -234,7 +244,7 @@ Nobody signed in: `R9 · trainer only (nobody signed in)`
 
 ### `qualification.grant`
 
-Nobody signed in: `R9 · trainer only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · trainer only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -247,7 +257,7 @@ Nobody signed in: `R9 · trainer only (nobody signed in)`
 
 ### `sortie.ack`
 
-Nobody signed in: `R9 · crew only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · crew only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -260,7 +270,7 @@ Nobody signed in: `R9 · crew only (nobody signed in)`
 
 ### `triage.edit`
 
-Nobody signed in: `R9 · requester only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · requester only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|
@@ -273,7 +283,7 @@ Nobody signed in: `R9 · requester only (nobody signed in)`
 
 ### `view.analytics`
 
-Nobody signed in: `R9 · requester, coordinator, authority, trainer or observer only (nobody signed in)`
+No actor (`can(null, …)`): `R9 · requester, coordinator, authority, trainer or observer only (nobody signed in)`
 
 | role | grant | when refused |
 |---|---|---|

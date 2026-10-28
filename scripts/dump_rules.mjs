@@ -35,7 +35,7 @@ function failingTarget(action, grant, actor) {
   switch (grant) {
     case 'own': return action === 'sortie.ack' ? { person_id: 'P-someone-else' } : { requester_id: 'U-someone-else' };
     case 'not-own': return { requester_id: actor.user_id };
-    case 'scope': return {};                      // no program in the target: outside a list scope
+    case 'scope': return { program_id: 'PRG-02', code: 'PN' };   // a coded program outside the one-program scope, as the views pass it
     case 'desk': return null;                     // the actor's scope decides
     case 'not-self': return { person_id: actor.person_id };
     default: return null;
