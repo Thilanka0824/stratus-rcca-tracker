@@ -2,7 +2,7 @@
 
 <!-- Rendered by scripts/render_docs.py from src/lib/auth.js, executed under Node; the table of actions no transition authorizes also scans src/lib/rules.js, src/App.jsx and src/views/*.jsx for the single-quoted action literal. Do not edit by hand: run `npm run docs`; `npm run docs:check` fails on drift. -->
 
-Authorization without authentication (R9). The matrix `PERMISSIONS` in `src/lib/auth.js` is data: for every action it names, per app role, whether the action is allowed outright or only under a named predicate. A role absent from an action's row is refused with a message that names the roles that may do it and the role signed in, for example `R9 · coordinator only (signed in as Requester)`; the action itself is named only in the unknown-action refusal. The UI asks `can()` and renders a refused control disabled with the message as its tooltip; every transition in `src/lib/rules.js` calls `authorize()`, which throws the same message. The messages below are the ones `can()` returns, produced by executing the module. `npm run docs:check` fails when this page and the module disagree; nothing runs it automatically, so run it before committing a change to `src/lib/auth.js`, to an `authorize()` call in `src/lib/rules.js`, or to which actions `src/App.jsx` and `src/views/*.jsx` ask `allowed()` for. How the matrix is used is in [rules.md](rules.md) and [architecture.md](architecture.md).
+Authorization without authentication (R9). The matrix `PERMISSIONS` in `src/lib/auth.js` is data: for every action it names, per app role, whether the action is allowed outright or only under a named predicate. A role absent from an action's row is refused with a message that names the roles that may do it and the role signed in, for example `R9 · coordinator only (signed in as Requester)`; the action itself is named only in the unknown-action refusal and in `can()`'s `default` branch for a grant kind that has no `case` (`R9 · <action> refused (signed in as <Role>)`), which no grant in the matrix reaches. The UI asks `can()` and renders a refused control disabled with the message as its tooltip; every transition in `src/lib/rules.js` calls `authorize()` (`editProgram()` through the two dial transitions it composes, each only when its dial changes), which throws the same message. The messages below are the ones `can()` returns, produced by executing the module. `npm run docs:check` fails when this page and the module disagree; nothing runs it automatically, so run it before committing a change to `src/lib/auth.js`, to an `authorize()` call in `src/lib/rules.js`, or to which actions `src/App.jsx` and `src/views/*.jsx` ask `allowed()` for. How the matrix is used is in [rules.md](rules.md) and [architecture.md](architecture.md).
 
 ## Roles
 
@@ -17,7 +17,7 @@ Authorization without authentication (R9). The matrix `PERMISSIONS` in `src/lib/
 
 ## Grants
 
-A cell in the matrix holds one of these; `·` means the role is refused.
+A cell in the matrix holds one of these; `·` means the role is refused. The meanings are `LEGEND` in `scripts/render_docs.py`, kept by hand in step with the comment block at the top of `src/lib/auth.js`; the render fails on a grant kind the legend lacks.
 
 | grant | meaning |
 |---|---|
@@ -52,7 +52,7 @@ A cell in the matrix holds one of these; `·` means the role is refused.
 
 The shape of the matrix is I3: `coordinator` holds `plan.assign`, `plan.reassign`, `plan.defer`, `plan.scrub` and none of the `program.*` actions; `authority` holds `program.priority`, `program.targets` and none of the `plan.*` actions — coordinators consume priority and cannot set it, authority sets priority and cannot assign. The render fails if that shape changes.
 
-Actions no transition in `src/lib/rules.js` passes to `authorize()` — a read gate asked by the UI, or an action the matrix carries ahead of its control. This table is a scan, not an execution: the authorized set is the `authorize(actor, '…')` literals in `rules.js`, and the *asked by* column names the files among `src/App.jsx` and `src/views/*.jsx` that contain the single-quoted action literal (not the control itself); an action name written any other way drops out while `docs:check` still passes, so keep writing them literally.
+Actions no transition in `src/lib/rules.js` passes to `authorize()` — a read gate asked by the UI, or an action the matrix carries ahead of its control. This table is a scan, not an execution: the authorized set is the `authorize(actor, '…')` literals inside the `function name(` declarations of `rules.js` (an arrow-function transition is not scanned), and the *asked by* column names the files among `src/App.jsx` and `src/views/*.jsx` that contain the single-quoted action literal (not the control itself); an action name written any other way drops out while `docs:check` still passes, so keep writing them literally.
 
 | action | asked by |
 |---|---|
@@ -298,7 +298,7 @@ An unknown action is refused for everyone: `R9 · unknown action no.such.action`
 
 ## Timeline events and the actions they are
 
-`EVENT_ACTION` maps each request-timeline event to the action its actor needed, so the seed's actors can be checked (I4) and the actions-by-role table can count them. `eventAction()` makes one exception: a `deferred` event with reason `late_intake` is `request.create` — the late-intake deferral is stamped at intake by the filer, not a plan decision.
+`EVENT_ACTION` maps each request-timeline event to the action its actor needed, so the seed's actors can be checked (I4); `actionsByRole()` in `src/lib/dispatch.js` asks `eventAction()` only to count the late-intake deferral as a filing, its other columns key on the event name. `eventAction()` makes one exception: a `deferred` event with reason `late_intake` is `request.create` — the late-intake deferral is stamped at intake by the filer, not a plan decision.
 
 | event | action |
 |---|---|
