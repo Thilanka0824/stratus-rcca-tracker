@@ -658,13 +658,19 @@ for p in persons:
 # The permission matrix, mirrored from src/lib/auth.js so the seed's actors
 # can be checked here (I4) before the app ever loads them. 'own' and 'scope'
 # are the ownership / scope predicates; anything absent is refused (R9).
+# Kept by hand, so it must say what auth.js says: it carries only the actions
+# the seed stamps, and permits() knows only the grant kinds those rows use
+# (yes, own, not-own, scope). A change to EVENT_ACTION or to one of these
+# rows on either side is a change to both; check_rules() asserts that every
+# action EVENT_ACTION names has a row here.
 EVENT_ACTION = {"submitted": "request.create", "withdrawn": "request.withdraw", "deferred": "plan.defer",
                 "rescheduled": "plan.defer", "scrubbed": "plan.scrub", "scheduled": "plan.assign",
-                "reassigned": "plan.assign", "executed": "plan.assign"}
+                "reassigned": "plan.reassign", "executed": "plan.assign"}
 PERMISSIONS = {
     "request.create":   {"requester": "yes", "coordinator": "yes", "authority": "scope"},
     "request.withdraw": {"requester": "own", "coordinator": "yes", "authority": "scope"},
     "plan.assign":      {"coordinator": "not-own"},        # I1: nobody assigns their own request
+    "plan.reassign":    {"coordinator": "not-own"},        # the same-day re-seat after a scrub; I1 holds there too
     "plan.defer":       {"coordinator": "yes"},
     "plan.scrub":       {"coordinator": "yes"},
     "desk.cover":       {"coordinator": "yes"},
@@ -1372,6 +1378,7 @@ def check_rules():
         assert cov >= RIDER_DESK["min_per_window"], ("R10 uncovered window", dd, w)
         assert n <= RIDER_DESK["ratio"] * cov, ("R10 over ratio", dd, w, n, cov)
     # --- actors: I1, I2, I4
+    assert set(EVENT_ACTION.values()) <= set(PERMISSIONS), ("mirror of auth.js: event action without a PERMISSIONS row", set(EVENT_ACTION.values()) - set(PERMISSIONS))
     for r in requests:
         for e in r["timeline"]:
             action = EVENT_ACTION[e["event"]]
