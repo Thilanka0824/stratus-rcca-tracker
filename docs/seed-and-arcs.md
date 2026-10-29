@@ -362,14 +362,15 @@ CQ, all 60 URC, 31 of 57 SBU).
 The generator also carries a hand-maintained mirror of `src/lib/auth.js` for
 the I4 audit: `EVENT_ACTION` (submitted → `request.create`, withdrawn →
 `request.withdraw`, deferred and rescheduled → `plan.defer`, scrubbed →
-`plan.scrub`, scheduled, reassigned and executed → `plan.assign`) and a
-six-action `PERMISSIONS` dict (`request.create`, `request.withdraw`,
-`plan.assign` as `not-own` for coordinators, `plan.defer`, `plan.scrub`,
-`desk.cover`), read by `permits(user, action, request)`, which understands
-`yes`, `own`, `not-own` and `scope` and refuses anything else. It differs from
-the app's matrix in two known ways: it covers six of the app's seventeen
-actions, and it maps `reassigned` to `plan.assign` where `auth.js` maps it to `plan.reassign`
-(both grant coordinators `not-own`, so the verdict is the same). A change to
+`plan.scrub`, scheduled and executed → `plan.assign`, reassigned →
+`plan.reassign`) and a seven-action `PERMISSIONS` dict (`request.create`,
+`request.withdraw`, `plan.assign` and `plan.reassign` as `not-own` for
+coordinators, `plan.defer`, `plan.scrub`, `desk.cover`), read by
+`permits(user, action, request)`, which understands `yes`, `own`, `not-own`
+and `scope` and refuses anything else. It differs from the app's matrix in one
+known way: it covers seven of the app's seventeen actions, the ones the seed
+stamps. For those it must say what `auth.js` says, and `check_rules()` asserts
+that every action `EVENT_ACTION` names has a row in the mirror. A change to
 either side must be mirrored on the other or the seed check and the app will
 disagree; `rules.test.js` runs the same audit with the real `can()`.
 

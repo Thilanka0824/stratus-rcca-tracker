@@ -536,7 +536,7 @@ same object.
 |---|---|---|---|---|
 | I1 | Nobody assigns their own request, even a coordinator | `plan.assign` and `plan.reassign` are `not-own`; `can()` answers `R9 · you can't assign your own request`; `newAssignment()` and `scheduleRequest()` throw it | the ownership block (`can()`, both transitions); the seed test that no sortie's `assigned_by` equals its request's `requester_id` | `plan_day()` places with the coordinator who did not file (`who = COORD_AM if requester_id == COORD_PM else COORD_PM`); `check_rules()` asserts `assigned_by != requester_id` |
 | I2 | Nobody grants their own rating or qualification | `rating.grant`, `rating.revoke`, `qualification.grant` are `not-self`; `R9 · you can't grant your own rating or qualification` | the ownership block with the trainer's own person; the seed test that every `granted_by` entry is a `trainer` persona whose `person_id` differs from the grantee's | `granted_by` is stamped with `TRAINER` for every effective-dated rating and qualification; `check_rules()` asserts the grantor's role and that the `person_id` differs |
-| I3 | Coordinators consume priority and cannot set it; authority sets it and cannot assign | the shape of `PERMISSIONS`: `program.priority` and `program.targets` are authority-only, `plan.*` coordinator-only | `R9 · authority only (signed in as Coordinator)` on `program.priority`; `R9 · coordinator only (signed in as Authority)` on `plan.assign` | the six-action mirror grants `plan.*` to coordinators only and carries no `program.*` action; nothing is asserted |
+| I3 | Coordinators consume priority and cannot set it; authority sets it and cannot assign | the shape of `PERMISSIONS`: `program.priority` and `program.targets` are authority-only, `plan.*` coordinator-only | `R9 · authority only (signed in as Coordinator)` on `program.priority`; `R9 · coordinator only (signed in as Authority)` on `plan.assign` | the seven-action mirror grants `plan.*` to coordinators only and carries no `program.*` action; nothing is asserted |
 | I4 | Every actor's role permits the event it stamped | `eventAction(e)` names the action; `can(user, action, request)` answers | the seed test over every timeline event, every sortie's `assigned_by` (`plan.assign`) and every coverage row's `assigned_by` (`desk.cover`) | `permits()` over the same three sets, with the `late_intake` deferral remapped to `request.create` |
 | I5 | Every rider-facing sortie flew with a qualified coverer in its window, at or under ratio | `checkAssignment()`'s R10 per sortie | the seed test: for every (date, window) with non-scrubbed rider-facing sorties, `deskCoverers().length >= min_per_window` and `n <= ratio × coverers`, over more than 20 such windows; plus `R2, extended · nobody flew in a window they were covering` | `check_rules()`: every coverage row's person qualified on the day, no `(date, window, person)` twice, no seat in `covering[(date, window)]`, and per window `cov >= min_per_window` and `load <= ratio × cov` |
 
@@ -544,19 +544,22 @@ The trainer persona in the seed is also a person on the roster (U-15 is
 P-001), which is what gives I2 something to refuse: in the rating matrix the
 trainer's own row is disabled with the `not-self` message.
 
-The generator's mirror is kept by hand and differs from `auth.js` in three
-ways worth knowing before a change. It covers six actions (`request.create`,
-`request.withdraw`, `plan.assign`, `plan.defer`, `plan.scrub`, `desk.cover`),
-the ones the seed stamps, and `permits()` knows `yes`, `own`, `not-own` and
-`scope` only; a `desk` or `not-self` grant would read as refused there. Its
-`EVENT_ACTION` maps `reassigned` to `plan.assign` where `auth.js` says
-`plan.reassign`; both are coordinator `not-own`, so the verdict is the same
-today. And it is stricter on availability: `check_rules()` asserts every seat
-and every coverer is rostered (`"unavailable crew"`, `"desk coverer off shift"`)
-where the engine only warns `AV`. R5, R6 and R7 are not in `check_rules()` at
-all; the planner satisfies them by construction (`place()`'s cap, the P0-first
-queue, `add_request()` deriving the late flag), and the vitest seed block is
-what checks R7 on every request and R5 and R6 on tomorrow.
+The generator's mirror is kept by hand and differs from `auth.js` in two
+ways worth knowing before a change. It covers seven actions (`request.create`,
+`request.withdraw`, `plan.assign`, `plan.reassign`, `plan.defer`, `plan.scrub`,
+`desk.cover`), the ones the seed stamps, and `permits()` knows `yes`, `own`,
+`not-own` and `scope` only; a `desk` or `not-self` grant would read as refused
+there. For the rows it carries it says what `auth.js` says — `EVENT_ACTION`
+maps `reassigned` to `plan.reassign` on both sides — and `check_rules()`
+asserts that every action `EVENT_ACTION` names has a row in the mirrored
+`PERMISSIONS`, so an event mapped to an action the mirror lacks fails by name
+rather than as an I4 refusal. And it is stricter on availability:
+`check_rules()` asserts every seat and every coverer is rostered
+(`"unavailable crew"`, `"desk coverer off shift"`) where the engine only warns
+`AV`. R5, R6 and R7 are not in `check_rules()` at all; the planner satisfies
+them by construction (`place()`'s cap, the P0-first queue, `add_request()`
+deriving the late flag), and the vitest seed block is what checks R7 on every
+request and R5 and R6 on tomorrow.
 
 ## Where the tests come from
 
