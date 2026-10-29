@@ -182,9 +182,10 @@ export default function CapacityView({ db, meta, today, theme, failures, me = nu
         <h3>Utilization trend by airframe</h3>
         <p className="caption">
           Weekly. Asset-window utilization is sorties over available asset-windows; tail-day saturation is the
-          share of available tails that flew at all. In the grounding week the four remaining Levants flew every
-          day while their window utilization barely moved — the two numbers tell different stories, and the
-          coordinator lives in the second one.
+          share of available tails that flew at all. In the grounding week every Levant that was not grounded or in
+          maintenance flew every day — three tails on most days, four on the first and last — while window
+          utilization stayed well short of full. The two numbers tell different stories, and the coordinator lives
+          in the second one.
         </p>
         <div className="filters">
           <select value={utilMetric} onChange={(e) => setUtilMetric(e.target.value)} aria-label="Utilization metric">
