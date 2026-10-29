@@ -75,8 +75,9 @@ The row counts are seed values that `npm run data` reproduces; the shapes are
 in [data-model.md](data-model.md).
 
 `App.jsx` hands seven of those files — programs, assets, persons, requests,
-assignments, users, coverage — and `meta.rider_desk` as the desk to `makeDb()`
-in `src/lib/rules.js`, which indexes them once: the raw arrays, `Map`s keyed by
+assignments, users, coverage — and the `desk` state (`meta.rider_desk` until
+`editDesk()` replaces it) as the desk to `makeDb()` in `src/lib/rules.js`,
+which indexes them once: the raw arrays, `Map`s keyed by
 id (`db.program`, `db.asset`, `db.person`, `db.request`, `db.user`) and the
 desk settings. The memo re-runs only when a session-mutable input changes
 (programs, persons, requests, assignments, coverage, desk); assets and users
@@ -128,8 +129,9 @@ every time), `editStamp` (the evening minute) and `intakeSeq` (the next session
 request id).
 
 **The persona is state, not identity.** `currentUser` is a row of `users.json`;
-`signIn()` replaces it and nothing else. The plan is not reset and the audit is
-not cleared. The Requests view is remounted (it is keyed by
+`signIn()` replaces it and, for a crew persona, moves the tab to My day; it
+touches no other state. The plan is not reset and the audit is not cleared. The
+Requests view is remounted (it is keyed by
 `currentUser.user_id`) and the board drops what it had in hand (`DispatchView`
 clears its selection and dialogs when `me.user_id` changes). Every permission
 question a view asks goes through one closure:
@@ -161,10 +163,11 @@ theme. The stylesheet only ever selects `[data-theme='light']`; dark is the
 `:root` default.
 
 **Edits are stamped in the evening of today, in order.** `stampNow()` returns
-`${today}T18:MM`, the minute taken from `editStamp` and incremented on every
-call. The intake form receives `nowAt = ${today}T18:00` for its R7 verdict,
-which is why a request filed in the session for tomorrow is flagged late by
-construction: 18:00 is after the 15:00 cutoff for the next day.
+`${today}T18:MM`, the minute `editStamp` modulo 60, incremented on every call;
+the sixty-first stamp wraps to `18:00`, so order by stamp holds only for the
+first sixty edits of a session. The intake form receives `nowAt = ${today}T18:00`
+for its R7 verdict, which is why a request filed in the session for tomorrow is
+flagged late by construction: 18:00 is after the 15:00 cutoff for the next day.
 
 **Session ids.** A request filed in the session is `RQ-L001`, `RQ-L002`, …
 (`intakeSeq` in `App.jsx`); a sortie placed on the board is `AS-2026-L001`, …
@@ -220,8 +223,10 @@ throw is wrapped as `[{ rule: 'R9', severity: 'block', message }]` by
 
 The return shapes are the contract the dialogs depend on: `onAssign` and
 `onCover` close only when the returned list has no block; the message-or-null
-callbacks show the message in place and close on null; the intake form reads
-`errors` by field.
+callbacks show the message in place and close on null. The intake form runs the
+same `validateRequest()` before it calls `onSubmit` and reads only `request`
+from the result; an `{ errors }` result — after that check, only an R9 refusal
+of `request.create` — is dropped unread.
 
 ## The modules
 
@@ -259,15 +264,16 @@ appends is part of filing. The rule-by-rule account is [rules.md](rules.md).
 `PERMISSIONS` maps 17 actions to, per app role, a grant: `yes`, `own`,
 `not-own`, `scope`, `desk` or `not-self`; a role absent from an action's row is
 refused. `can(actor, action, target)` is the UI's question and returns
-`{ ok: true }` or `{ ok: false, message }`, the message in the house format
-with the role and the action named; `authorize()` is the rules' question and
-throws that same message. The predicates (`inScope`, `deskScope`,
-`ownsRequest`, `ownSeat`, `isSelf`) are functions here, never string parsing
-in a view. `EVENT_ACTION` and `eventAction()` map a timeline event to the
-action it was, so the seed's actors can be checked (I4); a `deferred` event
-with reason `late_intake` is `request.create`. The matrix carries
-`request.edit` and `plan.reassign` ahead of any control that uses them. The
-whole module is rendered into [permissions.md](permissions.md).
+`{ ok: true }` or `{ ok: false, message }`, the message in the house format:
+the roles that may act and the role signed in, or the predicate that failed —
+the action itself is named only in the unknown-action refusal. `authorize()`
+is the rules' question and throws that same message. The predicates
+(`inScope`, `deskScope`, `ownsRequest`, `ownSeat`, `isSelf`) are functions
+here, never string parsing in a view. `EVENT_ACTION` and `eventAction()` map a
+timeline event to the action it was, so the seed's actors can be checked (I4);
+a `deferred` event with reason `late_intake` is `request.create`. The matrix
+carries `request.edit` and `plan.reassign` ahead of any control that uses
+them. The whole module is rendered into [permissions.md](permissions.md).
 
 ### `src/lib/dispatch.js` and `src/lib/helpers.js`, the derivations
 
@@ -382,10 +388,12 @@ be refused.
 
 One gate is not a permission. The board's edit controls (assign, defer, scrub,
 cover, release, the cell buttons) are rendered only when `date > today`; today
-and the past are history and show no controls at all. The disabled-not-hidden
-convention is about who, not when.
+and the past are history and show none of them. The desk's `settings…` and a
+program's `edit…` buttons are not day-specific and render on every date, as do
+the open-request and grounded-tail links. The disabled-not-hidden convention is
+about who, not when.
 
-Two tabs are gated by role in `App.jsx`. My day is enabled only for `crew`
+Two gates disable tabs by role in `App.jsx`. My day is enabled only for `crew`
 (its tooltip otherwise is `allowed('sortie.ack').message`), and `signIn()`
 lands a crew persona there. Capacity, Analytics and Reports (`ANALYTICS_TABS`)
 need `view.analytics`, which every role but `crew` holds; a persona without it
@@ -460,17 +468,26 @@ committed notebook is the reviewable artifact; the sqlite file is not
 committed.
 
 **The docs render.** `scripts/render_docs.py` keeps three parts of these pages
-equal to the code: `permissions.md` as a whole, the *Reference* block of
-`rules.md` and the *Schema* block of `data-model.md`, each between
-`<!-- rendered:begin … -->` and `<!-- rendered:end … -->` markers. It executes
-`auth.js` and `rules.js` under Node through `scripts/dump_rules.mjs` (with
-`scripts/esm_extensionless.mjs` registered so the app's extensionless relative
-imports resolve), reads the matrix, the refusal messages `can()` produces and
-the export inventories from that run, and loads the schema into an in-memory
-SQLite database to read the tables back through the engine. `--check` exits
+equal to the code: `permissions.md` as a whole — the file opens with a
+`<!-- Rendered by scripts/render_docs.py … -->` notice and has no markers — and
+two blocks spliced between
+`<!-- rendered:begin … -->` and `<!-- rendered:end … -->` markers: *Reference*
+in `rules.md` (`rules-reference`) and *Schema* in `data-model.md` (`schema`). It
+executes `auth.js` and `rules.js` under Node through `scripts/dump_rules.mjs`
+(with `scripts/esm_extensionless.mjs` registered so the app's extensionless
+relative imports resolve), reads the matrix, the refusal messages `can()`
+produces and the export inventories from that run, and loads the schema into an
+in-memory SQLite database to read the tables back through the engine. Two
+tables are scans, not executions: the *Functions* table of `rules.md` is a
+regex pass over the source of `rules.js` for the `rule`/`severity`,
+`authorize(actor, '…')` and `assertReason(reason, …)` literals and the text
+`throw new Error`, so a rule written any other way drops out while
+`docs:check` still passes; the *asked by* column of `permissions.md` searches
+`App.jsx` and the views for the single-quoted action name. `--check` exits
 non-zero and names the drifted files. It is the gate for any change to
-`auth.js`, `rules.js` or `sql/schema.sql`; the recipes are in
-[runbook.md](runbook.md).
+`auth.js`, `rules.js` or `sql/schema.sql`, and for a change to `src/App.jsx` or
+`src/views/*.jsx` that adds or removes the single-quoted name of an action no
+transition authorizes; the recipes are in [runbook.md](runbook.md).
 
 ## What is deliberately not here
 

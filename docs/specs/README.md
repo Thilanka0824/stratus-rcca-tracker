@@ -15,12 +15,20 @@ stands.
 | Dispatch layer spec, v2 | requests → prioritize → dispatch: R1–R8, the planner, arcs D1–D3 | shipped (PR #2); kept outside git until stripped, see below |
 | Roles layer spec, v1 | personas, R9, R10, I1–I5, the rider desk, arc D4 | shipped (PR #4); kept outside git until stripped, see below |
 
-Rule ids are global: R11–R13 and V1 are reserved by the Field Ops spec, and a
-rule that does not belong to it and lands first takes R14.
+The RCCA half (runs, failures, triage, reports — the initial build) has no spec
+of its own; the nearest statement of its design is the architecture decisions
+and the RCCA stories in the root `README.md`, and the domain invariants in
+`CLAUDE.md`.
 
-Numbering is per spec, not global: a new layer starts at v1, and a revision
-that changes a decision bumps the number. A revision opens with a change table
-against the version it replaces, so nothing is lost when the old file goes.
+Rule ids are global: R11–R13 and V1 are reserved by the Field Ops spec, and a
+rule that does not belong to it and lands first takes R14; the rule recipe in
+[`docs/runbook.md`](../runbook.md#adding-a-rule) uses that id.
+
+Spec versions are per spec, not global: a new layer's spec starts at v1, and a
+revision that changes a decision bumps the number; the Stratus v2 and v3 in the
+titles of PR #2 and PR #4 are app versions, not spec versions. A revision opens
+with a change table against the version it replaces, so nothing is lost when
+the old file goes.
 Name a file `stratus-<layer>-spec-v<N>.md`.
 
 ## Before committing a spec
@@ -44,9 +52,10 @@ would, and commit it by explicit path.
 
 ## Where specs are referenced
 
-[`docs/README.md`](../README.md) indexes this directory and
-[`docs/glossary.md`](../glossary.md) links it from its introduction; both
-must follow a move or rename, and nothing checks hand-written links. The
+[`docs/README.md`](../README.md) indexes this directory,
+[`docs/glossary.md`](../glossary.md) links it from its introduction and
+[`docs/runbook.md`](../runbook.md) from its rule recipe; all three must follow
+a move or rename, and nothing checks hand-written links. The
 build order for the Field Ops work (a PR A on `feat/live-data`, then a PR B
 on `feat/field-ops`, neither opened yet) is defined in the v2 spec, outside
 git.

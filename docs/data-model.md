@@ -82,10 +82,11 @@ state per request.
 
 Each subsection lists the fields as the generator writes them, the id scheme,
 what the nested parts become in SQLite, and one trimmed record from the seed
-(`…` marks an elision). Types are JSON types. An `enum` row lists the values
-the schema's `CHECK` accepts; where the generator or the app writes fewer, the
-row says so. Counts are seed values that `npm run data` reproduces and the
-sanity report prints.
+(`…` marks an elision). Types are JSON types; `date`, `timestamp` and `enum`
+are the string conventions above. An `enum` row lists the values the schema's
+`CHECK` accepts; where the generator or the app writes fewer, the row says so.
+Counts are seed values that `npm run data` reproduces and the sanity report
+prints.
 
 ### `test_runs.json`
 
@@ -279,10 +280,11 @@ the desk role. Ids are `P-NNN`.
 | `granted_by` | object | `airframe or rider_ops → user_id`, one entry per key of `ratings_effective` and of `qualifications`; `U-15`, the trainer, on every seed entry |
 
 `ratedOn(person, airframe, date)` and `qualifiedOn(person, date)` in
-`rules.js` are how the rules ask, and both read the effective dates;
+`rules.js` are the only way the rules ask, and both read the effective dates;
 `ratingMatrix()` in `dispatch.js` and the ratings panel in `MyDayView` read
-`ratings` and `ratings_effective` directly so they can show a pending rating
-with its date. `availableOn()` reads `availability`. The trainer's
+`ratings` and `ratings_effective` directly to show a pending rating with its
+date, and `actionsByRole()` reads `ratings_effective` and `qualifications` to
+date each grant. `availableOn()` reads `availability`. The trainer's
 transitions `grantRating()`, `revokeRating()` and `grantQualification()`
 write `ratings` or `roles`, the effective map and `granted_by` together.
 
@@ -348,12 +350,12 @@ submission order after the planner has run.
 | `crew` | enum | `pilot_only` · `operator_pilot` · `lone_operator` · `none`; the seed never uses `none`, the intake form offers it and R4 handles it |
 | `windows` | array of enum | the requested windows in preference order; one or two in the seed |
 | `airframe` | string | one of the program's airframes; a sortie's tail must match it (R3) |
-| `priority` | enum | `P0` … `P3`; the seed has no `P3` request |
+| `priority` | enum | `P0` … `P3`; the seed has no `P3` request and the intake form offers `P0`–`P2` |
 | `supporting_team` | string or null | never null in the seed; `newRequest()` writes `null` when the form leaves it blank |
 | `submitted_at` | timestamp | |
 | `needed_by` | date | |
 | `plan_date` | date | the day the request is queued or planned for; never null in the seed, and a withdrawn request keeps the last plan day it held |
-| `status` | enum | `submitted` · `scheduled` · `executed` · `deferred` · `withdrawn` |
+| `status` | enum | `submitted` · `scheduled` · `executed` · `deferred` · `withdrawn`; `executed` comes only from the generator, the app's transitions write the other four |
 | `late` | boolean | equals the R7 predicate, see [Invariants](#invariants-the-data-must-keep) |
 | `deferral_reason` | enum or null | one of `meta.deferral_reasons`; set only while the status is `deferred` or `withdrawn` (then `requester_withdrew`) |
 | `rider_facing` | boolean | riders aboard: set at intake, never changed later |
@@ -365,7 +367,7 @@ A timeline event:
 |---|---|---|
 | `at` | timestamp | when it was stamped |
 | `day` | date or null | the plan day the event refers to; `null` only on `submitted` |
-| `event` | enum | `submitted` · `scheduled` · `deferred` · `rescheduled` · `reassigned` · `scrubbed` · `executed` · `withdrawn` |
+| `event` | enum | `submitted` · `scheduled` · `deferred` · `rescheduled` · `reassigned` · `scrubbed` · `executed` · `withdrawn`; `rescheduled`, `reassigned` and `executed` come only from the generator, the app writes the other five |
 | `reason` | string or null | on `deferred`, one of `meta.deferral_reasons` (R8, checked by the schema); on `withdrawn`, `requester_withdrew`; on `scrubbed`, a scrub reason, `weather` included; otherwise `null` |
 | `note` | string | free text; a desk refusal keeps what was free |
 | `by` | string | the actor's `user_id`; every event has one (R9) |
@@ -423,7 +425,7 @@ after sorting by (date, window order, asset); the board issues
 | `request_id` | string | |
 | `asset_id` | string | the tail |
 | `operator_id`, `pilot_id` | string or null | the seats; which are filled follows the request's `crew` (R4) |
-| `status` | enum | `planned` · `done` · `scrubbed`; the schema also accepts `in_progress`, which neither the generator nor the app writes |
+| `status` | enum | `planned` · `done` · `scrubbed`; the app writes `planned` and `scrubbed`, only the generator `done`; the schema also accepts `in_progress`, which neither writes |
 | `scrub_reason` | string or null | when scrubbed, a deferral reason or `weather` (`SCRUB_REASONS`); the schema does not constrain this column, `scrubAssignment()` does |
 | `run_id` | string or null | the logged Flight run linked back to this sortie |
 | `notes` | string | `""`, one of the generator's short notes (`currency check: …`, `cross-rating flight: …`, `reassigned from …`), or `assigned on the board` |
@@ -558,12 +560,13 @@ loads the real `src/data/*.json`.
 A field or an entity is one thing in five places; change them together.
 
 1. **The generator.** Add the field where the record is built — `add_run()`,
-   `add_failure()`, `add_request()`, `new_assignment()`, `event()`, the asset
-   and person loops, or the `USERS` literal — and derive it there rather than
-   typing it. Mind the RNG streams: a new draw in the RCCA half re-rolls every
-   run and failure after it, and a new `drng` draw before Jun 15 re-rolls arcs
-   D1–D3 (see [seed-and-arcs.md](seed-and-arcs.md)). If a rule should hold
-   over the field, assert it in `check_rules()`.
+   `add_failure()`, `add_request()`, `new_assignment()`, `event()`,
+   `desk_roster()` for coverage, the asset and person loops, or the `PROGRAMS`
+   and `USERS` literals — and derive it there rather than typing it. Mind the
+   RNG streams: a new draw in the RCCA half re-rolls every run and failure
+   after it, and a new `drng` draw before Jun 15 re-rolls arcs D1–D3 (see
+   [seed-and-arcs.md](seed-and-arcs.md)). If a rule should hold over the
+   field, assert it in `check_rules()`.
 2. **The schema.** Add the column or table to `sql/schema.sql` with its
    `CHECK` and references, and the matching `INSERT` in `write_sqlite()`;
    the `?` placeholders are positional, so the count must match the column

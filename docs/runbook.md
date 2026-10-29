@@ -28,14 +28,14 @@ npm install
 ```
 
 Run every command from the project root. `generate_data.py` writes
-`src/data/<name>.json` and, by default, `data/stratus.sqlite` from
-`sql/schema.sql`; `render_analytics.py` reads `data/stratus.sqlite` and writes
+`src/data/<name>.json` and `data/stratus.sqlite` from `sql/schema.sql`;
+`render_analytics.py` reads `data/stratus.sqlite` and writes
 `docs/analytics.md`; `render_docs.py` runs `node scripts/dump_rules.mjs`, reads
-`src/lib/rules.js` and `sql/schema.sql`, and writes under `docs/`. Those paths
-are relative constants, so from any other directory the scripts stop with a
-missing-file error or write into the wrong place. (`dump_rules.mjs` itself
-locates the modules relative to its own file; the Python that calls it does
-not.)
+`src/lib/rules.js`, `src/App.jsx`, `src/views/*.jsx` and `sql/schema.sql`, and
+writes under `docs/`. Those paths are relative constants, so from any other
+directory the scripts stop with a missing-file error or write into the wrong
+place. (`dump_rules.mjs` itself locates the modules relative to its own file;
+the Python that calls it does not.)
 
 Do not run `npm audit fix`. `package.json` asks for Vite `^5.4.8` and the
 major bump is deferred on purpose.
@@ -190,7 +190,7 @@ Three parts of `docs/` are rendered from the code by `scripts/render_docs.py`:
 
 | target | source | contents |
 |---|---|---|
-| `docs/permissions.md`, the whole file | `src/lib/auth.js` | the roles, the grant legend, the matrix, the by-role summary, every refusal message `can()` returns, `EVENT_ACTION`, the export inventory |
+| `docs/permissions.md`, the whole file | `src/lib/auth.js`, executed; for the table of actions no transition authorizes, the `scan_functions()` scan of `src/lib/rules.js` and a search of `src/App.jsx` and `src/views/*.jsx` for the single-quoted action name | the roles, the grant legend (`LEGEND` in `render_docs.py`), the matrix, the I3 sentence, the table of actions no transition authorizes and which file asks for them, the by-role summary, every refusal message `can()` returns, `EVENT_ACTION`, the export inventory |
 | the `rules-reference` block of `docs/rules.md` | `src/lib/rules.js` | the vocabulary (windows, priorities, deferral and scrub reasons with labels, crew kinds, build stages, the triage ladder, the desk's defaults and bounds), the two R8 messages `validateReason()` returns, the function inventory, the export inventory |
 | the `schema` block of `docs/data-model.md` | `sql/schema.sql` | every table's columns, keys and references read back through SQLite's pragmas, the stored DDL, the foreign-key list, the indexes |
 
@@ -246,7 +246,8 @@ memory, compares it with what is on disk, prints a unified diff per drifted
 file and exits 1 with a `docs:check — N file(s) drifted from the code` line
 that names them and says to run `npm run docs`; otherwise it exits 0.
 
-After changing `src/lib/auth.js`, `src/lib/rules.js` or `sql/schema.sql`:
+After changing `src/lib/auth.js`, `src/lib/rules.js` or `sql/schema.sql`, or
+which matrix actions `src/App.jsx` and `src/views/*.jsx` quote:
 
 ```bash
 npm test
@@ -255,8 +256,11 @@ npm run docs:check
 ```
 
 and commit the rendered files with the change. Nothing runs `docs:check`
-automatically: it is the gate for any PR that touches those three files, and a
-reviewer can run it against the branch.
+automatically: it is the gate for any PR that touches those three files, and
+for one that adds or removes in `src/App.jsx` or `src/views/*.jsx` the
+single-quoted name of a matrix action no transition authorizes — the *asked by*
+column of `permissions.md` is a search of those files. A reviewer can run it
+against the branch.
 
 ## Recipes
 
@@ -273,10 +277,12 @@ the gates green.
    violations instead of saving when `hasBlock()` is true, and the dialog in
    the view keeps its confirm button disabled while a block is live.
 2. Return a violation in the house shape, with the literals written out so
-   the docs scan sees them:
+   the docs scan sees them. Rule ids are global, and R11–R13 are reserved by
+   the Field Ops spec ([specs/README.md](specs/README.md)), so the next rule
+   takes `R14`:
 
    ```js
-   out.push({ rule: 'R11', severity: 'block', message: `${asset.asset_id} … in ${cand.window} on ${cand.date}.` });
+   out.push({ rule: 'R14', severity: 'block', message: `${asset.asset_id} … in ${cand.window} on ${cand.date}.` });
    ```
 
    `block` rejects the edit, `warn` renders inline and in the day summary.
@@ -285,9 +291,9 @@ the gates green.
    the message.
 3. Make the seed obey it. The planner in `generate_data.py` must respect the
    rule when it builds assignments, and `check_rules()` must assert it with a
-   tag such as `("R11 …", record)`, so `npm run data` fails the first time
+   tag such as `("R14 …", record)`, so `npm run data` fails the first time
    the seed breaks it.
-4. Add a `describe('R11 · …')` block to `src/lib/rules.test.js`, extending
+4. Add a `describe('R14 · …')` block to `src/lib/rules.test.js`, extending
    `fx()` where the fixture lacks the case. Use the `rules()` helper for
    blocks; for a warning, look the violation up and check `.severity`.
 5. `npm run data` and confirm the seed is byte-identical (or read the report),
@@ -373,7 +379,7 @@ the gates green.
    `allowed(action, target)` for each control. If it carries Recharts, add it
    to `lazyViews()`, render it inside the existing `ChunkBoundary` and
    `Suspense`, take `theme` as a prop and destructure `chartTheme(theme)` for
-   its colours: SVG attributes cannot resolve CSS variables.
+   its colors: SVG attributes cannot resolve CSS variables.
 2. Every dialog goes through `src/views/Modal.jsx`. `Modal` takes `label`,
    `onClose`, an optional `className` (`wide`, `confirm`), `as` (the intake
    form renders as a `form`), `closeOnBackdrop={false}` for a form that must
@@ -390,11 +396,11 @@ the gates green.
 
 ### Adding a color
 
-1. Reuse first. Status colour is the data encoding: a pass/fail/blocked
+1. Reuse first. Status color is the data encoding: a pass/fail/blocked
    meaning takes `--pass`, `--fail` or `--blocked`, and a priority takes
    `--p0` to `--p3`.
 2. A new token goes in both blocks of `src/styles.css`: `:root` (dark) and
-   `[data-theme='light']`. The non-colour tokens (`--mono`, `--display`,
+   `[data-theme='light']`. The non-color tokens (`--mono`, `--display`,
    `--body`, `--r`) live in `:root` only.
 3. Derive tints with `color-mix(in srgb, var(--token) N%, transparent)` rather
    than a second hex; the stylesheet does this for pill borders (40%), pill

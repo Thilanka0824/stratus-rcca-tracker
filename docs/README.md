@@ -13,7 +13,7 @@ invariants hold, and how to change it without breaking the demo.
 | [architecture.md](architecture.md) | How the app is shaped: one-way build-time data, the state `App.jsx` owns and who edits it, the modules, the views and their callbacks, the dialog contract, the theme | hand-written, verified against the code |
 | [data-model.md](data-model.md) | Every entity's JSON shape as the generator writes it and how it flattens into the schema; the relationships; the invariants and where each is enforced; the change recipe; every table, column, key and reference | prose hand-written; the *Schema* block rendered from `sql/schema.sql` |
 | [rules.md](rules.md) | How a rule is shaped, R1–R10 one by one, the rider desk, intake, every transition, the invariants I1–I5, where the 173 tests come from | prose hand-written; the *Reference* block rendered from `src/lib/rules.js` |
-| [permissions.md](permissions.md) | Who may do what: the matrix and its I3 shape, every refusal message as `can()` produces it, the actions carried ahead of their controls, the event-to-action map | rendered whole by `scripts/render_docs.py`: `src/lib/auth.js` executed, plus a scan of `src/lib/rules.js` and a search of `src/App.jsx` and `src/views/*.jsx` for the table of actions carried ahead of their controls |
+| [permissions.md](permissions.md) | Who may do what: the matrix and its I3 shape, every refusal message as `can()` produces it, the actions carried ahead of their controls, the event-to-action map | rendered whole by `scripts/render_docs.py`: `src/lib/auth.js` executed, plus a scan of `src/lib/rules.js` and a search of `src/App.jsx` and `src/views/*.jsx` for the table of actions carried ahead of their controls, and a grant legend hand-written in the renderer |
 | [seed-and-arcs.md](seed-and-arcs.md) | `generate_data.py`: the three RNG streams, what each half produces, the seven arcs with their constants, what `check_rules()` and the sanity report assert, what must not move | hand-written, verified against the generator and its report |
 | [runbook.md](runbook.md) | Setup, every command, the dev loop, regenerating the seed, keeping the docs honest, recipes for the common changes, the pre-PR checklist | hand-written |
 | [glossary.md](glossary.md) | The vocabulary and the identifiers, with the meaning the code gives each and where it is defined | hand-written |
@@ -30,8 +30,12 @@ non-zero when what is on disk differs from what the code says. Nothing runs
 either automatically, so the check is a step on the pre-PR list in
 `runbook.md` for any change to `src/lib/auth.js`, `src/lib/rules.js` or
 `sql/schema.sql`, and for any change to `src/App.jsx` or `src/views/*.jsx`
-that adds or removes the quoted name of a matrix action — the *asked by*
-column of `permissions.md` is a search of those files. The fourth is
+that adds or removes the single-quoted literal of a matrix action no
+`rules.js` transition authorizes (`request.edit`, `plan.reassign` and
+`view.analytics` at present) — the *asked by* column of `permissions.md` is a
+search of those files for the name in single quotes, so a name written any
+other way drops out while `docs:check` still passes; keep writing them
+single-quoted. The fourth is
 `analytics.md`, rendered whole by `scripts/render_analytics.py` from
 `sql/analytics/*.sql` and `data/stratus.sqlite`; `npm run data` and
 `npm run analytics` rewrite it, `docs:check` does not cover it, and its check
@@ -50,8 +54,14 @@ text rather than executions. The *Functions* table in `rules.md` scans
 `throw new Error`; it says so and names what the scan would miss. The table of
 actions carried ahead of their controls in `permissions.md` takes the
 authorized actions from that same scan and, for the rest, searches
-`src/App.jsx` and `src/views/*.jsx` for the quoted action name to say which
-control asks for it; it does not say it is a scan. The rendered blocks sit
+`src/App.jsx` and `src/views/*.jsx` for the single-quoted action name and
+names the files that hold it, or says `no control asks for it yet`; it does
+not name the control, and it too says it is a scan. One column comes from
+none of these: the *meaning* column of the *Grants* table in `permissions.md`
+is `LEGEND` in `scripts/render_docs.py`, a hand-written copy of the comment
+block at the top of `src/lib/auth.js`; the render fails only when the matrix
+uses a grant kind the legend lacks, so a change to what a predicate means is
+made in `auth.js` and in `LEGEND` together. The rendered blocks sit
 between `<!-- rendered:begin … -->` and `<!-- rendered:end … -->` markers;
 the prose around them is the explanation.
 

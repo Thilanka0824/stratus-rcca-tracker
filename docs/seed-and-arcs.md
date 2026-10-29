@@ -33,8 +33,11 @@ third.
 No draw from the module-level stream appears below the banner — the only
 `random.*` references there are the two `random.Random(seed)` constructors,
 which create independent generators — so a change to the dispatch half cannot
-perturb a run or a failure. Two things cross the banner, both
-deterministic: `ARC3_FAILURE_ID`, the id of the failure whose title starts
+perturb a run or a failure. Three things cross the banner, all
+deterministic: `BUILD_WINDOWS`, which `add_request()` reads through
+`build_for()` and `plan_day()` through `BUILD_START`, so re-dating a build
+window also moves request builds and the `build_not_ready` deferrals;
+`ARC3_FAILURE_ID`, the id of the failure whose title starts
 with `Intruder track dropout`, which the grounding events on LV-03 and LV-05
 carry; and the run-to-sortie link at the end of the script, which writes
 `request_id` onto Flight runs after the planner has finished and draws
@@ -60,9 +63,13 @@ Each stream is fragile in its own way.
   the desk's only draw; the eight showcase-run requests are registered with
   every intake field spelled out so they draw nothing from either stream; the
   three rider operators take no random days off. Every `drng` draw before
-  Jun 15 is therefore identical to a build without the desk. From Jun 15 on,
-  R10 itself changes outcomes (a refused sortie changes placement, usage and
-  later draws), and the sanity report asserts that D1 and D3 still hold.
+  Jun 15 is identical to a build without the desk — not by the stream layout
+  alone, but because the desk refuses nothing before then: the first
+  `no_rider_ops` deferral is for Jun 15, and no coverer holds a crew role
+  until P-009 on Jun 17. New rider-facing demand before Jun 15 can break that
+  without adding a draw. From Jun 15 on, R10 itself changes outcomes (a
+  refused sortie changes placement, usage and later draws), and the sanity
+  report asserts that D1 and D3 still hold.
 
 The window is three constants:
 
@@ -76,7 +83,9 @@ The app does not read `meta.today`; it takes the greatest run date
 (`maxDate()` in `src/lib/helpers.js`, used by `App.jsx`). The two agree because
 the background loop writes at least one run on every day from START to END.
 The ten build windows in `BUILD_WINDOWS` cover START..END and nothing past
-it, so `build_for(TOMORROW)` falls back to the oldest build.
+it; past END `build_for()` would fall back to the oldest build, but
+`add_request()` clamps with `min(needed_by, END)`, so the eight requests
+needed Jul 1 carry v2.16.1.
 
 ## The RCCA half
 
@@ -170,7 +179,7 @@ occurrences chosen by predicate over the finished run list:
 | arc | title | severity · status · team | opened · resolved | root cause | occurrences |
 |---|---|---|---|---|---|
 | 1 | Lateral drift exceeds touchdown tolerance — gusty crosswind (SIM only) | P1 · Corrective Action · Test Infrastructure | 2026-04-09 · none | Scenario Definition | every failing Simulation run of the crosswind scenario, any date |
-| 2 | Telemetry uploader race drops flight logs on rapid disarm | P2 · Investigating · Data Platform | 2026-05-22 · none | Data / Logging | every Flight run with `telemetry` false dated May 18 – Jun 7, pass or fail |
+| 2 | Telemetry uploader race drops flight logs on rapid disarm | P2 · Investigating · Data Platform | 2026-05-22 · none | Data / Logging | every Flight run with `telemetry` false dated May 18 – Jun 7, whatever its status |
 | 3 | Intruder track dropout above 12 m/s closure after planner refactor | P0 · Verified · Autonomy | 2026-06-03 · 2026-06-13 | Software Regression | every failing Dynamic Intruder run on HIL Bench or Flight dated Jun 2 – Jun 12 |
 
 Arc 1 carries five whys and a corrective action that cites the passing Flight
@@ -314,8 +323,9 @@ windows are emptied on every day of `D4_OUT`.
 
 Ratings held since before the window carry no date. `RATING_EFFECTIVE` dates
 exactly two: P-011 and P-012 on Harmattan, both `CROSS_RATING_DATE`
-(2026-05-29), the day after the second cross-rating flight. Until then only
-P-001 and P-002 fly Harmattan, and P-002 is on vacation for the last week of
+(2026-05-29), the day after the second cross-rating flight. Until then P-001
+and P-002 are the only Harmattan-rated pilots (operators P-006, P-007 and
+P-008 fly it throughout), and P-002 is on vacation for the last week of
 April. The desk qualification is effective-dated the same way: the three rider
 operators from `DESK_QUAL_EFFECTIVE` (2026-04-01, before the window), and
 P-009 from `DESK_QUAL_DATE` after `rider_ops` is appended to the operator's
@@ -529,7 +539,7 @@ exemptions are tested; at six the request is withdrawn without a draw.
 |---|---|
 | `late_intake` | `add_request()`, at intake, by the filer |
 | `requester_withdrew` | `add_request()` (3% before planning); `defer()` after repeated deferral; `execute_day()` when the 2% scrub draws it — a withdrawal, not a deferral, in all three |
-| `build_not_ready` | `plan_day()` when the build ships after D; also one of the four 2% scrub kinds |
+| `build_not_ready` | `plan_day()` when the build ships after D; also one of the three kinds the 2% scrub draw picks from (`weather` twice, `requester_withdrew` and `build_not_ready` once) |
 | `no_rated_pilot`, `no_rated_operator` | `crew_for()`; a PLC `no_rated_pilot` before Apr 28 becomes `no_rated_operator` in `defer()` |
 | `program_over_max` | `place()`, the R5 cap |
 | `asset_grounded` | `place()` when no tail is usable and one was grounded or in maintenance; `execute_day()` after a grounding scrub with no same-day move |
@@ -580,13 +590,14 @@ re-queues with a reason-less `rescheduled` event.
 
 The main loop runs `daily_demand(d)`, `plan_day(d)`, `execute_day(d)` for
 every day START..END, then `daily_demand(TOMORROW)` and `plan_day(TOMORROW,
-standing_only=True)` with no execution: the standing programs are planned at
-cutoff and the ad hoc queue waits for the morning review, which is the
-board's default state. Requests are then sorted by `(submitted_at,
-request_id)` and renumbered `RQ-0001..`, each timeline sorted by `at`,
-`deferral_reason` cleared unless the status is `deferred` or `withdrawn`, and
-sorties sorted by `(date, window, asset_id)` and renumbered `AS-2026-0001..`
-with `request_id` remapped.
+standing_only=True)` with no execution: PLC and PN are planned at cutoff —
+not CQ, though it is standing too — and the rest of the queue waits for the
+morning review, which is the board's default state. Requests are then sorted
+by `(submitted_at, request_id)` and renumbered `RQ-0001..`, each timeline
+sorted by `at`, `deferral_reason` cleared unless the status is `deferred` or
+`withdrawn`, and sorties sorted by `(date, WINDOWS.index(window), asset_id)` —
+AM, then PM, then NIGHT — and renumbered `AS-2026-0001..` with `request_id`
+remapped.
 
 ### Linking Flight runs to sorties
 
@@ -653,10 +664,12 @@ opened Jun 3, resolved Jun 13 (the first v2.15.2 day), with a corrective
 action that names v2.15.2; its occurrences are every failing Dynamic Intruder
 run on HIL Bench or Flight dated Jun 2–12.
 
-The window is encoded in three places that must move together: the build
-names in the `base_fail` test, the dates of the guaranteed runs, and the date
-bounds of the occurrence predicate; the fix date likewise in the v2.15.2
-window start, the guaranteed passes' start date and `resolved`.
+The window is encoded in four places that must move together: the v2.15.0
+and v2.15.1 entries of `BUILD_WINDOWS`, the build names in the `base_fail`
+test (which bite on the dates those entries give them), the dates of the
+guaranteed runs, and the date bounds of the occurrence predicate; the fix
+date likewise in the v2.15.2 window start, the guaranteed passes' start date
+and `resolved`.
 
 Seed: F-0011, 9 occurrences (Jun 2 – Jun 12; 6 HIL Bench, 3 Flight).
 
@@ -820,6 +833,15 @@ RQ-0533  SBU  P0  submitted  Perception regression — night approach     PM, NI
 RQ-0534  SF   P0  submitted  Showcase flight — city council             PM   late
 ```
 
+PN asked for four and placed three. The fourth, RQ-0535 ("Perception
+regression — static field", NIGHT), drew the 6% late flag, was stamped 16:43
+on Jun 30, and so carries a `late_intake` deferral for Jul 1 and a plan date
+of Jul 2 (`next_open_day()` returns a day past TOMORROW as it is) — the
+report's one `deferred` request. The report's queue stops at TOMORROW and
+leaves it out, but `queuedFor()` keeps a request deferred *from* a day on
+that day's rail, so the board's Jul 1 rail shows five requests, four of them
+unscheduled, RQ-0535 marked as pushed to Jul 2.
+
 README demo steps 1–3 and the seed test "tomorrow's rail holds two
 unscheduled P0 and R6 fires for the late showcase" depend on exactly this
 queue.
@@ -936,9 +958,12 @@ npm run docs:check     # when src/lib/rules.js, src/lib/auth.js or sql/schema.sq
 `docs/analytics.md`. `data/stratus.sqlite` is gitignored and is deleted and
 rebuilt on every run; the JSON and `docs/analytics.md` are tracked, so a
 clean `git status` after a run is the proof that a change was a pure
-refactor. A change meant to leave the seed alone — anything in the dispatch
-half that adds no `drng` draw ahead of `plan_day(Jun 15)`, anything in
-`write_sqlite()`, the report, or a new assert — must leave it clean.
+refactor. A change meant to leave the seed alone — a pure refactor of the
+dispatch half that adds or removes no `drng` draw anywhere and changes no
+planner decision, anything in `write_sqlite()`, the report, or a new assert —
+must leave it clean. A draw added after `plan_day(Jun 15)` leaves D1 and
+every day before Jun 15 as they were, but re-rolls the rest: D4, D2, D3's
+Jun 15–18 numbers, tomorrow's rail and every stamp and id after it.
 
 After a change to generation logic:
 

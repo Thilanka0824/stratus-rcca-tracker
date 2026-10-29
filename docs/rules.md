@@ -68,11 +68,12 @@ Day-level results carry more than the triple. `dayWarnings()` adds `level`
 (`under` or `over`), `program_id` and `count` to an R5 entry and `request_id`
 and `holder` to an R6 entry. `checkCoverage()` returns the desk row itself
 (`rule: 'R10'` with `level`, no severity) because a row is a colour, not a
-refusal. Messages are not uniform about dates: `checkAssignment()`'s R1, R2, R3
-and AV print the ISO day (`2026-07-01`); the desk's messages (R10, the R2
-extension, `checkCover`, `checkUncover`, `checkCoverage`) print `fmtDate()`'s
-short form (`Jul 1`). The tests assert several messages with `toBe`, so a
-wording change is a test change.
+refusal. Messages are not uniform about dates: `checkAssignment()`'s R2, R3
+and AV print the sortie's day in ISO (`2026-07-01`) and its R1 prints only
+the rating's effective date, in the same form (`until 2026-05-29`); the
+desk's messages (R10, the R2 extension, `checkCover`, `checkUncover`,
+`checkCoverage`) print `fmtDate()`'s short form (`Jul 1`). The tests assert
+several messages with `toBe`, so a wording change is a test change.
 
 The same functions run over the seed. The `seed data` block of
 `rules.test.js` imports the real `src/data/*.json`, builds `makeDb()` with
@@ -503,8 +504,10 @@ returns a new object, leaving its input untouched. `App.jsx` runs the matching
 check first where there is one, builds the transition in a `try`, saves the
 result and, for actions outside a request's timeline, appends an audit row
 `{ at, by, action, target, detail }` through `record()`. Session stamps come
-from `stampNow()`, `<today>T18:<nn>`, where `nn` is a counter so that edits
-sort in the order they were made.
+from `stampNow()`, `<today>T18:<nn>`, where `nn` is a counter taken modulo 60:
+edits sort in the order they were made for the first sixty stamps of a session
+(audit rows written by `record()` consume the counter too), after which the
+minute wraps.
 
 | transition | authorizes | returns | throws (after R9) | `App.jsx` |
 |---|---|---|---|---|
