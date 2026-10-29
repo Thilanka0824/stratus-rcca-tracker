@@ -232,8 +232,10 @@ Twelve tails: six Levant (`LV-01` … `LV-06`), four Harmattan (`HM-01` …
 | `status_history[].failure_id` | string or null | the RCCA item a grounding is attributable to |
 
 The flat fields are only today. `assetStatusOn(asset, date)` in `rules.js`
-is the way to ask about any day: it returns the first history row covering
-the date, or `available`.
+is the way to ask about any day: it returns `{ status, reserved_by, note,
+failure_id }` from the first history row covering the date — not the row
+itself — or the same shape with `status: 'available'` and the rest
+`null`/`""` when none does.
 
 In SQLite: `assets`, `asset_windows` and `asset_status_history` (an integer
 `id` key; `failure_id` a foreign key to `failures`).
@@ -357,7 +359,7 @@ submission order after the planner has run.
 | `plan_date` | date | the day the request is queued or planned for; never null in the seed, and a withdrawn request keeps the last plan day it held |
 | `status` | enum | `submitted` · `scheduled` · `executed` · `deferred` · `withdrawn`; `executed` comes only from the generator, the app's transitions write the other four |
 | `late` | boolean | equals the R7 predicate, see [Invariants](#invariants-the-data-must-keep) |
-| `deferral_reason` | enum or null | one of `meta.deferral_reasons`; set only while the status is `deferred` or `withdrawn` (then `requester_withdrew`) |
+| `deferral_reason` | enum or null | one of `meta.deferral_reasons`; set only while the status is `deferred` or `withdrawn` (then `requester_withdrew`), but `null` on a request `scrubRequest()` put back on the rail: a scrub's reason lands on the `scrubbed` event and the sortie's `scrub_reason`, never here |
 | `rider_facing` | boolean | riders aboard: set at intake, never changed later |
 | `timeline[]` | array of object | the request's history, below |
 
@@ -551,7 +553,7 @@ loads the real `src/data/*.json`.
 | The flat asset fields are only today; any other day comes from `status_history` | the snapshot pass fills `status`, `reserved_by`, `status_note`, `status_since` as of `END` after the history is built | `assetStatusOn()` reads the history; R3 in `checkAssignment()` and `dailyCapacity()` in `dispatch.js` use it | `assets.status` commented `as of "today"`; `asset_status_history` holds the rest | the R3 test reads `assetStatusOn()` on the day before and the day of a grounding |
 | `rider_facing` is set at intake and never later | `add_request()`: `SF` always, about a fifth of `PN` and `URC` from the desk's own RNG stream, and explicit (`rider_facing=True`) for the PN rider flights `daily_demand()` adds on Jun 15–17 to keep two queued for PM; the showcase run itself is `SF` | `validateRequest()` refuses an `SF` request without riders; `newRequest()` stores `Boolean(f.rider_facing)`; no transition touches it | `rider_facing` not null, 0/1, commented R10 | the intake `SF` test; the seed I5 test |
 | The desk's `ratio` and `min_per_window` live in `meta.rider_desk`, bounded 1–4, with no waiver | `RIDER_DESK` is exported as `meta.rider_desk`; `desk_check()` and the I5 assertion in `check_rules()` read it | `DEFAULT_DESK` when the seed does not say; `setDeskSettings()` keeps exactly two keys inside `DESK_BOUNDS`; `App.jsx` seeds its `desk` state from `meta.rider_desk` | no table; query 10 in `sql/analytics/` writes the ratio as a literal | `setDeskSettings()` bounds and keys; the seed I5 test against `meta.rider_desk` |
-| A deferral carries a reason from the enum (R8) | `defer()` asserts the reason; `check_rules()` re-checks every `deferred` event | `deferRequest()`, `scrubAssignment()` and `scrubRequest()` call `assertReason()` and throw | the `CHECK` on `requests.deferral_reason` and on `deferred` rows of `request_events` | the R8 block; the seed test over every timeline |
+| A deferral carries a reason from the enum (R8) | `defer()` asserts the reason; `check_rules()` re-checks every `deferred` event | `deferRequest()`, `scrubAssignment()` and `scrubRequest()` call `assertReason()` and throw; a scrub's reason lands on the sortie's `scrub_reason` and the `scrubbed` event, not on `deferral_reason` | the `CHECK` on `requests.deferral_reason` and on `deferred` rows of `request_events` | the R8 block; the seed test over every timeline |
 | Every actor stamp is a persona whose role permits the action (I4); nobody assigns their own request (I1) | `permits()` over every event, sortie and coverage row in `check_rules()`; `assigned_by != requester_id` | every transition calls `authorize()` first; the `not-own` predicate in `auth.js` | `actor_id`, `assigned_by` not null and referencing `users`; comments name I1 and R9 | the seed I4 and I1 tests |
 | Today is the last run date; tomorrow exists as a planned day | `END` is the last run day; `TOMORROW = END + 1` carries planned sorties and coverage rows, unacked | `App.jsx` sets `today = maxDate(runsData)` and opens the board on `meta.tomorrow` | SQL takes `max(test_runs.date)` | the seed test that tomorrow's rail holds exactly two unscheduled P0 |
 

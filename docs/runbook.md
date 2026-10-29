@@ -17,7 +17,7 @@ Three tools and no services:
 
 | tool | used by | notes |
 |---|---|---|
-| Node and npm | Vite, vitest, `scripts/dump_rules.mjs` | Node 20.6 or later: `dump_rules.mjs` calls `module.register()` from `node:module`, which older Node lacks. `package.json` pins no `engines` |
+| Node and npm | Vite, vitest, `scripts/dump_rules.mjs` | Node 20.6 or later, or 18.19 or later: `dump_rules.mjs` calls `module.register()` from `node:module`, added in 20.6.0 and backported to 18.19.0. `package.json` pins no `engines` |
 | Python 3 | `generate_data.py`, `scripts/render_analytics.py`, `scripts/render_docs.py` | standard library only (`json`, `random`, `datetime`, `os`, `collections`, `sqlite3`, `glob`, `re`, `difflib`, `subprocess`, `sys`); there is no requirements file and nothing to install |
 | SQLite | through Python's `sqlite3` module | the generator writes `data/stratus.sqlite`; the renderers read it, or build a database in memory |
 

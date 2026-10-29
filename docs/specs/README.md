@@ -26,9 +26,10 @@ rule that does not belong to it and lands first takes R14; the rule recipe in
 
 Spec versions are per spec, not global: a new layer's spec starts at v1, and a
 revision that changes a decision bumps the number; the Stratus v2 and v3 in the
-titles of PR #2 and PR #4 are app versions, not spec versions. A revision opens
-with a change table against the version it replaces, so nothing is lost when
-the old file goes.
+titles of PR #2 and PR #4 are milestone names, not spec versions. Nor are they
+app versions: `package.json` has stayed at 1.0.0 and the repo has no tags. A
+revision opens with a change table against the version it replaces, so nothing
+is lost when the old file goes.
 Name a file `stratus-<layer>-spec-v<N>.md`.
 
 ## Before committing a spec

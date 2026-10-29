@@ -296,7 +296,7 @@ deferral Pareto (`deferralEvents`, `deferralPareto`) and the tell (`idleRated`,
 `demandVsSupply`); `leadTimes` and `churnByDay`; `ratingMatrix`; the desk
 (`deskByDay`, `deskLoad`); `actionsByRole` with `ACTION_COLUMNS`; the loop back
 into RCCA (`groundingDays`, `tailsAgainst`); and `daySummary`, which feeds the
-header's "Tomorrow: unscheduled P0" card and the end-of-day report. The SQL
+"Tomorrow: unscheduled P0" stat card and the end-of-day report. The SQL
 notebook restates these metrics against the seed database;
 [analytics.md](analytics.md) is the rendered result.
 
@@ -438,14 +438,14 @@ the build prints. The lockfile resolves Vite 5.4; `dist/` is gitignored.
 **vitest.** The only suite is `src/lib/rules.test.js`, deliberately scoped to
 the rules engine, the matrix and the seed's compliance with them; there is no
 vitest config, so `vite.config.js` applies. It reports 173 tests: 71
-hand-written cases in thirteen `describe` blocks (R1 to R8 one each; R9
-ownership, scope and the invariants I1–I3; R10; the transitions; intake; and
-the seed block, which imports the real `src/data/*.json`), plus 102 generated
-at collection time by looping `ACTIONS × ROLES` from `PERMISSIONS` — 17
-actions × 6 roles, each expecting `can()` to agree with the matrix against a
-target that satisfies the role's predicate. A change to the matrix is therefore
-a change to the tests, and a regeneration that moves a load-bearing arc fails
-the seed block.
+hand-written cases in thirteen of its fourteen `describe` blocks (R1 to R8 one
+each; R9 ownership, scope and the invariants I1–I3; R10; the transitions;
+intake; and the seed block, which imports the real `src/data/*.json`), plus 102
+generated at collection time in the fourteenth, the R9 matrix block, by looping
+`ACTIONS × ROLES` from `PERMISSIONS` — 17 actions × 6 roles, each expecting
+`can()` to agree with the matrix against a target that satisfies the role's
+predicate. A change to the matrix is therefore a change to the tests, and a
+regeneration that moves a load-bearing arc fails the seed block.
 
 **The generator.** `generate_data.py` is two halves on two RNG streams: the
 RCCA half under `random.seed(42)` (runs, failures, arcs 1–3) and, below the
@@ -468,9 +468,9 @@ committed notebook is the reviewable artifact; the sqlite file is not
 committed.
 
 **The docs render.** `scripts/render_docs.py` keeps three parts of these pages
-equal to the code: `permissions.md` as a whole — the file opens with a
-`<!-- Rendered by scripts/render_docs.py … -->` notice and has no markers — and
-two blocks spliced between
+equal to the code: `permissions.md` as a whole — the file carries a
+`<!-- Rendered by scripts/render_docs.py … -->` notice under its title and has
+no markers — and two blocks spliced between
 `<!-- rendered:begin … -->` and `<!-- rendered:end … -->` markers: *Reference*
 in `rules.md` (`rules-reference`) and *Schema* in `data-model.md` (`schema`). It
 executes `auth.js` and `rules.js` under Node through `scripts/dump_rules.mjs`

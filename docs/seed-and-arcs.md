@@ -427,7 +427,7 @@ handed, it derives or draws.
 | field | rule |
 |---|---|
 | `airframe` | Harmattan for a CQ request whose title contains "Harmattan"; else the program's first airframe |
-| `submitted_at`, `late` | without a `submitted_at`: `late` drawn with p = 0.06 unless given; stamped on `needed_by − 1` at hour 15, 15, 16 or 17 (late) or 8–14 (on time), minute 0–59. With a `submitted_at` and no `late`: `late` = submission date ≥ `needed_by − 1` and time ≥ 15:00 (R7). Every caller in the script that passes `submitted_at` also passes `late` |
+| `submitted_at`, `late` | without a `submitted_at`: `late` drawn with p = 0.06 unless given; stamped on `needed_by − 1` at hour 15, 15, 16 or 17 (late) or 8–14 (on time), minute 0–59. With a `submitted_at` and no `late`: `late` = submission date ≥ `needed_by − 1` and clock time ≥ 15:00 — narrower than the app's `isLate()`, which flags a submission on or after `needed_by` at any hour. The branch is dead: every caller in the script that passes `submitted_at` also passes `late`, and the seed test (`late` equal to `isLate()`) would reject a same-day morning submission that relied on it |
 | `build` | given, else `build_for(min(needed_by, END))` |
 | `build_stage` | given, else `release_candidate` with p = 0.7 for PLC, otherwise `engineering` with p = 0.8 else `release_candidate` |
 | `requester`, `title` | given, else drawn from the program's `REQUESTERS` and `TITLES` pools |
@@ -833,20 +833,23 @@ RQ-0533  SBU  P0  submitted  Perception regression — night approach     PM, NI
 RQ-0534  SF   P0  submitted  Showcase flight — city council             PM   late
 ```
 
-PN asked for four and placed three. The fourth, RQ-0535 ("Perception
-regression — static field", NIGHT), drew the 6% late flag, was stamped 16:43
-on Jun 30, and so carries a `late_intake` deferral for Jul 1 and a plan date
-of Jul 2 (`next_open_day()` returns a day past TOMORROW as it is) — the
-report's one `deferred` request. The report's queue stops at TOMORROW and
-leaves it out, but `queuedFor()` keeps a request deferred *from* a day on
-that day's rail, so the board's Jul 1 rail shows five requests, four of them
-unscheduled, RQ-0535 marked as pushed to Jul 2.
+PN's ask for Jul 1 is four, less the one already queued: RQ-0526, a late
+Jun 29 filing for Jun 30 carried to Jul 1 by its `late_intake` deferral. So
+three were filed on Jun 30 — RQ-0531 (PM+NIGHT), RQ-0529 (NIGHT) and RQ-0535
+(NIGHT). Three fly: RQ-0526 on LV-04 PM, RQ-0531 on LV-06 PM, RQ-0529 on
+LV-05 NIGHT. RQ-0535 ("Perception regression — static field") drew the 6%
+late flag, was stamped 16:43 on Jun 30, and so carries a `late_intake`
+deferral for Jul 1 and a plan date of Jul 2 (`next_open_day()` returns a day
+past TOMORROW as it is) — the report's one `deferred` request. The report's
+queue stops at TOMORROW and leaves it out, but `queuedFor()` keeps a request
+deferred *from* a day on that day's rail, so the board's Jul 1 rail shows
+five requests, four of them unscheduled, RQ-0535 marked as pushed to Jul 2.
 
 README demo steps 1–3 and the seed test "tomorrow's rail holds two
 unscheduled P0 and R6 fires for the late showcase" depend on exactly this
 queue.
 
-## check_rules() and the sanity report
+## `check_rules()` and the sanity report
 
 `check_rules()` runs after the planner and before anything is written. It
 asserts, with these messages:
@@ -951,7 +954,8 @@ paths.
 npm run data           # python3 generate_data.py && python3 scripts/render_analytics.py
 git status --short     # src/data and docs/analytics.md clean = nothing moved
 npm test               # the seed block in src/lib/rules.test.js
-npm run docs:check     # when src/lib/rules.js, src/lib/auth.js or sql/schema.sql changed
+npm run docs           # re-render permissions.md and the blocks when src/lib/rules.js, src/lib/auth.js or sql/schema.sql changed
+npm run docs:check     # exits 1 on drift; the pre-PR gate
 ```
 
 `npm run data` rewrites `src/data/*.json`, `data/stratus.sqlite` and
@@ -1014,10 +1018,11 @@ Adding a deferral reason touches three places, then a regeneration:
    carries a reason the schema does not list.
 
 Then `npm run data` (the schema and the data move together), `npm test` (the
-R8 tests assert the enum), and `npm run docs:check` (the reference block in
-`rules.md` renders the enum from the code). A reason with actor semantics of
-its own, as `late_intake` has, also needs `eventAction()` in `src/lib/auth.js`,
-the I4 audit in `check_rules()` and query 09, which all name `late_intake`
-literally, plus `newRequest()` in `src/lib/rules.js`, which stamps the intake
-deferral and `deferral_reason` at intake, and the `eventAction` and intake
-tests in `src/lib/rules.test.js` that assert it.
+R8 tests assert the enum), `npm run docs` (it re-renders the reference block
+in `rules.md` and the schema block in `data-model.md` from the code) and
+`npm run docs:check` (it only diffs them and exits 1 on drift). A reason with
+actor semantics of its own, as `late_intake` has, also needs `eventAction()`
+in `src/lib/auth.js`, the I4 audit in `check_rules()` and query 09, which all
+name `late_intake` literally, plus `newRequest()` in `src/lib/rules.js`, which
+stamps the intake deferral and `deferral_reason` at intake, and the
+`eventAction` and intake tests in `src/lib/rules.test.js` that assert it.

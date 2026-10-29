@@ -40,11 +40,12 @@ of two values. `block` rejects the edit: the CrewPicker and CoverPicker in
 exists, and `App.jsx` returns the violations unsaved when `hasBlock()` is true.
 `warn` renders inline and in the day summary: in the dialog's rule list, on the
 board chips (`R5 · 2 under target`, `R6 · 1 P0 starved`), in the program meter's
-title and in the rail's R6 line. Two ids ride alongside R1–R10. `AV` is
-availability: a person who is not rostered for the window is a `warn`, never a
-block, from both `checkAssignment()` and `checkCover()`. `R9` never comes out of
-a check; `App.jsx` manufactures it (`refused()`) when a transition throws, so
-the dialog shows an authorization refusal in the same list as a rule block.
+title and in the rail's R6 line. Two `rule` ids need a note. `AV` is not one of
+R1–R10; it is availability: a person who is not rostered for the window is a
+`warn`, never a block, from both `checkAssignment()` and `checkCover()`. `R9` is
+one of R1–R10 but never comes out of a check; `App.jsx` manufactures it
+(`refused()`) when a transition throws, so the dialog shows an authorization
+refusal in the same list as a rule block.
 
 Two rules are not violations at all. R8 is structural: `deferRequest()`,
 `scrubAssignment()` and `scrubRequest()` call `assertReason()`, which throws
@@ -85,8 +86,9 @@ on the invariants below says where it is stricter and where it is narrower.
 
 ## The dispatch rules R1–R10
 
-Every check below except R5's day level, R6, R7 and the desk's own checks
-(`checkCover`, `checkUncover` and `checkCoverage`, under
+Every check below except R5's day level, R6, R7, the structural R8 and R9
+(`validateReason()` in `rules.js`, `can()` in `auth.js`) and the desk's own
+checks (`checkCover`, `checkUncover` and `checkCoverage`, under
 [The desk](#the-desk)) lives in `checkAssignment(cand, db)`, where `cand` is
 `{ date, window, request_id, asset_id, operator_id, pilot_id, assignment_id? }`
 and `assignment_id` is passed only when editing an existing sortie. If the
@@ -204,10 +206,11 @@ not.
 
 At edit time, `checkAssignment()` says so before the day does: when the
 candidate's tail is new to the program (`programTails()` with the candidate's
-own `assignment_id` excluded) and the program already has `asset_max` tails, it
-warns `<code> would be at <n+1> tails today; target is <min>–<max>.` The board
-reads the day level as chips (`R5 · N under target`, `R5 · N over cap`) and as
-each program's meter, whose title is the R5 message when there is one.
+own `assignment_id` excluded) and the program already has at least `asset_max`
+tails (`tails.size >= asset_max`), it warns `<code> would be at <n+1> tails
+today; target is <min>–<max>.` The board reads the day level as chips
+(`R5 · N under target`, `R5 · N over cap`) and as each program's meter, whose
+title is the R5 message when there is one.
 
 The band is set by the program's authority through `setProgramTargets()`,
 which refuses anything but whole numbers with `0 <= min <= max`. The
@@ -433,9 +436,9 @@ the ratio and that there is no such action.
 
 One courtesy lives in the view. `DispatchView.jsx`'s `deskBlocks(r)` reads the
 desk rows and, when every window a rider-facing request asked for is below the
-minimum or at capacity, the rail card says so and opens the ReasonPicker with
-`no_rider_ops` pre-selected. The coordinator still chooses; the engine only
-sees the reason they confirm.
+minimum or at or over capacity (`demand + 1 > capacity`), the rail card says so
+and opens the ReasonPicker with `no_rider_ops` pre-selected. The coordinator
+still chooses; the engine only sees the reason they confirm.
 
 ## Intake
 
