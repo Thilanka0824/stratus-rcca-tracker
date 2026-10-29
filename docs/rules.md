@@ -84,8 +84,9 @@ on the invariants below says where it is stricter and where it is narrower.
 
 ## The dispatch rules R1–R10
 
-Every check below except R5's day level, R6 and R7 lives in
-`checkAssignment(cand, db)`, where `cand` is
+Every check below except R5's day level, R6, R7 and the desk's own checks
+(`checkCover`, `checkUncover` and `checkCoverage`, under
+[The desk](#the-desk)) lives in `checkAssignment(cand, db)`, where `cand` is
 `{ date, window, request_id, asset_id, operator_id, pilot_id, assignment_id? }`
 and `assignment_id` is passed only when editing an existing sortie. If the
 request or the tail is unknown the function returns a single R3 block,
@@ -316,8 +317,11 @@ in `auth.js`, never string parsing in a view:
 | `not-self` | not `isSelf()`: `target.person_id !== actor.person_id` | `R9 · you can't grant your own rating or qualification` |
 | absent | — | `R9 · <role, role or role> only (signed in as <Role>)` |
 
-Two more messages exist for the edges: `R9 · unknown action <action>` and
-`R9 · <roles> only (nobody signed in)` when there is no actor. The desk actions
+Three more messages exist for the edges: `R9 · unknown action <action>`,
+`R9 · <roles> only (nobody signed in)` when there is no actor, and
+`R9 · <action> refused (signed in as <Role>)` from `can()`'s `default` branch,
+reached only by a grant value that has no `case` — what a new grant kind
+returns until its predicate is added. The desk actions
 take no target: `coverWindow()`, `uncoverWindow()` and `setDeskSettings()`
 authorize `desk.cover` and `desk.settings` against `null`.
 
@@ -576,9 +580,15 @@ roles and the three authority scopes the matrix distinguishes: a lead on
 
 Fourteen `describe` blocks follow in file order: R1 through R8 as unit tests
 of `checkAssignment()`, `dayWarnings()`, `isLate()`, `defaultPlanDate()` and
-`deferRequest()`; two R9 blocks; R10; `transitions`, which checks that every
-mutation refuses the wrong role before touching anything and leaves its input
-unchanged; `intake`; and `seed data`.
+`deferRequest()`; two R9 blocks; R10; `transitions`, whose first case checks
+that six transitions (`deferRequest`, `scrubAssignment`, `scrubRequest`,
+`grantRating`, `setProgramPriority`, `newAssignment`) refuse the wrong role
+before touching anything, and whose other cases walk a sortie built on the
+board, the grants, the program dials, a scrub's note, triage and withdraw,
+three of them ending on an `// immutable` assertion over the input; `intake`;
+and `seed data`. The wrong-role refusals of `coverWindow` and
+`setDeskSettings` are under R10, `acknowledge`'s in the second R9 block and
+`newRequest`'s under `intake`.
 
 The first R9 block is generated rather than written. At collection time it
 asserts `ACTIONS.length >= 16` and then loops `for action of ACTIONS` × `for
@@ -619,12 +629,12 @@ what must not move.
 Three habits keep the suite honest when the engine changes. `makeDb()` builds
 its `Map`s once, so a test that pushes a tail or replaces a person must also
 update `db.asset` or `db.person` by hand, as the R5 and grant tests do.
-Several assertions are exact strings (`toBe`), including the ISO-dated R2 slot
-message and the short-dated desk messages, so a wording change in `rules.js`
-is a deliberate test change. And the `rules()` helper keeps only `block`
-severities, so demoting a rule to `warn` silently drops it from those
-assertions; the warning tests look the violation up and check `.severity` or
-`.level` instead.
+Several assertions are exact strings (`toBe`, or `toEqual` on an array of
+them), including the ISO-dated R2 slot message and the short-dated desk
+messages, so a wording change in `rules.js` is a deliberate test change. And
+the `rules()` helper keeps only `block` severities, so demoting a rule to
+`warn` silently drops it from those assertions; the warning tests look the
+violation up and check `.severity` or `.level` instead.
 
 ## Reference
 

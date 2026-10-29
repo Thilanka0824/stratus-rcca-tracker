@@ -14,7 +14,7 @@ the entities in [data-model.md](data-model.md), the generator in
 One page. `src/main.jsx` creates a React 18 root on `#root` inside
 `React.StrictMode`, imports the one stylesheet and renders `App`. There is no
 router, no backend and no state library: eight views are selected by tab index
-in `App.jsx`, every mutable value is React state in that one component, and a
+in `App.jsx`, every session-mutable value is React state in that one component, and a
 reload returns the seed. The README's *Architecture decisions* and *Cut list*
 give the reasoning: the claim being demonstrated is workflow and prioritization
 design, and a backend would spend the effort proving CRUD, which is the wrong
@@ -98,9 +98,10 @@ views as imported, and no handler writes to it. Two dates follow from it:
 
 ## App.jsx is the only owner of state
 
-Every `useState` in the app is in `App.jsx`. Views keep only their own UI state
-(a filter, a selection, an open dialog), and none of it survives a tab change,
-because a view is mounted only while its tab is selected.
+Every piece of session state — anything that must outlive a tab change — is a
+`useState` in `App.jsx`. Views keep only their own UI state (a filter, a
+selection, an open dialog) in their own hooks, and none of it survives a tab
+change, because a view is mounted only while its tab is selected.
 
 | state | holds | who changes it |
 |---|---|---|
@@ -130,20 +131,25 @@ request id).
 `signIn()` replaces it and nothing else. The plan is not reset and the audit is
 not cleared. The Requests view is remounted (it is keyed by
 `currentUser.user_id`) and the board drops what it had in hand (`DispatchView`
-clears its selection and dialogs when `me.user_id` changes). Every question a
-view asks about the persona goes through one closure:
+clears its selection and dialogs when `me.user_id` changes). Every permission
+question a view asks goes through one closure:
 
 ```js
 const allowed = (action, target = null) => can(currentUser, action, target);
 ```
 
+The views read `me` only for identity — whose seats, whose requests, and when
+the persona changed.
+
 **Deep links are plain callbacks.** `openBoard(date)` sets `boardDate` and
 switches to Dispatch; `openRequest(id)` sets `requestFocus` and switches to
 Requests; `openFailure(id)` sets `triageFocus` and switches to Triage;
 `go(i, focus)` wraps a stat card's jump to Reports in a fresh `{ panel, n }`
-so that clicking the same card twice scrolls twice. The receiving view reads
-its focus prop as initial state, which works because switching tabs unmounts
-and remounts it.
+so that clicking the same card twice scrolls twice. Requests and Triage read
+`focusId` as initial state, which works because switching tabs unmounts and
+remounts them; Reports scrolls in an effect keyed on `focus`, which is why the
+fresh `{ panel, n }` object matters when the card is clicked while Reports is
+already open.
 
 **The theme is one preference and one resolved value.** `pref` is persisted to
 `localStorage['stratus-theme']`; `theme` is `pref === 'system' ? osTheme :
@@ -173,7 +179,9 @@ the actions that do not write a request timeline: `desk.cover`, `desk.uncover`,
 `triage.edit` and `desk.settings`. Assign, defer, scrub, withdraw and intake
 are not recorded there; they append a timeline event with `by` to the request
 itself. `actionsByRole()` in `dispatch.js` folds the audit into its `granted`
-and `set` columns and reads the timelines for everything else.
+and `set` columns, counts `covered` from the coverage rows' `assigned_by` and
+the seed's grants from `person.granted_by`, and reads the timelines for filed,
+withdrawn, assigned, deferred and scrubbed.
 
 **One pattern for every mutation.** A handler builds the next value by calling
 a `rules.js` transition outside the state updater, inside `try`/`catch`, and
@@ -225,9 +233,9 @@ severity model: `'block'` rejects an edit, `'warn'` renders inline and in the
 day summary, R8 is structural (`deferRequest()` and `scrubAssignment()` throw
 without a reason from the enum), and R9 is authorization — every mutating
 transition takes the actor first and calls `authorize()` before it touches
-anything. The file reads in sections:
+anything. Its exports, by concern:
 
-| section | functions |
+| concern | functions |
 |---|---|
 | constants | `WINDOWS`, `PRIORITY_RANK`, `DEFERRAL_REASONS`, `SCRUB_REASONS` (adds `weather`), `REASON_LABELS`, `CREW_LABELS`, `CREW_KINDS`, `BUILD_STAGES`, `TRIAGE_STEPS`, `DEFAULT_DESK`, `DESK_BOUNDS` |
 | lookups | `makeDb`, `addDays`, `isWeekend`, `ratedOn`, `availableOn`, `qualifiedOn`, `assetStatusOn`, `isOperatingDay` |
@@ -238,9 +246,11 @@ anything. The file reads in sections:
 | intake | `validateRequest`, `operatingWindows`, `pruneWindows`, `newRequest` |
 | transitions | `nextAssignmentId`, `newAssignment`, `scheduleRequest`, `deferRequest`, `scrubAssignment`, `scrubRequest`, `triageFailure`, `withdrawRequest`, `coverWindow`, `uncoverWindow`, `acknowledge`, `grantRating`, `revokeRating`, `grantQualification`, `setProgramPriority`, `setProgramTargets`, `editProgram`, `setDeskSettings` |
 
-Transitions are immutable: each returns a new object and leaves its input
-untouched, which is what lets `App.jsx` build the next value first and save it
-second. `newRequest()` derives the late flag and the plan day from the
+Transitions are immutable: each leaves its input untouched and returns a new
+object, which is what lets `App.jsx` build the next value first and save it
+second. The one exception is `editProgram()`, which hands back the same program
+when the patch changes nothing — the identity `App.jsx` checks before it saves
+or records anything. `newRequest()` derives the late flag and the plan day from the
 submission time and stamps the filer as the actor; the late-intake deferral it
 appends is part of filing. The rule-by-rule account is [rules.md](rules.md).
 
@@ -294,7 +304,7 @@ transition is called from `App.jsx`.
 | view | group | shows | callbacks it can fire | actions it checks with `allowed()` | who edits here |
 |---|---|---|---|---|---|
 | `RequestsView` | Plan | the queue in attention order, the intake form, a drawer per request with its timeline | `onSubmit`, `onWithdraw`, `onOpenBoard` | `request.create` per program, `request.withdraw` | requesters, coordinators (on behalf), authority in scope; the default tab |
-| `DispatchView` | Plan | one day: the desk row, a program group per program with its tail × window grid, the rail, the chips and footer, six dialogs | `onAssign`, `onDefer`, `onScrub`, `onCover`, `onUncover`, `onEditProgram`, `onEditDesk`, `onOpenRequest`, `onOpenFailure`, `setDate` | `plan.assign`, `plan.defer`, `plan.scrub`, `desk.cover`, `desk.settings`, `program.priority`, `program.targets` | the coordinator (the plan and the desk roster), authority (a program's dials), the PM or rider ops lead (the desk's settings) |
+| `DispatchView` | Plan | one day: the desk row, a program group per program with its tail × window grid, the rail, the chips and footer, five dialogs (the reason picker serves both defer and scrub) | `onAssign`, `onDefer`, `onScrub`, `onCover`, `onUncover`, `onEditProgram`, `onEditDesk`, `onOpenRequest`, `onOpenFailure`, `setDate` | `plan.assign`, `plan.defer`, `plan.scrub`, `desk.cover`, `desk.settings`, `program.priority`, `program.targets` | the coordinator (the plan and the desk roster), authority (a program's dials), the PM or rider ops lead (the desk's settings) |
 | `CapacityView` | Plan, lazy | KPI cards, demand vs supply, the deferral Pareto and the tell, desk load, utilization, lead time and churn, the rating matrix, actions by role | `onGrant`, `onRevoke` | `rating.grant`, `qualification.grant` | the trainer, in the matrix's edit mode; refused to crew |
 | `MyDayView` | Plan | the crew persona's own sorties and coverage rows for a day, their ratings as of that day, who granted them | `onAck` | `sortie.ack` per seat | crew only; the tab is disabled for everyone else |
 | `RunsView` | Execute | the run log, newest first, with filters and the artifact dots | — | — | nobody; read-only |
@@ -477,4 +487,5 @@ per-program filter is on the roadmap. Next, per the README and the brief:
 structured intake from free text into the form that already validates it, live
 multi-user state once there is something worth persisting, lazy-loading the
 seed JSON the way the chart views already are, a CSV export of the integrity
-audit, and rider incidents feeding RCCA with a rider comms log on the sortie.
+audit, and rider incidents feeding RCCA with a rider comms log on the sortie
+and role-based notifications.

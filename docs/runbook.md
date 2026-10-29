@@ -61,8 +61,8 @@ matrix is a change to the tests
 ([rules.md](rules.md#where-the-tests-come-from)). There is no linter, formatter
 or CI configuration in the repository; every gate on this page is run by hand.
 
-`data/stratus.sqlite` is the one generated file that is not committed
-(`.gitignore`). `src/data/*.json` and `docs/analytics.md` are committed and are
+Of the data pipeline's outputs, `data/stratus.sqlite` is the one not committed
+(`.gitignore`); `src/data/*.json` and `docs/analytics.md` are committed and are
 regenerated, never edited.
 
 ## The dev loop
@@ -83,9 +83,9 @@ Pick the persona for what you are checking:
 | intake, withdraw, the triage ladder and its Undo toast | Test Engineer, PLC `U-12` or Engineer, Perception `U-13` (`requester`) |
 | program priority and tail targets inside a scope, and the `outside your scope` refusal | Program Lead, PLC `U-05` (scope `PRG-01`), PN `U-07` (`PRG-02`), SF `U-08` (`PRG-06`) |
 | the desk's ratio and minimum, and everything an authority may do | PM `U-06` (scope `all`); Rider Ops Lead `U-02` (scope `desk`) for the desk's settings alone |
-| grants and revokes, effective from tomorrow, and the refusal of one's own row (I2) | Trainer `U-15`, whose own row is `P-001` |
+| grants, effective from tomorrow at the earliest; revokes, which take effect at once; and the refusal of one's own row (I2) | Trainer `U-15`, whose own row is `P-001` |
 | My day and acknowledgements; the analytics tabs refused | the crew personas `U-09`, `U-10`, `U-11`, `U-14`; crew land on My day |
-| every refusal tooltip at once | Manager `U-01` (`observer`): read-only, plus Capacity and Reports |
+| every refusal tooltip at once | Manager `U-01` (`observer`): read-only, plus the three analytics tabs (Capacity, Analytics, Reports) |
 
 The board is editable only for days after today (`editable = date > today` in
 `DispatchView.jsx`); tomorrow, `meta.tomorrow`, is its default view and the
@@ -116,10 +116,12 @@ npm run data
 
 `generate_data.py` builds the seed in memory, runs `check_rules()` over it (R1
 to R4, R8, R10, the R2 extension to the desk, and I1, I2, I4, I5, each an
-`assert` tagged with the rule and the offending record), prints
-`invariants: I1 ok · I2 ok · I4 ok (…) · I5 ok · R2 desk ok`, writes the ten
-JSON files, calls `write_sqlite()`, which removes `data/stratus.sqlite` and
-rebuilds it from `sql/schema.sql`, and then prints the sanity report. The
+`assert` tagged with the offending record and, for the numbered rules and
+invariants, the rule id; three carry a description instead: the airframe
+match and the two availability checks the app shows as the `AV` warning),
+prints `invariants: I1 ok · I2 ok · I4 ok (…) · I5 ok · R2 desk ok`, writes
+the ten JSON files, calls `write_sqlite()`, which removes `data/stratus.sqlite`
+and rebuilds it from `sql/schema.sql`, and then prints the sanity report. The
 report ends in assertions, and the `&&` in the npm script means
 `render_analytics.py` runs only when the generator exits cleanly.
 
@@ -163,10 +165,11 @@ the planner below the `dispatch layer` banner draws from
 `drng = random.Random(4242)`; the desk's rider-facing flags draw from
 `rrng = random.Random(4243)`. A new draw in one stream re-rolls everything
 after it in that stream and nothing in the others, so the dispatch section can
-change without perturbing a single run or failure; but the dispatch stream must
-not gain or lose a draw before Jun 15, or arcs D1 to D3 re-roll. That is why
-the showcase run is registered with its intake fields spelled out instead of
-drawn. What each arc needs and what must not move is in
+change without re-rolling a single run or failure — only the run-to-sortie
+link, `run.request_id` on Flight runs, follows the planner; but the dispatch
+stream must not gain or lose a draw before Jun 15, or arcs D1 to D3 re-roll.
+That is why the showcase run is registered with its intake fields spelled out
+instead of drawn. What each arc needs and what must not move is in
 [seed-and-arcs.md](seed-and-arcs.md).
 
 The sqlite file and the notebook follow the seed. `write_sqlite()` fills every
@@ -266,8 +269,9 @@ the gates green.
    `checkAssignment()`; a day-level one is in `dayWarnings()`; a rule on the
    desk roster is in `checkCover()` or `checkUncover()`; an intake rule is in
    `validateRequest()` or beside `lateWarning()`. Checks return and never
-   throw; `App.jsx` runs them before the transition and keeps a dialog's
-   confirm button disabled while a block is live (`hasBlock()`).
+   throw; `App.jsx` runs them before the transition and returns the
+   violations instead of saving when `hasBlock()` is true, and the dialog in
+   the view keeps its confirm button disabled while a block is live.
 2. Return a violation in the house shape, with the literals written out so
    the docs scan sees them:
 
@@ -310,9 +314,12 @@ the gates green.
 4. In the view, ask `allowed('the.action', target)` and render the control
    `disabled` with the message as its `title` when refused. Never hide it.
 5. If the seed stamps the action on an event, sortie or coverage row, add it
-   to the mirrored `PERMISSIONS` in `generate_data.py` and to `permits()`, so
-   `check_rules()` can verify I4. The mirror carries only the actions the seed
-   uses.
+   to the mirrored `PERMISSIONS` in `generate_data.py` (a new grant kind also
+   needs a branch in `permits()`, which switches on the kind and has no
+   per-action code). `check_rules()` verifies I4 with `permits()` over every
+   timeline event, through the mirrored `EVENT_ACTION`, and over each sortie's
+   and coverage row's `assigned_by`; a stamp on any other field needs its own
+   assert there. The mirror carries only the actions the seed uses.
 6. The matrix tests write themselves: six new cases per action. A predicate
    grant needs `friendly()` in `rules.test.js` to build a target that
    satisfies it for the granted role (`PRG-A` for the lead's scope, the
@@ -394,7 +401,7 @@ the gates green.
    backgrounds (8%) and highlighted cells.
 4. If a chart uses it, add a hex copy to both `CHART_THEMES.dark` and
    `CHART_THEMES.light` in `src/lib/helpers.js` and keep them equal to the
-   tokens; the comment above the light block says so.
+   tokens; the comment above `CHART_THEMES` says so.
 
 ### Changing an entity's shape
 

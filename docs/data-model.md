@@ -20,13 +20,15 @@ The first rendering is ten JSON files under `src/data/`, written by one loop
 with `json.dump(..., indent=1)`: `test_runs`, `failures`, `meta`, `programs`,
 `assets`, `persons`, `requests`, `assignments`, `users`, `coverage`. `App.jsx`
 imports all ten statically, so Vite bundles them into the build and the
-browser never fetches data. `makeDb()` in `src/lib/rules.js` indexes them
-once — the raw arrays, a `Map` by id for programs, assets, persons, requests
-and users, and the desk settings — and the result is handed to the views as a
-prop. Board and triage edits live in React state for the session and are never
-written back. Records the session creates take ids with an `L` in them
-(`RQ-L001…` from `App.jsx`, `AS-2026-L001…` from `nextAssignmentId()` in
-`rules.js`), so they cannot collide with the seed.
+browser never fetches data. `makeDb()` in `src/lib/rules.js` indexes seven of
+them once — programs, assets, persons, requests, assignments, users and
+coverage, with `meta.rider_desk` as the desk: the raw arrays, a `Map` by id
+for programs, assets, persons, requests and users, and the desk settings — and
+the result is handed to the views as a prop; runs and failures travel as their
+own props, `meta` as itself. Board and triage edits live in React state for
+the session and are never written back. Records the session creates take ids
+with an `L` in them (`RQ-L001…` from `App.jsx`, `AS-2026-L001…` from
+`nextAssignmentId()` in `rules.js`), so they cannot collide with the seed.
 
 The second rendering is `data/stratus.sqlite`. `write_sqlite()` deletes any
 existing file, runs `sql/schema.sql` through `executescript`, and fills every
@@ -36,13 +38,15 @@ gitignored; its only reader is `scripts/render_analytics.py`, which runs
 The schema is the stricter rendering: it carries the `CHECK` constraints, the
 `UNIQUE` slot key and the foreign keys that the JSON can only promise.
 
-The conventions, as the schema's header states them:
+The conventions — dates, timestamps, booleans and references as the schema's
+header states them, the rest as the schema body and `write_sqlite()` apply
+them:
 
 | convention | JSON | SQLite |
 |---|---|---|
 | dates | ISO `YYYY-MM-DD` strings, from `iso()` | `TEXT`, same spelling |
 | timestamps | `YYYY-MM-DDTHH:MM`, local, no seconds, no zone, from `stamp()`; the board stamps its own edits `<today>T18:MM` (`stampNow()` in `App.jsx`) | `TEXT`, same spelling |
-| booleans | `true` / `false` | `INTEGER` 0/1 through `int()`, with `CHECK (… IN (0,1))` |
+| booleans | `true` / `false` | `INTEGER` 0/1 through `int()`, with `CHECK (… IN (0,1))` on every boolean column except the three `art_*` columns of `test_runs`, which are bare `INTEGER` |
 | missing values | `null` | `NULL`; `artifacts.video` is the one three-valued field and becomes `NULL` only when the JSON is `null` |
 | enums | plain strings | `CHECK (… IN (…))` on the column |
 | ids | strings with a typed prefix (per entity, below) | `TEXT PRIMARY KEY` |
@@ -99,7 +103,7 @@ which loop of the generator created the run.
 | `build` | string | the build whose window in `BUILD_WINDOWS` contains `date`, `v2.13.2` through `v2.16.1` |
 | `status` | enum | `pass` · `fail` · `blocked` |
 | `duration_min` | integer | drawn per pipeline |
-| `owner` | string | a display name from `OWNERS`; not a persona |
+| `owner` | string | a display name from `OWNERS`, not a `user_id`; four of the eight names coincide with personas, but nothing links them |
 | `artifacts.logs` | boolean | present or missing |
 | `artifacts.telemetry` | boolean | present or missing; the arc 2 gap drops it on Flight runs |
 | `artifacts.video` | boolean or null | `null` on every Simulation run (not applicable), `false` when missing |
@@ -141,7 +145,7 @@ the same rather than hardcode `F-0011`.
 | `team` | string | one of `TEAMS` |
 | `root_cause` | string or null | one of `ROOT_CAUSES`; `null` until determined |
 | `opened` | date | hand-set on the arcs and re-dated near the end of the window on Open items; only a background item that is not Open opens on its first occurrence's date |
-| `resolved` | date or null | set only while `triage_status` is `Verified`; `triageFailure()` stamps today on `Verified` and clears it on any other step |
+| `resolved` | date or null | set only while `triage_status` is `Verified`; `triageFailure()` stamps today on `Verified` and clears it on any other step, unless an explicit `resolved` is passed, which is how Undo restores the previous value |
 | `five_whys` | array of string | ordered; `[]` on every background failure |
 | `corrective_action` | string or null | |
 | `occurrences` | array of string | `run_id`s; the arc 2 predicate has no status filter, so a passing run can be an occurrence |
@@ -275,10 +279,12 @@ the desk role. Ids are `P-NNN`.
 | `granted_by` | object | `airframe or rider_ops → user_id`, one entry per key of `ratings_effective` and of `qualifications`; `U-15`, the trainer, on every seed entry |
 
 `ratedOn(person, airframe, date)` and `qualifiedOn(person, date)` in
-`rules.js` are the only ways to ask, and both read the effective dates;
-`availableOn()` reads `availability`. The trainer's transitions
-`grantRating()`, `revokeRating()` and `grantQualification()` write
-`ratings` or `roles`, the effective map and `granted_by` together.
+`rules.js` are how the rules ask, and both read the effective dates;
+`ratingMatrix()` in `dispatch.js` and the ratings panel in `MyDayView` read
+`ratings` and `ratings_effective` directly so they can show a pending rating
+with its date. `availableOn()` reads `availability`. The trainer's
+transitions `grantRating()`, `revokeRating()` and `grantQualification()`
+write `ratings` or `roles`, the effective map and `granted_by` together.
 
 In SQLite: `persons` (id, name, `self_pilot`), `person_roles`,
 `person_ratings` (`effective_from` `NULL` for a rating with no date),
@@ -447,9 +453,10 @@ In SQLite: `assignments`, with `UNIQUE (date, asset_id, window)` and the index
 
 ### `coverage.json`
 
-One row per (date, window, person) on the rider desk, 321 in the seed, for
-every day from the window start through tomorrow. There is no id: the triple
-is the identity.
+One row per (date, window, person) on the rider desk, 321 in the seed, on
+every rostered day from the window start through tomorrow — weekdays, since
+the three rider operators' shift patterns (`day`, `swing`, `night`) have no
+weekend windows. There is no id: the triple is the identity.
 
 | field | type | values and meaning |
 |---|---|---|
@@ -512,7 +519,7 @@ in the rendered block lists every foreign key the schema declares, in order.
 | `test_runs[].request_id` | `requests` | the generator's last step: each Flight run is matched to a same-day `done` sortie that has no `run_id` yet, preferring one whose program's `SCENARIO_POOL` contains the run's scenario; `null` on every other run. 46 of the 58 Flight runs are linked in the seed (the sanity report prints the ratio) | `RunsView` filters runs by program through it |
 | `assignments[].run_id` | `test_runs` | the same link from the sortie's side, set in the same step | the request drawer in `RequestsView` |
 | `failures[].occurrences[]` | `test_runs` | the runs a failure groups | the linked runs in `TriageView`; `paretoRootCauses()` weights a root cause by it |
-| a failure and a program | `requests.program_id` | only through `occurrences → test_runs.request_id → requests`; a failure has no program field | — |
+| a failure and a program | `requests.program_id` | only through `occurrences → test_runs.request_id → requests`; a failure has no program field | the programs-hit list in `TriageView`'s `Detail` (occurrence → `runs` → `request_id` → `db.request` → `db.program`) |
 | `assets[].status_history[].failure_id` | `failures` | a grounding attributable to an RCCA item — arc D3 grounds `LV-03` and `LV-05` against `F-0011` | `groundingDays()` and `tailsAgainst()` in `dispatch.js`; the tail-status button in `DispatchView` opens the failure |
 | `users[].person_id` | `persons` | the crew personas and the trainer are people on the roster | the `own` predicate for `sortie.ack` and the `not-self` predicate for grants in `auth.js` |
 | `requests[].requester_id` | `users` | the filer | the `own` and `not-own` predicates (I1) |
@@ -537,10 +544,10 @@ loads the real `src/data/*.json`.
 | One assignment per (date, asset, window), ever; a scrubbed sortie frees its crew but not its slot | `busy_sets()` keeps a scrubbed sortie's (asset, window) busy; `check_rules()` asserts no slot is used twice (R2) | `checkAssignment()` R2 blocks a tail already in the slot, scrubbed or not, and skips scrubbed sorties only for the crew check | `UNIQUE (date, asset_id, window)` on `assignments` | the R2 block; the seed test that no non-scrubbed sortie has a blocking violation |
 | Every timeline event carries `day`, the plan day it refers to; `null` only on `submitted` | `event()` writes `day` (a deferral stamped at Tuesday's cutoff is for Wednesday); in the seed, `day` is null on `submitted` events and nowhere else | every transition writes `day` — `scheduleRequest()` and `scrubRequest()` the sortie's date, `deferRequest()` the day it was for, `newRequest()`'s late-intake deferral `needed_by`; `queuedFor()`, `deferralEvents()`, `churnByDay()`, `leadTimes()` and `misattribution()` group by it, not by `at` | `request_events.day`, nullable, commented as the plan day | the R8 test asserts the deferral event's `day` |
 | `late` equals the R7 predicate: submitted at or after `15:00` on the day before `needed_by`, or later | `add_request()` derives it from `submitted_at` and `CUTOFF`, or stamps a drawn-late submission at or after 15:00 the day before; the `late_intake` deferral is stamped by the filer | `isLate()`; `newRequest()` derives `late`, `plan_date` (`defaultPlanDate()`) and the `late_intake` deferral from the submission time — none is typed | `late` 0/1, commented R7; `actor_id` comment names the filer | the R7 block; the seed test asserts `late === isLate(submitted_at, needed_by, meta.cutoff_local)` for every request |
-| `artifacts.video` is `null` when not applicable (Simulation) and `false` when missing | `default_artifacts()` writes `None` for Simulation; `write_sqlite()` maps `None` to `NULL` | `missingArtifacts()` in `helpers.js` counts video only when `=== false` | `art_video` nullable, commented `NULL = not applicable (Simulation)` | none — vitest does not import `test_runs.json`; regeneration is the check |
+| `artifacts.video` is `null` when not applicable (Simulation) and `false` when missing | `default_artifacts()` writes `None` for Simulation; `write_sqlite()` maps `None` to `NULL` | `missingArtifacts()` in `helpers.js` counts video only when `=== false` | `art_video` nullable, commented `NULL = not applicable (Simulation)` | none — vitest does not import `test_runs.json`, and `check_rules()` does not look at artifacts; `default_artifacts()` is the only place `video` is set, so it holds by construction |
 | Ratings and qualifications are effective-dated, granted by a trainer, never to oneself | `RATING_EFFECTIVE` and `DESK_QUAL_DATE`; `rated_on()` and `qualified_on()`; `check_rules()` asserts R1 per seat, a qualified coverer per row, and I2 on `granted_by` | `ratedOn()`, `qualifiedOn()`; `grantRating()` and `grantQualification()` require an effective date not before `notBefore` (`App.jsx` passes `meta.tomorrow`) and refuse the actor's own person (`not-self`) | `person_ratings.effective_from` nullable (`NULL` = before the window), `qualifications.effective_from` not null, `granted_by` references `users` | R1 "not yet effective", R10 `deskCoverers()` by date, the grant transitions, the seed I2 test |
 | The flat asset fields are only today; any other day comes from `status_history` | the snapshot pass fills `status`, `reserved_by`, `status_note`, `status_since` as of `END` after the history is built | `assetStatusOn()` reads the history; R3 in `checkAssignment()` and `dailyCapacity()` in `dispatch.js` use it | `assets.status` commented `as of "today"`; `asset_status_history` holds the rest | the R3 test reads `assetStatusOn()` on the day before and the day of a grounding |
-| `rider_facing` is set at intake and never later | `add_request()`: `SF` always, about a fifth of `PN` and `URC` from the desk's own RNG stream, explicit for the arc D4 flights | `validateRequest()` refuses an `SF` request without riders; `newRequest()` stores `Boolean(f.rider_facing)`; no transition touches it | `rider_facing` not null, 0/1, commented R10 | the intake `SF` test; the seed I5 test |
+| `rider_facing` is set at intake and never later | `add_request()`: `SF` always, about a fifth of `PN` and `URC` from the desk's own RNG stream, and explicit (`rider_facing=True`) for the PN rider flights `daily_demand()` adds on Jun 15–17 to keep two queued for PM; the showcase run itself is `SF` | `validateRequest()` refuses an `SF` request without riders; `newRequest()` stores `Boolean(f.rider_facing)`; no transition touches it | `rider_facing` not null, 0/1, commented R10 | the intake `SF` test; the seed I5 test |
 | The desk's `ratio` and `min_per_window` live in `meta.rider_desk`, bounded 1–4, with no waiver | `RIDER_DESK` is exported as `meta.rider_desk`; `desk_check()` and the I5 assertion in `check_rules()` read it | `DEFAULT_DESK` when the seed does not say; `setDeskSettings()` keeps exactly two keys inside `DESK_BOUNDS`; `App.jsx` seeds its `desk` state from `meta.rider_desk` | no table; query 10 in `sql/analytics/` writes the ratio as a literal | `setDeskSettings()` bounds and keys; the seed I5 test against `meta.rider_desk` |
 | A deferral carries a reason from the enum (R8) | `defer()` asserts the reason; `check_rules()` re-checks every `deferred` event | `deferRequest()`, `scrubAssignment()` and `scrubRequest()` call `assertReason()` and throw | the `CHECK` on `requests.deferral_reason` and on `deferred` rows of `request_events` | the R8 block; the seed test over every timeline |
 | Every actor stamp is a persona whose role permits the action (I4); nobody assigns their own request (I1) | `permits()` over every event, sortie and coverage row in `check_rules()`; `assigned_by != requester_id` | every transition calls `authorize()` first; the `not-own` predicate in `auth.js` | `actor_id`, `assigned_by` not null and referencing `users`; comments name I1 and R9 | the seed I4 and I1 tests |
@@ -580,8 +587,9 @@ into `DEFERRAL_REASONS` in both `generate_data.py` and `rules.js` (with a
 `REASON_LABELS` entry), into the two `CHECK` lists in the schema, and
 `meta.deferral_reasons` follows the generator's list; `02_deferrals_by_cause`
 then groups on it. A new timeline event needs `EVENT_ACTION` in `auth.js` and
-the generator's mirror of it, the `request_events.event` `CHECK`, and the
-`CASE` in `09_actions_by_role`.
+the generator's mirror of it, the `request_events.event` `CHECK`, the `CASE`
+in `09_actions_by_role`, and its twin `column()` inside `actionsByRole()` in
+`dispatch.js`, which drops an event it does not know.
 
 ## Schema
 

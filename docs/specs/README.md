@@ -11,9 +11,12 @@ stands.
 
 | spec | layer | status |
 |---|---|---|
-| Field Ops spec, v2 | the real-drone loop: two deployments of one codebase, flight and static tickets, R11–R13 and V1, the Field page, the narrow backend | ratified Oct 28, 2026; kept with the project's planning notes outside git. **Lands at step A0 of PR A `feat/live-data`**, superseding v1, which is not kept. The root `README.md` and `CLAUDE.md` describe the app as it is and do not mention it yet |
+| Field Ops spec, v2 | the real-drone loop: two deployments of one codebase, flight and static tickets, R11–R13 and V1, the Field page, the narrow backend | ratified Oct 28, 2026; kept with the project's planning notes outside git. To land at step A0 of a first PR (`feat/live-data`), superseding v1, which is not kept; no branch exists yet. The root `README.md` and `CLAUDE.md` describe the app as it is and do not mention it yet |
 | Dispatch layer spec, v2 | requests → prioritize → dispatch: R1–R8, the planner, arcs D1–D3 | shipped (PR #2); kept outside git until stripped, see below |
 | Roles layer spec, v1 | personas, R9, R10, I1–I5, the rider desk, arc D4 | shipped (PR #4); kept outside git until stripped, see below |
+
+Rule ids are global: R11–R13 and V1 are reserved by the Field Ops spec, and a
+rule that does not belong to it and lands first takes R14.
 
 Numbering is per spec, not global: a new layer starts at v1, and a revision
 that changes a decision bumps the number. A revision opens with a change table
@@ -24,8 +27,9 @@ Name a file `stratus-<layer>-spec-v<N>.md`.
 
 The confidentiality rule in `CLAUDE.md` applies to specs as much as to code:
 nothing from any real workplace enters the repo. The two shipped specs were
-written with working notes in them, which is why they are not here yet. Strip,
-before adding either:
+written with working notes in them, which is why they are not here yet; the
+Field Ops spec gets the same pass when it lands. Strip, before adding any of
+them:
 
 - colleague names, and interview notes or quotations of any kind;
 - real vehicle ids, program names, team names, tool names, channel names and
@@ -40,6 +44,9 @@ would, and commit it by explicit path.
 
 ## Where specs are referenced
 
-[`docs/README.md`](../README.md) indexes this directory. The build order for
-the Field Ops work (PR A `feat/live-data`, then PR B `feat/field-ops`) is
-defined in the v2 spec.
+[`docs/README.md`](../README.md) indexes this directory and
+[`docs/glossary.md`](../glossary.md) links it from its introduction; both
+must follow a move or rename, and nothing checks hand-written links. The
+build order for the Field Ops work (a PR A on `feat/live-data`, then a PR B
+on `feat/field-ops`, neither opened yet) is defined in the v2 spec, outside
+git.

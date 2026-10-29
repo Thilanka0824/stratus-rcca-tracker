@@ -27,11 +27,13 @@ third.
 | stream | created | seed | governs |
 |---|---|---|---|
 | the module-level `random` | `random.seed(42)`, right after the imports | 42 | everything in the RCCA half: runs per day, pipeline, scenario, status, artifacts, duration, owner, the dates of the guaranteed arc runs, the shuffle of leftover failing runs, each background failure's size, status, team fallback, root cause, resolution date and severity, and the re-dating of Open items |
-| `drng` | `random.Random(4242)`, just below the banner, after the dispatch imports | 4242 | the dispatch half: the 5% odd day off per crew member per rostered weekday, every request field `add_request()` is not handed (lateness, submission time, requester, title, build stage, supporting team), the 3% pre-plan withdrawal, the size of each day's standing ask, the SBU backlog, the currency-check subject, the surge's timestamps and windows, the 40% withdrawal after repeated deferral, the 2% scrub and its kind, and the minutes on event timestamps |
+| `drng` | `random.Random(4242)`, just below the banner, after the dispatch imports | 4242 | the dispatch half: the 5% odd day off per crew member per rostered day, every request field `add_request()` is not handed (lateness, submission time, requester, title, build stage, supporting team), the 3% pre-plan withdrawal, the size of each day's standing ask, the SBU backlog, the currency-check subject, the surge's timestamps and windows, the 40% withdrawal after repeated deferral, the 2% scrub and its kind, and the minutes on event timestamps |
 | `rrng` | `random.Random(4243)`, in the arc D4 block | 4243 | one draw, in `add_request()`: whether a PN or URC request is rider-facing (p = 0.2). SF is rider-facing without a draw; PLC, SBU and CQ never are |
 
-No `random.*` call appears below the banner, so a change to the dispatch half
-cannot perturb a run or a failure. Two things cross the banner, both
+No draw from the module-level stream appears below the banner — the only
+`random.*` references there are the two `random.Random(seed)` constructors,
+which create independent generators — so a change to the dispatch half cannot
+perturb a run or a failure. Two things cross the banner, both
 deterministic: `ARC3_FAILURE_ID`, the id of the failure whose title starts
 with `Intruder track dropout`, which the grounding events on LV-03 and LV-05
 carry; and the run-to-sortie link at the end of the script, which writes
@@ -45,10 +47,15 @@ Each stream is fragile in its own way.
   random.choice(OWNERS)` draws only when no owner is passed) re-rolls every run
   and failure after it; the re-sequencing that follows then renumbers the ids,
   so the diff reads as a wholesale reshuffle.
-- The planner stream is consumed in date order. Arcs D1–D3 are planner
-  outcomes (deferral counts and reasons, a churn peak, the dates two flights
-  flew), so a draw gained or lost anywhere before Jun 15 — in the crew roster,
-  in `add_request()`, in `defer()`, in `execute_day()` — re-rolls them.
+- The planner stream is consumed in program order, not date order: the crew
+  roster first, then the SBU backlog for the whole window, `SHOWCASES`,
+  `cq_cross`, the surge and tomorrow's rail, and only then the day loop. Arcs
+  D1–D3 are planner outcomes (deferral counts and reasons, a churn peak, the
+  dates two flights flew), so a draw gained or lost anywhere that runs before
+  `plan_day(Jun 15)` — in the crew roster, in a registration above the main
+  loop whatever date it carries (a surge request submitted Jun 19, a late-June
+  SBU item), in `add_request()`, in `defer()`, in `execute_day()` — re-rolls
+  them.
 - The desk's randomness is on `rrng` for that reason. The rider-facing flag is
   the desk's only draw; the eight showcase-run requests are registered with
   every intake field spelled out so they draw nothing from either stream; the
@@ -398,7 +405,7 @@ rider-facing sortie fits, else `{reason: "no_rider_ops", note}` with one of
 two notes.
 
 ```
-R10 · no rider operator covering {w} on {Mon} {day}     coverers below min_per_window
+R10 · no rider operator covering {w} on {month} {day}   coverers below min_per_window; reads "on Jun 20"
 R10 · desk at {load}:{coverers}, ratio is {ratio}       load + 1 would exceed ratio × coverers
 ```
 
@@ -419,7 +426,7 @@ handed, it derives or draws.
 | `requester_id` | `requester_user()`; also the `by` of the `submitted` event |
 | `rider_facing` | given, else SF → true; PN and URC → `rrng.random() < 0.2`; else false |
 | `plan_date` | given, else `needed_by`; a late request instead gets `next_open_day(needed_by + 1, airframe)` and a `deferred` event with reason `late_intake`, stamped one minute after submission, `day = needed_by`, `by = requester_id`, note "flagged at intake: after the 15:00 cutoff — moved to next open day"; status `deferred`. An explicit `plan_date` skips this block, late or not |
-| withdrawal | with `may_withdraw` and `needed_by < END`, p = 0.03: a `withdrawn` event (`requester_withdrew`) 35–170 minutes after submission by the requester; status `withdrawn` |
+| withdrawal | with `may_withdraw`, a 3% draw is taken; when it hits and `needed_by < END`, a `withdrawn` event (`requester_withdrew`) 35–170 minutes after submission by the requester; status `withdrawn` |
 
 `next_open_day(d, airframe)` is the first day on or after `d` (within ten)
 with any person rated on the airframe and rostered that day; a day past
@@ -428,8 +435,10 @@ back. The emitted request has `request_id`, `program_id`, `requester`,
 `title`, `build`, `build_stage`, `crew`, `windows` (preference order),
 `airframe`, `priority`, `supporting_team`, `submitted_at`, `needed_by`,
 `plan_date`, `status`, `late`, `deferral_reason`, `timeline`, `requester_id`
-and `rider_facing`; planner-only state (`plan_date`, `attempts`, a currency
-check's `subject`) lives in `rstate` and is never written.
+and `rider_facing`; planner-only state — the planner's own copy of
+`plan_date`, which `set_plan_date()` clears on withdrawal while the emitted
+`plan_date` keeps the last day the request was queued or flown, `attempts`,
+and a currency check's `subject` — lives in `rstate` and is never written.
 
 Demand arrives from `daily_demand(D)`, which returns at once on Saturday and
 Sunday, plus fixed registrations.
@@ -513,8 +522,8 @@ slot", and a plan date of May 27; a request with six attempts, or with three
 or more attempts when a 40% draw says so and it is neither a surge request
 nor SF or CQ, is withdrawn by its requester ("withdrawn by requester after
 repeated deferral"); anything else is re-queued to `next_open_day(D + 1)`.
-The 40% draw is taken whenever attempts are three or more, before the
-exemptions are tested.
+The 40% draw is taken whenever attempts are three to five, before the
+exemptions are tested; at six the request is withdrawn without a draw.
 
 | reason | produced by |
 |---|---|
@@ -525,7 +534,7 @@ exemptions are tested.
 | `program_over_max` | `place()`, the R5 cap |
 | `asset_grounded` | `place()` when no tail is usable and one was grounded or in maintenance; `execute_day()` after a grounding scrub with no same-day move |
 | `no_asset` | `place()` when no tail is usable and none was grounded; the fallback when no window worked |
-| `no_rider_ops` | `desk_check()`, R10, the only reason that carries a note of its own |
+| `no_rider_ops` | `desk_check()`, R10 — the only shortage `place()` returns as a `{reason, note}` dict rather than a bare reason string |
 
 `new_assignment()` writes the sortie — `assignment_id`, `date`, `window`,
 `request_id`, `asset_id`, `operator_id`, `pilot_id`, `status: planned`,
@@ -600,7 +609,8 @@ Constants: the scenario "Precision Landing — Gusty Crosswind"; `base_fail`
 0.85 in Simulation and 0.05 in any other pipeline; six guaranteed Simulation
 fails (owner S. Tanaka) with three same-day Flight passes by the same owner.
 The failure record is written with root cause Scenario Definition, five whys
-ending at the m/s-versus-knots mismatch, and a corrective action that cites
+that reach the m/s-versus-knots mismatch at the fourth and end at the missing
+unit validation, and a corrective action that cites
 the passing Flight runs; its occurrences are every failing Simulation
 crosswind run in the window.
 
@@ -665,12 +675,12 @@ in `RATING_EFFECTIVE` for P-011 and P-012 on Harmattan; `PLC_PUSH` May 4–8
 vacation Apr 27 – May 1; the two `cq_cross` requests (CQ, P2, needed May 6,
 AM, submitted May 4, build v2.14.0); the parking rule in `defer()`.
 
-Mechanism: until May 29 only P-001 and P-002 are rated on Harmattan, so the
+Mechanism: until May 29 the only Harmattan-rated pilots are P-001 and P-002, so the
 PLC `operator_pilot` ask (two to four a day) runs out of pilots, not
 operators — three Harmattan-rated operators (P-006, P-007, P-008) are on the
 day roster. `crew_for()`
 returns `no_rated_pilot`; before Apr 28 `defer()` logs it as
-`no_rated_operator` "per thread consensus", after Apr 28 as `no_rated_pilot`
+`no_rated_operator` "per thread consensus", from Apr 28 as `no_rated_pilot`
 with "both Harmattan-rated pilots committed". The cross-rating flights, P2 in
 a P0 queue, are deferred twice during the push, parked to May 27 in the PM
 slot, and fly May 27–28; the rating takes effect May 29.
@@ -777,8 +787,9 @@ RQ-0425 · Jun 16 · R10 · desk at 3:1, ratio is 2 · LV-01 and C. Delacroix / 
 RQ-0426 · Jun 16 · same note as RQ-0425
 ```
 
-All nine showcase requests end `executed`: six fly as asked, RQ-0416 flies
-Jun 16, RQ-0425 and RQ-0426 fly Jun 17, and RQ-0437 and RQ-0438 — deferred
+All nine showcase requests end `executed`: four fly as asked (RQ-0413,
+RQ-0415, RQ-0424, RQ-0436), RQ-0416 flies Jun 16, RQ-0425 and RQ-0426 fly
+Jun 17, and RQ-0437 and RQ-0438 — deferred
 `asset_grounded` on Jun 17, when the grounding and LV-06's inspection leave
 too few Levants — fly Jun 18. PM coverers: P-018 alone on Jun 15–16, P-009
 and P-018 on Jun 17–19; P-009's `rider_ops` is effective 2026-06-17, granted
@@ -926,8 +937,8 @@ npm run docs:check     # when src/lib/rules.js, src/lib/auth.js or sql/schema.sq
 rebuilt on every run; the JSON and `docs/analytics.md` are tracked, so a
 clean `git status` after a run is the proof that a change was a pure
 refactor. A change meant to leave the seed alone — anything in the dispatch
-half that adds no `drng` draw before Jun 15, anything in `write_sqlite()`,
-the report, or a new assert — must leave it clean.
+half that adds no `drng` draw ahead of `plan_day(Jun 15)`, anything in
+`write_sqlite()`, the report, or a new assert — must leave it clean.
 
 After a change to generation logic:
 
@@ -953,7 +964,9 @@ Stream discipline, restated as rules:
 - RCCA half: never add, remove or reorder a draw unless you mean to re-roll
   every run and failure. Arc failure ids are positional; locate an arc by
   title, as `ARC3_FAILURE_ID` does, never by `F-NNNN`.
-- Dispatch half: no new `drng` draw before Jun 15. A hand-registered request
+- Dispatch half: no new `drng` draw anywhere that runs before
+  `plan_day(Jun 15)`, the registrations above the main loop included whatever
+  date they carry. A hand-registered request
   draws nothing when it passes `title`, `requester`, `stage`, `team`,
   `submitted_at`, `late` and `may_withdraw=False`, as `SHOWCASE_RUN` does;
   `rider_facing` draws from `rrng` only for PN and URC when not passed.
@@ -980,4 +993,6 @@ R8 tests assert the enum), and `npm run docs:check` (the reference block in
 `rules.md` renders the enum from the code). A reason with actor semantics of
 its own, as `late_intake` has, also needs `eventAction()` in `src/lib/auth.js`,
 the I4 audit in `check_rules()` and query 09, which all name `late_intake`
-literally.
+literally, plus `newRequest()` in `src/lib/rules.js`, which stamps the intake
+deferral and `deferral_reason` at intake, and the `eventAction` and intake
+tests in `src/lib/rules.test.js` that assert it.

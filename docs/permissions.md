@@ -1,8 +1,8 @@
 # Permissions
 
-<!-- Rendered by scripts/render_docs.py from src/lib/auth.js. Do not edit by hand: run `npm run docs`; `npm run docs:check` fails on drift. -->
+<!-- Rendered by scripts/render_docs.py from src/lib/auth.js, executed under Node; the table of actions no transition authorizes also scans src/lib/rules.js, src/App.jsx and src/views/*.jsx for the single-quoted action literal. Do not edit by hand: run `npm run docs`; `npm run docs:check` fails on drift. -->
 
-Authorization without authentication (R9). The matrix `PERMISSIONS` in `src/lib/auth.js` is data: for every action it names, per app role, whether the action is allowed outright or only under a named predicate. A role absent from an action's row is refused with a message that names the roles that may do it and the role signed in, for example `R9 · coordinator only (signed in as Requester)`; the action itself is named only in the unknown-action refusal. The UI asks `can()` and renders a refused control disabled with the message as its tooltip; every transition in `src/lib/rules.js` calls `authorize()`, which throws the same message. The messages below are the ones `can()` returns, produced by executing the module. `npm run docs:check` fails when this page and the module disagree; nothing runs it automatically, so run it before committing a change to `src/lib/auth.js`. How the matrix is used is in [rules.md](rules.md) and [architecture.md](architecture.md).
+Authorization without authentication (R9). The matrix `PERMISSIONS` in `src/lib/auth.js` is data: for every action it names, per app role, whether the action is allowed outright or only under a named predicate. A role absent from an action's row is refused with a message that names the roles that may do it and the role signed in, for example `R9 · coordinator only (signed in as Requester)`; the action itself is named only in the unknown-action refusal. The UI asks `can()` and renders a refused control disabled with the message as its tooltip; every transition in `src/lib/rules.js` calls `authorize()`, which throws the same message. The messages below are the ones `can()` returns, produced by executing the module. `npm run docs:check` fails when this page and the module disagree; nothing runs it automatically, so run it before committing a change to `src/lib/auth.js`, to an `authorize()` call in `src/lib/rules.js`, or to which actions `src/App.jsx` and `src/views/*.jsx` ask `allowed()` for. How the matrix is used is in [rules.md](rules.md) and [architecture.md](architecture.md).
 
 ## Roles
 
@@ -52,7 +52,7 @@ A cell in the matrix holds one of these; `·` means the role is refused.
 
 The shape of the matrix is I3: `coordinator` holds `plan.assign`, `plan.reassign`, `plan.defer`, `plan.scrub` and none of the `program.*` actions; `authority` holds `program.priority`, `program.targets` and none of the `plan.*` actions — coordinators consume priority and cannot set it, authority sets priority and cannot assign. The render fails if that shape changes.
 
-Actions no transition in `src/lib/rules.js` passes to `authorize()` — a read gate asked by the UI, or an action the matrix carries ahead of its control:
+Actions no transition in `src/lib/rules.js` passes to `authorize()` — a read gate asked by the UI, or an action the matrix carries ahead of its control. This table is a scan, not an execution: the authorized set is the `authorize(actor, '…')` literals in `rules.js`, and the *asked by* column names the files among `src/App.jsx` and `src/views/*.jsx` that contain the single-quoted action literal (not the control itself); an action name written any other way drops out while `docs:check` still passes, so keep writing them literally.
 
 | action | asked by |
 |---|---|
@@ -71,7 +71,7 @@ Actions no transition in `src/lib/rules.js` passes to `authorize()` — a read g
 
 ## Refusals, as the UI shows them
 
-Per action: the answer `can()` gives with no actor, and per role the grant with the message `can()` returns when the role is refused or its predicate does not hold (an `own` grant with someone else's request, a `not-own` grant with the actor's own request, a `scope` grant on a program outside the scope, a `desk` grant without `desk` in scope, a `not-self` grant on the actor's own person). A `scope` refusal labels the program by the target's `code`, else its `program_id`, else `that program`; the views pass the program object, so the tooltip shows the code, while `newRequest()` passes only the id. The no-actor line is `can(null, …)`: the header always holds a persona, so the app never shows it, but a transition or a test called without an actor gets this answer.
+Per action: the answer `can()` gives with no actor, and per role the grant with the message `can()` returns when the role is refused or its predicate does not hold (an `own` grant with someone else's request — or, for `sortie.ack`, a seat that is not the actor's — a `not-own` grant with the actor's own request, a `scope` grant on a program outside the scope, a `desk` grant without `desk` in scope, a `not-self` grant on the actor's own person). A `scope` refusal labels the program by the target's `code`, else its `program_id`, else `that program`: the intake form and the program dials pass the program object, so those tooltips show the code; the Requests drawer's Withdraw control and `withdrawRequest()` pass the request, and `newRequest()` passes `{ program_id }`, so those show the program id. The no-actor line is `can(null, …)`: the header always holds a persona, so the app never shows it, but a transition or a test called without an actor gets this answer.
 
 ### `request.create`
 
