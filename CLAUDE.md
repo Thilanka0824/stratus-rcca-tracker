@@ -58,7 +58,7 @@ These are load-bearing; breaking them makes the dashboard dishonest.
 
 ## The seeded narrative arcs
 
-`generate_data.py` plants seven stories, documented in its docstring. Regenerating with a different seed or altering the probability logic will break captions in `ReportsView`, `AnalyticsView`, `CapacityView` and the README that reference them by name; the sanity report asserts the load-bearing ones (the cross-rating flights fly before the rating date, churn peaks on the grounding day, the ratio refuses a showcase on the first day of the run, tomorrow holds exactly two P0):
+`generate_data.py` plants seven stories, documented in its docstring. Regenerating with a different seed or altering the probability logic will break captions in `ReportsView` and `CapacityView` and the README that reference them by name (the `AnalyticsView` captions name no arc); the sanity report asserts the load-bearing ones (the cross-rating flights fly before the rating date, churn peaks on the grounding day, the ratio refuses a showcase on the first day of the run, tomorrow holds exactly two P0):
 
 1. **Sim-only crosswind failure** — fails ~85% in Simulation, passes in Flight; root cause Scenario Definition.
 2. **Telemetry gap cluster** — Flight runs 2026-05-18..06-07 drop telemetry ~42%.
